@@ -1,11 +1,52 @@
- 						Role play of Call Break (Card Game)
+ 						ROLE PLAY of Call Break (Card Game)
+
+NEEDS
+
+	[ TERMS ]
+	1. Table
+	2. Dealer
+	3. Player
+	4. Cards
 
 
 * This game plays with four players.
-		Name, Hand Cards, player Id
-		throw card, call
+		attribute --> Name , Hand Cards , player Id , Card throwable.
+
 * We need a table to play game.
-	players position
+	attribute --> Dealer,players,deck,pack,score board.
+	
+	=>
+	Dealer
+		1. shuffle
+		2. distribute
+		3. ask call from all 4 players
+		4. will tell whose turn
+		5. who won the hand
+		6. update scoreboard
+		7. will check whether the round(13 turns) are over or not.
+			if Not [AGAIN GO TO THE POINT 4]
+			if Yes [PROCEED TO THE NEXT POINT]
+		8. update scoreboard and show to the players
+		9. check if game over(all 5 sets completed or not)
+			if not [AGAIN GO TO THE POINT 1]
+			if Yes [Tell who win and give a game over message]
+
+	Player
+		1. hands(13 cards)
+		2. make call
+		3. throw card(by getting previous cards info from Dealer)
+
+	card
+		1. suit
+		2. rank
+		3. id(like=> 'three of heart','king of club')
+
+	scoreBoard
+		1. detail of call maded by each player.
+		2. each turn score of all players.
+		3. each round score of all players.
+		4. set(5 rounds) details.
+
 * We need cards to play Call Break.
 	52 cards.
 		card:
@@ -18,6 +59,6 @@
 	Update point table.
 
 * Deck
-	deck shoud know that which card is thrown by which player.	
+	deck shoud know that which card is thrown by which player.
 
 ---------------------------------------------------------------------------------
