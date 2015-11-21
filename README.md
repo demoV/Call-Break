@@ -1,17 +1,16 @@
-    # Call-Break
-             Card Game.
+   								 # Call-Break (Card Game)
 
 								(TERMS)
-+		---------------------------------------------------------------------------
-+					Hand : Throwing a card from each players is a hand.
-+					Trump : The spades suit cards are trump.
-+					Led Suit: The first card's suit of hand is led suit.
-+					Call : How much hand probely player thinking that he can capture. 
-+					Round: 13 hands are one round.
-+					Dealer: Who manages game.
+		---------------------------------------------------------------------------
+					Hand : Throwing a card from each players is a hand.
+					Trump : The spades suit cards are trump.
+					Led Suit: The first card's suit of hand is led suit.
+					Call : How much hand probely player thinking that he can capture. 
+					Round: 13 hands are one round.
+					Dealer: Who manages game.
 
 
-					(Priorities
+						(Priorities)
 				---> Based on cards values(rank) of led suits.
 				---> Trump card have a more priority than other suits.
 
