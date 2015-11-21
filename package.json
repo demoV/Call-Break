@@ -1,0 +1,27 @@
+{
+  "name": "Call-Break",
+  "version": "1.0.0",
+  "description": "Card Game.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/demoV/Call-Break.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/demoV/Call-Break/issues"
+  },
+  "homepage": "https://github.com/demoV/Call-Break#readme",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1"
+  }
+}
