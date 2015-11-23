@@ -1,13 +1,13 @@
 var chai = require('chai');
 var assert  = chai.assert;
 var expect = chai.expect;
-var entities = require('../entities.js').entities;
+var lib = require('./card.js').lib;
 
 describe('Card', function(){
-	var sampleCard = new entities.Card('diamonds' , 14 );
+	var sampleCard = new lib.Card('diamonds' , 14 );
 	it('should be a constructor which creates properties in a new object', function(){
 		expect(sampleCard).to.be.a('object');
-		expect(sampleCard).to.be.an.instanceof(entities.Card);
+		expect(sampleCard).to.be.an.instanceof(lib.Card);
 	});
 	it('should have properties suit and rank', function(){
 		expect(sampleCard).to.have.all.keys('suit', 'rank');
@@ -28,7 +28,7 @@ describe('Card', function(){
 });
 
 describe('generatePack', function(){
-	var pack = entities.generatePack();
+	var pack = lib.generatePack();
 	it('should be generate an array of cards', function(){
 		expect(pack).to.be.a('array');
 	});
