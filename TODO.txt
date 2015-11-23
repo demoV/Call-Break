@@ -36,29 +36,19 @@ NEEDS
 		2. make call
 		3. throw card(by getting previous cards info from Dealer)
 
+	Deck
+		deck should know that which card is thrown by which player.
+	
 	card
 		1. suit
 		2. rank
 		3. id(like=> 'three of heart','king of club')
 
 	scoreBoard
-		1. detail of call maded by each player.
+		1. detail of call made by each player.
 		2. each turn score of all players.
 		3. each round score of all players.
 		4. set(5 rounds) details.
 
-* We need cards to play Call Break.
-	52 cards.
-		card:
-			Name, Suit, Rank
-
-* Make a dealer who will manage game
-	Sufffle cards.
-	Distribute Cards.
-	Ask for call.
-	Update point table.
-
-* Deck
-	deck shoud know that which card is thrown by which player.
 
 ---------------------------------------------------------------------------------
