@@ -81,5 +81,29 @@ describe('"dealer', function(){
 			expect(players.p3.name).to.be.a('string').to.be.equal('durga');
 			expect(players.p4.name).to.be.a('string').to.be.equal('vinay');
 		});
+	});
+	describe('writeCall"',function(){
+		it('will write call made by the each player',function(){
+			var writeCall = entities.dealer.writeCall;
+			writeCall(players,'p1',5);
+			expect(players.p1.call).to.be.ok;
+		})
 	})
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
