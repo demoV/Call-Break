@@ -14,5 +14,8 @@ entities.dealer = {
 		shuffledCards.forEach(function(card,index){
 			players[playerId[index%4]].hands[card.suit].push(card);
 		});
-	}
+	},
+	writeCall : function(players,player,call){
+		players[player].call = call;
+	};
 };
