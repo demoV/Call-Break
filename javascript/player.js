@@ -28,6 +28,12 @@ entities.Player.prototype = {
 		return ld.remove(this.hands[suit], function(card){
 			return card == cardName;
 		});
+	},
+	makeCall: function(call){
+		if(!this.turn)
+			return;
+		call = (this.round && this.round.call) || (call > 1) && call || 2;
+		this.round = {call: call, captured: 0};
 	}
 };
 

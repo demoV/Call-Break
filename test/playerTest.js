@@ -10,7 +10,7 @@ describe('Player', function(){
 		expect(Player).to.exist;
 		expect(player).to.be.an.instanceof(Player);
 	});
-	it('should have 3 properties name and hands', function(){
+	it('should have 4 properties name and hands', function(){
 		expect(player).to.have.all.keys(['name', 'hands', 'turn']);
 	});
 	it('is not writable for name property', function(){
@@ -39,4 +39,31 @@ describe('Player', function(){
 	it('should have prototype throwCard', function(){
 		expect(player).to.respondTo('throwCard');
 	});
+	it('can make call for every round', function(){
+		var demo = new Player('demo');
+		demo.turn = true;
+		demo.makeCall(5);
+		expect(demo.round.call).to.eql(5).that.is.a('number');
+	});
+	it("can't make call if turn is false", function(){
+		var demo = new Player('demo');
+		demo.makeCall(5);
+		expect(demo.round).to.not.exist;
+	});
+	it("can't make call less than 2 ", function(){
+		var demo = new Player('demo');
+		demo.turn = true;
+		demo.makeCall(1);
+		expect(demo.round.call).to.eql(2).that.is.a('number');
+		demo.makeCall(0);
+		expect(demo.round.call).to.eql(2).that.is.a('number');
+	});
+	it('can not call 2 or more times in one round', function(){
+		var demo = new Player('demo');
+		demo.turn = true;
+		demo.makeCall(4);
+		expect(demo.round.call).to.eql(4).that.is.a('number');
+		demo.makeCall(5);
+		expect(demo.round.call).to.eql(4).that.is.a('number');
+	})
 });
