@@ -4,7 +4,9 @@
   "description": "Card Game.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "min": "mocha -R min --recursive",
+    "watch": "mocha -R min --watch --recursive"
   },
   "repository": {
     "type": "git",
