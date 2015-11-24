@@ -15,7 +15,7 @@ entities.dealer = {
 			players[playerId[index%4]].hands[card.suit].push(card);
 		});
 	},
-	writeCall : function(players,player,call){
+	writeCall: function(players,player,call){
 		players[player].call = call;
-	};
+	}
 };

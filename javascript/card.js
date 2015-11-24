@@ -14,10 +14,13 @@ lib.Card = function(suit , rank){
 		}
 	});
 };	
-lib.Card.prototype.toString = function() {
-	var rankName = ['two' , 'three' , 'four' ,'five' , 'six' , 'seven' , 'eight',
-					'nine','ten' , 'jack' , 'queen' , 'king' ,'ace'];
-	return [rankName[this.rank - 2],'of' , this.suit].join('_');
+
+lib.Card.prototype = {
+	toString : function() {
+		var rankName = ['two' , 'three' , 'four' ,'five' , 'six' , 'seven' , 'eight',
+						'nine','ten' , 'jack' , 'queen' , 'king' ,'ace'];
+		return [rankName[this.rank-2],'of' , this.suit].join('_');
+	}
 };
 
 lib.generatePack = function(){

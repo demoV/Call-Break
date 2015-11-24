@@ -83,12 +83,20 @@ describe('"dealer', function(){
 		});
 	});
 	describe('writeCall"',function(){
-		it('will write call made by the each player',function(){
-			var writeCall = entities.dealer.writeCall;
-			writeCall(players,'p1',5);
+		var writeCall = entities.dealer.writeCall;
+		writeCall(players,'p1',3);
+		writeCall(players,'p4',5);
+		it('checks the existance of the function',function(){
+			expect(entities.dealer.writeCall).to.exist;
+		});
+		it('will check call made by player is valid or not',function(){
 			expect(players.p1.call).to.be.ok;
 		})
-	})
+		it('writes the call made by each player', function(){
+			expect(players.p1.call).to.equal(3);
+			expect(players.p4.call).to.equal(5);
+		});
+	});
 });
 
 
