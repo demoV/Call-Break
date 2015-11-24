@@ -10,8 +10,8 @@ describe('Player', function(){
 		expect(Player).to.exist;
 		expect(player).to.be.an.instanceof(Player);
 	});
-	it('should have 2 properties name and hands', function(){
-		expect(player).to.contain.all.keys(['name', 'hands']);
+	it('should have 3 properties name and hands', function(){
+		expect(player).to.have.all.keys(['name', 'hands', 'turn']);
 	});
 	it('is not writable for name property', function(){
 		var demo = new Player('demo');
@@ -28,6 +28,7 @@ describe('Player', function(){
 	});
 	it('can throw a card of given name', function(){
 		var demo = new Player('demo');
+		demo.turn = true;
 		demo.hands.diamonds.push({suit: 'diamonds', rank: 4, toString: function(){return 'four_of_diamonds';}});
 		var thrownCard = demo.throwCard('four_of_diamonds');
 		expect(demo.hands.diamonds).to.have.length(0);
