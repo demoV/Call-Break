@@ -1,0 +1,19 @@
+.join{
+	text-align: center;
+}
+h1{
+	font-size: 80px
+}
+input{
+	height: 20px;
+	width: 10%;
+	font-size: 90%;
+}
+#join{
+	width: 5%;
+	height: 25px;
+	font-size: 100%
+}
+#game_status{
+	text-align: center;
+}
