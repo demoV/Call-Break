@@ -1,6 +1,7 @@
 var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
+	// setTimeout(showPopup,3000);
 	removeCard();
 };
 
@@ -30,6 +31,25 @@ var getPlayersNames = function(){
 		$('#hand_cards>#name').append('<h3>'+positions.my+'</h3>');
 	});
 };
+var popupTemplate = '<h1>Select your call</h1><br>'+
+				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
+				'<br><output name="callOutputName" id="callOutputId">2</output><br><button>submit</button>';
+
+				
+var showPopup = function(){
+	$('#deck').addClass('popup');
+	$('#deck').html(popupTemplate);
+	$('#deck>button').click(requestForCall)
+}
+
+var requestForCall = function(){
+	var call = $('#call').val();
+	$.post('call',{call:call},function(data){
+		alert(data);
+	});
+	$('#deck').removeClass('popup').html('')
+
+};
+
 
 $(document).ready(onLoad);
-

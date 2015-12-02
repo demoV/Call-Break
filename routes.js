@@ -3,7 +3,6 @@ var querystring = require('querystring');
 var ld = require('lodash');
 var callBreak = require('./javascript/callBreak.js');
 var game;
-// game = new callBreak.CreateGame(['lalit','akshay','durga','adharsh']);
 
 var userInfo = [];
 var isGameStarted = false;
@@ -14,7 +13,12 @@ var nameOfPlayers = function(){
 };
 var roundStart = function(){
 	game.distribute();
-}
+};
+
+var startGame = function(){
+		game = new callBreak.CreateGame(nameOfPlayers());
+		game.distribute();
+};
 
 var isConnected = function(req , res){
 	return userInfo.some(function(user){
@@ -65,7 +69,6 @@ var joinUser = function(req ,res ,name){
 }
 
 var resForJoining = function(req , res){
-	console.log('==================== cookie is this',req.headers.cookie)
 	if(isGameStarted)
 			res.end('{isGameStarted : true}');
 	else{
@@ -75,19 +78,21 @@ var resForJoining = function(req , res){
 		});		
 		req.on('end' , function(){
 			var playerName = querystring.parse(data).name;
-			isConnected(req ,res) ? res.end('{alreadyConected : true }') : joinUser(req ,res , playerName) ;
+			if(isConnected(req ,res))
+				res.end('{alreadyConected : true }'); 
+			else
+				joinUser(req ,res , playerName) ;
 		})
 		if(userInfo.length == 4){
 			isGameStarted = true;
 		}
 	}
-}
+};
 
 var sendUpdate = function(req , res){
 	if(userInfo.length == 4){
 		if(!game)
 			startGame();
-		// game.distribute();
 		res.statusCode = 200;
 		res.end(JSON.stringify({status : 'started'}));
 	}else{
@@ -100,7 +105,9 @@ var sendUpdate = function(req , res){
 var cardsToImg = function(hands){
 	var keys = Object.keys(hands);
 	return ld.flatten(keys.map(function(suit){
-		return hands[suit].sort(function(a,b){return b.rank - a.rank}).map(function(card){
+		return hands[suit].sort(function(a,b){
+			return b.rank - a.rank;
+		}).map(function(card){
 			return card.rank+(card.suit.slice(0,1)).toUpperCase()+'.png';
 		});
 	}));
@@ -108,7 +115,6 @@ var cardsToImg = function(hands){
 
 var serveHandCards = function(req, res, next){
 	var hands = cardsToImg(game.players[req.headers.cookie].hands);
-	// var hands = cardsToImg(game.players['lalit'].hands);
 	res.end(JSON.stringify(hands));
 };
 var startGame = function(){
@@ -121,16 +127,28 @@ var getPlayersPositions = function(playerName){
 	var i = playersName.indexOf(playerName);
 	return {my: playersName[i],right_player: playersName[(i+1)%4],
 			top_player: playersName[(i+2)%4], left_player: playersName[(i+3)%4]};
-}
+};
+
+var writeCall = function(req , res){
+	var data = '';
+	req.on('data' , function(chunk){
+		data += chunk;
+	});
+	req.on('end', function(){
+		call = querystring.parse(data).call;
+		game.players[req.headers.cookie].makeCall(+call);
+		res.end('success');
+	});
+};
 
 var servePlayersNames = function(req,res,next){
 	var playersPosition = getPlayersPositions(req.headers.cookie);
-	// var playersPosition = getPlayersPositions('lalit');
 	res.end(JSON.stringify(playersPosition));
 };
 
 exports.post_handlers = [
-	{path : '^/join_user$' , handler : resForJoining},	
+	{path : '^/join_user$' , handler : resForJoining},
+	{path : '^/html/call$' , handler : writeCall},	
 	{path: '', handler: method_not_allowed}
 ];
 
@@ -143,4 +161,3 @@ exports.get_handlers = [
 	{path: '', handler: serveStaticFile},
 	{path: '', handler: fileNotFound}
 ];
-
