@@ -35,17 +35,3 @@ exports.CreateGame.prototype = {
 		players[player].call = call;
 	}
 };
-var cardsInImg = function(hands){
-	var keys = Object.keys(hands);
-	return ld.flatten(keys.map(function(suit){
-		return hands[suit].sort(function(a,b){return b.rank - a.rank}).map(function(card){
-			return card.rank+(card.suit.slice(0,1)).toUpperCase()+'.png';
-		});
-	}));
-};
-
-var generateTableData = function(hands){
-	return hands.map(function(card){
-		return '<td>'+'<img src="./resource/'+card+'">'+'</td>'
-	});
-};
