@@ -14,11 +14,13 @@ var nameOfPlayers = function(){
 };
 var roundStart = function(){
 	game.distribute();
-}
+};
+
 var startGame = function(){
 		game = new callBreak.CreateGame(nameOfPlayers());
 		game.distribute();
-}
+};
+
 var isConnected = function(req , res){
 	return userInfo.some(function(user){
 		return req.headers.cookie == user.id;
@@ -68,7 +70,6 @@ var joinUser = function(req ,res ,name){
 }
 
 var resForJoining = function(req , res){
-	console.log('==================== cookie is this',req.headers.cookie)
 	if(isGameStarted)
 			res.end('{isGameStarted : true}');
 	else{
@@ -78,13 +79,16 @@ var resForJoining = function(req , res){
 		});		
 		req.on('end' , function(){
 			var playerName = querystring.parse(data).name;
-			isConnected(req ,res) ? res.end('{alreadyConected : true }') : joinUser(req ,res , playerName) ;
+			if(isConnected(req ,res))
+				res.end('{alreadyConected : true }'); 
+			else
+				joinUser(req ,res , playerName) ;
 		})
 		if(userInfo.length == 4){
 			isGameStarted = true;
 		}
 	}
-}
+};
 
 var sendUpdate = function(req , res){
 	if(userInfo.length == 4){
@@ -98,31 +102,63 @@ var sendUpdate = function(req , res){
 			noOfPlayers : userInfo.length,
 		}));
 	}
-}
+};
 var cardsToImg = function(hands){
 	var keys = Object.keys(hands);
 	return ld.flatten(keys.map(function(suit){
-		return hands[suit].sort(function(a,b){return b.rank - a.rank}).map(function(card){
+		return hands[suit].sort(function(a,b){
+			return b.rank - a.rank;
+		}).map(function(card){
 			return card.rank+(card.suit.slice(0,1)).toUpperCase()+'.png';
 		});
 	}));
 };
+
 var serveHandCards = function(req, res, next){
 	var hands = cardsToImg(game.players[req.headers.cookie].hands);
 	res.end(JSON.stringify(hands));
-}
+};
+var startGame = function(){
+	game = new callBreak.CreateGame(nameOfPlayers());
+	game.distribute();
+};
+
+var getPlayersPositions = function(playerName){
+	var playersName = nameOfPlayers();
+	var i = playersName.indexOf(playerName);
+	return {my: playersName[i],right_player: playersName[(i+1)%4],
+			top_player: playersName[(i+2)%4], left_player: playersName[(i+3)%4]};
+};
+
+var writeCall = function(req , res){
+	var data = '';
+	req.on('data' , function(chunk){
+		data += chunk;
+	});
+	req.on('end', function(){
+		call = querystring.parse(data).call;
+		game.players[req.headers.cookie].makeCall(+call);
+		res.end('success');
+	});
+};
+
+var servePlayersNames = function(req,res,next){
+	var playersPosition = getPlayersPositions(req.headers.cookie);
+	res.end(JSON.stringify(playersPosition));
+};
 
 exports.post_handlers = [
-	{path : '^/join_user$' , handler : resForJoining},	
+	{path : '^/join_user$' , handler : resForJoining},
+	{path : '^/html/call$' , handler : writeCall},	
 	{path: '', handler: method_not_allowed}
-	
 ];
+
 exports.get_handlers = [
 	{path: '^/$', handler: serveIndex},
 	{path: '^/join$' , handler : serveJoinPage},
 	{path : '^/update$' , handler : sendUpdate},
 	{path: '^/html/cards$', handler: serveHandCards},
+	{path:'^/html/names$', handler: servePlayersNames},
 	{path: '', handler: serveStaticFile},
 	{path: '', handler: fileNotFound}
 ];
-
