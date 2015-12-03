@@ -20,9 +20,8 @@ var getHighestCard = function(self, ledCard){
 	self.thrownCards.forEach(function(c){
 		if(c.card.suit == self.ledSuit && c.card.rank > ledCard.card.rank)
 			ledCard = c;
-		if(c.card.suit == 'spades' && ledCard.card.suit != 'spades'){
+		if(c.card.suit == 'spades' && ledCard.card.suit != 'spades')
 			ledCard = c;
-		}
 		if(ledCard.card.suit == 'spades' && c.card.suit == 'spades' 
 			&& c.card.rank > ledCard.card.rank)
 			ledCard = c;

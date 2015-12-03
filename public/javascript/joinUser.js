@@ -36,8 +36,8 @@ var sendReaquestToJoin = function(){
 }
 
 var onReady = function(){
-	$('#join').click(sendReaquestToJoin)
-	var interval = setInterval(sendReaquestForUpdate , 4000)
+	$('#join').click(sendReaquestToJoin);
+	var interval = setInterval(sendReaquestForUpdate , 4000);
 }
 
 $(onReady);

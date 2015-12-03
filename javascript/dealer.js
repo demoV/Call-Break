@@ -3,7 +3,6 @@ var ld = require('lodash');
 var entities = {};
 exports.entities = entities;
 
-
 entities.dealer = {
 	shuffle : function(pack){
 		return ld.shuffle(pack);
@@ -17,5 +16,18 @@ entities.dealer = {
 	},
 	writeCall: function(players,player,call){
 		players[player].call = call;
+	},
+	setPlayersTurn: function(){
+		var self = this;
+		var keys = Object.keys(this.players);
+		this.players[keys[0]].turn =  true;
+		return function(){
+			var playerId = self.deck.highestCard().playerId;
+			self.players[playerId].turn = true;
+			ld.remove(keys, function(key){return key == playerId});
+			keys.forEach(function(key){
+				self.players[key].turn = false;
+			});
+		}
 	}
 };
