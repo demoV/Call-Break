@@ -1,28 +1,24 @@
+// var callBreak = require('./javascript/callBreak.js');
+var ld = require('lodash');
 var fs = require('fs');
 var querystring = require('querystring');
-var ld = require('lodash');
-var callBreak = require('./javascript/callBreak.js');
-var game;
+var serveGame = require('./serveGame.js');
 
+var serveHandCards = serveGame.serveHandCards;
+var startGame = serveGame.startGame;
+var game;
 var userInfo = [];
 var isGameStarted = false;
 var nameOfPlayers = function(){
 	return userInfo.map(function(info){
 		return info.name;
 	});
-
 };
-var roundStart = function(){
-	game.distribute();
-}
-var startGame = function(){
-		game = new callBreak.CreateGame(nameOfPlayers());
-		game.distribute();
-}
+
 var isConnected = function(req , res){
 	return userInfo.some(function(user){
 		return req.headers.cookie == user.id;
-	})
+	});
 };
 
 var method_not_allowed = function(req, res){
@@ -65,7 +61,7 @@ var joinUser = function(req ,res ,name){
 	console.log(userInfo);
 	res.end(JSON.stringify( {isGameStarted : isGameStarted,
 						     noOfPlayers : userInfo.length } ));
-}
+};
 
 var resForJoining = function(req , res){
 	console.log('==================== cookie is this',req.headers.cookie)
@@ -84,12 +80,12 @@ var resForJoining = function(req , res){
 			isGameStarted = true;
 		}
 	}
-}
+};
 
 var sendUpdate = function(req , res){
 	if(userInfo.length == 4){
 		if(!game)
-			startGame();
+			startGame(game);
 		res.statusCode = 200;
 		res.end(JSON.stringify({status : 'started'}));
 	}else{
@@ -98,24 +94,11 @@ var sendUpdate = function(req , res){
 			noOfPlayers : userInfo.length,
 		}));
 	}
-}
-var cardsToImg = function(hands){
-	var keys = Object.keys(hands);
-	return ld.flatten(keys.map(function(suit){
-		return hands[suit].sort(function(a,b){return b.rank - a.rank}).map(function(card){
-			return card.rank+(card.suit.slice(0,1)).toUpperCase()+'.png';
-		});
-	}));
 };
-var serveHandCards = function(req, res, next){
-	var hands = cardsToImg(game.players[req.headers.cookie].hands);
-	res.end(JSON.stringify(hands));
-}
 
 exports.post_handlers = [
 	{path : '^/join_user$' , handler : resForJoining},	
 	{path: '', handler: method_not_allowed}
-	
 ];
 exports.get_handlers = [
 	{path: '^/$', handler: serveIndex},
