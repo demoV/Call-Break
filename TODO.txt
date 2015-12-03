@@ -50,5 +50,13 @@ NEEDS
 		3. each round score of all players.
 		4. set(5 rounds) details.
 
+			[ Way ]
+		> Our point table will update a file (pointtable.json) 
+		> Point table will access all players round key (players object key) 
+		> Point table will store the call maded by each player and hand captured by them in pointtable.json
+		> Point table will be called after the 13 th turn over of the round 
+		> After point table is updated it is shown on the screen of each player which contains all points of previous rounds
+		> After 5 rounds point table will be shown to the players with the winner's name (the one with the highest points)
+
 
 ---------------------------------------------------------------------------------
