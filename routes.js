@@ -3,6 +3,7 @@ var querystring = require('querystring');
 var ld = require('lodash');
 var callBreak = require('./javascript/callBreak.js');
 var game;
+var currentRoundPoints = require('pointTable.js').pointTable();
 
 var userInfo = [];
 var isGameStarted = false;
