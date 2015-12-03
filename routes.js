@@ -53,6 +53,11 @@ var serveStaticFile = function(req, res, next){
 var serveJoinPage = function(req ,res , next){
 	req.url = '/html/joinPage.html';
 	next();
+};
+
+var serveHelpPage = function(req ,res , next){
+	req.url = '/html/help.html';
+	next();
 }
 var fileNotFound = function(req, res){
 	res.statusCode = 404;
@@ -90,7 +95,7 @@ var resForJoining = function(req , res){
 };
 
 var sendUpdate = function(req , res){
-	if(userInfo.length == 4){
+	if(userInfo.length == 1){
 		if(!game)
 			startGame();
 		res.statusCode = 200;
@@ -125,7 +130,7 @@ var startGame = function(){
 var getPlayersPositions = function(playerName){
 	var playersName = nameOfPlayers();
 	var i = playersName.indexOf(playerName);
-	return {my: playersName[i],right_player: playersName[(i+1)%4],
+	return { my: playersName[i],right_player: playersName[(i+1)%4],
 			top_player: playersName[(i+2)%4], left_player: playersName[(i+3)%4]};
 };
 
@@ -155,6 +160,7 @@ exports.post_handlers = [
 exports.get_handlers = [
 	{path: '^/$', handler: serveIndex},
 	{path: '^/join$' , handler : serveJoinPage},
+	{path : '^/help$' , handler : serveHelpPage},
 	{path : '^/update$' , handler : sendUpdate},
 	{path: '^/html/cards$', handler: serveHandCards},
 	{path:'^/html/names$', handler: servePlayersNames},

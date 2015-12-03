@@ -1,0 +1,17 @@
+div{
+	width: 50%;
+	position: relative;
+	left: 10%;
+	right: 20%;
+}
+p{
+	font-family: serif;
+	font-size: 20px;
+	font-variant: 10px;
+	margin-left: 7px;
+
+}
+
+h1{
+	font-family: sans-serif;
+}
