@@ -43,4 +43,3 @@ var isCardsInHand = function(hands){
 		console.log(hands[key],key);
 		return hands[key].length == 0;
 	})
-};
