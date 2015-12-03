@@ -80,6 +80,3 @@ var generateTableData = function(hands){
 		return '<td>'+'<img src="./resource/'+card+'">'+'</td>'
 	});
 };
-
-var newGame = new exports.CreateGame(['akshay','vinay','adarsh','durga']);
-newGame.distribute();
