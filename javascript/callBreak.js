@@ -57,7 +57,6 @@ var generateTableData = function(hands){
 	});
 };
 
-
 var flattedAllSuitCards = function(player){
 	return ld.flattenDeep(Object.keys(player).map(function(suit){
 		return player[suit].map(function(card){
