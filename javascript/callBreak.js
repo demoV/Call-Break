@@ -10,7 +10,6 @@ var initialize_player = function(loginPlayers){
 	});
 	return players;
 };
-
 var flattedAllSuitCards = function(player){
 	return ld.flattenDeep(Object.keys(player).map(function(suit){
 		return player[suit].map(function(card){
@@ -64,5 +63,40 @@ exports.CreateGame.prototype = {
 	},
 	writeCall: function(players,player,call){
 		players[player].call = call;
+	},
+	throwableCards: function(playerName){
+		if(!this.deck.thrownCards.length){
+			return throwableCardsForFirstPlayer(this, playerName);
+		}
+		var spadeCards = this.players[playerName].hands['spades'];
+		var ledSuit = this.deck.ledSuit;
+		var ledSuitCards = this.players[playerName].hands[ledSuit];
+		var highestCard = this.deck.highestCard().card;
+		if(ledSuitCards.length)
+			return throwableCardsOfLedSuit(this, playerName, ledSuit, highestCard)
+		if(ledSuit != 'spades' && spadeCards.length)
+			return throwableCardsIfNotHaveLedSuit(this, playerName, spadeCards, highestCard);
+		return throwableCardsForFirstPlayer(this, playerName);
 	}
 };
+
+var throwableCardsForFirstPlayer = function(self, playerName){
+	return ld.flatten([self.players[playerName].hands['diamonds'],
+				self.players[playerName].hands['hearts'],
+				self.players[playerName].hands['clubs'],
+				self.players[playerName].hands['spades'] ]);
+};
+var throwableCardsOfLedSuit = function(self, playerName, ledSuit, highestCard){
+	if(ledSuit == highestCard.suit)	
+		return self.players[playerName].hands[ledSuit].filter(function(card){
+				return card.rank > highestCard.rank;
+			});
+	return this.players[playerName].hands[ledSuit];
+};
+var throwableCardsIfNotHaveLedSuit = function(self, playerName, spadeCards, highestCard){
+	if(highestCard.suit != "spades")
+		return spadeCards;
+	return spadeCards.filter(function(card){
+		return card.rank > highestCard.rank;
+	});
+}

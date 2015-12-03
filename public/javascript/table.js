@@ -2,14 +2,15 @@ var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
 	// setTimeout(showPopup,3000);
-	removeCard();
 };
 
-var removeCard = function(){
-		$('td' ).click(function() {
-		console.log('this')
-	    	console.log('div',this);
-	    	this.remove();
+var removalCards = function(){
+	$('#hands').children('td').click(function() {
+		var self = this;
+		$.post('throwCard' , {card : this.id}, function(response){
+			if(response == 'thrown successfully')
+				self.remove();// getHandCards();
+		});
 	});	
 };
 
@@ -17,8 +18,9 @@ var getHandCards = function(){
 	$.get('cards', function(data){
 		hands = JSON.parse(data);
 		hands.forEach(function(card){
-			$('#hands').append('<td>'+'<img src="../resources/resource/'+card+'">'+'</td>');
+			$('#hands').append('<td id="'+card.slice(0,-4)+'"><img src="../resources/resource/'+card+'">'+'</td>');
 		});
+		removalCards();
 	});
 };
 
@@ -51,5 +53,5 @@ var requestForCall = function(){
 
 };
 
-
 $(document).ready(onLoad);
+// $(document).on('click' , 'td' , removalCards);

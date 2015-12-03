@@ -2,7 +2,8 @@ var fs = require('fs');
 var querystring = require('querystring');
 var ld = require('lodash');
 var callBreak = require('./javascript/callBreak.js');
-var game;
+// var game;
+var game = new callBreak.CreateGame(['lakha','nirahu','ghurahu' , 'pappu halkat']);
 
 var userInfo = [];
 var isGameStarted = false;
@@ -19,6 +20,16 @@ var startGame = function(){
 		game = new callBreak.CreateGame(nameOfPlayers());
 		game.distribute();
 };
+
+// var dataCollector = function(req , res){
+// 	var data = '';
+// 	req.on('data',function(chunk){
+// 		console.log(chunk, 'chankl')
+// 			data += chunk;
+// 	});
+// 	console.log(querystring.parse(data), 'in dataCollector')
+// 	return querystring.parse(data);	
+// };
 
 var isConnected = function(req , res){
 	return userInfo.some(function(user){
@@ -90,9 +101,10 @@ var resForJoining = function(req , res){
 };
 
 var sendUpdate = function(req , res){
-	if(userInfo.length == 4){
-		if(!game)
-			startGame();
+	if(userInfo.length == 1){
+		// if(!game)
+		// 	startGame();
+		game.distribute();
 		res.statusCode = 200;
 		res.end(JSON.stringify({status : 'started'}));
 	}else{
@@ -102,6 +114,7 @@ var sendUpdate = function(req , res){
 		}));
 	}
 };
+
 var cardsToImg = function(hands){
 	var keys = Object.keys(hands);
 	return ld.flatten(keys.map(function(suit){
@@ -114,7 +127,8 @@ var cardsToImg = function(hands){
 };
 
 var serveHandCards = function(req, res, next){
-	var hands = cardsToImg(game.players[req.headers.cookie].hands);
+	// var hands = cardsToImg(game.players[req.headers.cookie].hands);
+	var hands = cardsToImg(game.players['pappu halkat'].hands);
 	res.end(JSON.stringify(hands));
 };
 var startGame = function(){
@@ -142,13 +156,42 @@ var writeCall = function(req , res){
 };
 
 var servePlayersNames = function(req,res,next){
-	var playersPosition = getPlayersPositions(req.headers.cookie);
+	// var playersPosition = getPlayersPositions(req.headers.cookie);
+	var playersPosition = getPlayersPositions('pappu halkat');
 	res.end(JSON.stringify(playersPosition));
+};
+
+var toCardName = function(cardImgName){
+	console.log(cardImgName, 'csjkbbsjkbckjxbcxkzjbckbclbk');
+	var rankName = ['two' , 'three' , 'four' ,'five' , 'six' , 'seven' , 'eight',
+						'nine','ten' , 'jack' , 'queen' , 'king' ,'ace'];
+	var suits = ['clubs' , 'diamonds' , 'hearts' , 'spades'];
+	var suit = suits.filter(function(suit){
+		return suit.slice(0,1)==cardImgName.slice(-1).toLowerCase();
+	}).join('');
+	card = +cardImgName.slice(0,-1);
+	return [rankName[card - 2],'of' , suit].join('_');
+};
+
+var throwCard = function(req, res, next){
+	var data = '';
+	req.on('data',function(chunk){
+			data += chunk;
+	});
+	req.on('end', function(){
+		var card = querystring.parse(data).card;
+		card = toCardName(card);
+		var thrownCard = {card: game.players['pappu halkat'].throwCard(card), playerId: 'pappu halkat'};
+		game.deck.thrownCards.push(thrownCard);
+		console.log(game.deck.thrownCards , '--------====================')
+		res.end('thrown successfully');
+	});
 };
 
 exports.post_handlers = [
 	{path : '^/join_user$' , handler : resForJoining},
-	{path : '^/html/call$' , handler : writeCall},	
+	{path : '^/html/call$' , handler : writeCall},
+	{path : '^/html/throwCard$' , handler : throwCard},	
 	{path: '', handler: method_not_allowed}
 ];
 
