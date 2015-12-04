@@ -1,11 +1,10 @@
-var callBreak = require('./javascript/callBreak.js');
 var ld = require('lodash');
 var fs = require('fs');
+var currentRoundPoints = require('pointTable.js').pointTable();
 var querystring = require('querystring');
-var serveGame = require('./serveGame.js');
+var callBreak = require('./javascript/callBreak.js');
+var game;
 
-var serveHandCards = serveGame.serveHandCards;
-var startGame = serveGame.startGame;
 var game;
 var userInfo = [];
 var isGameStarted = false;
@@ -14,6 +13,16 @@ var nameOfPlayers = function(){
 		return info.name;
 	});
 };
+
+// var dataCollector = function(req , res){
+// 	var data = '';
+// 	req.on('data',function(chunk){
+// 		console.log(chunk, 'chankl')
+// 			data += chunk;
+// 	});
+// 	console.log(querystring.parse(data), 'in dataCollector')
+// 	return querystring.parse(data);	
+// };
 
 var isConnected = function(req , res){
 	return userInfo.some(function(user){
@@ -47,6 +56,11 @@ var serveStaticFile = function(req, res, next){
 
 var serveJoinPage = function(req ,res , next){
 	req.url = '/html/joinPage.html';
+	next();
+};
+
+var serveHelpPage = function(req ,res , next){
+	req.url = '/html/help.html';
 	next();
 }
 var fileNotFound = function(req, res){
@@ -85,7 +99,7 @@ var resForJoining = function(req , res){
 };
 
 var sendUpdate = function(req , res){
-	if(userInfo.length == 4){
+	if(userInfo.length == 1){
 		if(!game)
 			startGame(game);
 		res.statusCode = 200;
@@ -97,6 +111,7 @@ var sendUpdate = function(req , res){
 		}));
 	}
 };
+
 var cardsToImg = function(hands){
 	var keys = Object.keys(hands);
 	return ld.flatten(keys.map(function(suit){
@@ -109,7 +124,8 @@ var cardsToImg = function(hands){
 };
 
 var serveHandCards = function(req, res, next){
-	var hands = cardsToImg(game.players[req.headers.cookie].hands);
+	// var hands = cardsToImg(game.players[req.headers.cookie].hands);
+	var hands = cardsToImg(game.players['pappu halkat'].hands);
 	res.end(JSON.stringify(hands));
 };
 var startGame = function(){
@@ -120,7 +136,7 @@ var startGame = function(){
 var getPlayersPositions = function(playerName){
 	var playersName = nameOfPlayers();
 	var i = playersName.indexOf(playerName);
-	return {my: playersName[i],right_player: playersName[(i+1)%4],
+	return { my: playersName[i],right_player: playersName[(i+1)%4],
 			top_player: playersName[(i+2)%4], left_player: playersName[(i+3)%4]};
 };
 
@@ -137,19 +153,64 @@ var writeCall = function(req , res){
 };
 
 var servePlayersNames = function(req,res,next){
-	var playersPosition = getPlayersPositions(req.headers.cookie);
+	// var playersPosition = getPlayersPositions(req.headers.cookie);
+	var playersPosition = getPlayersPositions('pappu halkat');
 	res.end(JSON.stringify(playersPosition));
 };
 
+var toCardName = function(cardImgName){
+	console.log(cardImgName, 'csjkbbsjkbckjxbcxkzjbckbclbk');
+	var rankName = ['two' , 'three' , 'four' ,'five' , 'six' , 'seven' , 'eight',
+						'nine','ten' , 'jack' , 'queen' , 'king' ,'ace'];
+	var suits = ['clubs' , 'diamonds' , 'hearts' , 'spades'];
+	var suit = suits.filter(function(suit){
+		return suit.slice(0,1)==cardImgName.slice(-1).toLowerCase();
+	}).join('');
+	card = +cardImgName.slice(0,-1);
+	return [rankName[card - 2],'of' , suit].join('_');
+};
+
+var throwCard = function(req, res, next){
+	var data = '';
+	req.on('data',function(chunk){
+			data += chunk;
+	});
+	req.on('end', function(){
+		var card = querystring.parse(data).card;
+		card = toCardName(card);
+		var thrownCard = {card: game.players['pappu halkat'].throwCard(card), playerId: 'pappu halkat'};
+		game.deck.thrownCards.push(thrownCard);
+		console.log(game.deck.thrownCards , '--------====================')
+		res.end('thrown successfully');
+	});
+};
+var cardsToImg = function(hands){
+	var keys = Object.keys(hands);
+	return ld.flatten(keys.map(function(suit){
+		return hands[suit].sort(function(a,b){return b.rank - a.rank}).map(function(card){
+			return card.rank+(card.suit.slice(0,1)).toUpperCase()+'.png';
+		});
+	}));
+};
+var serveHandCards = function(req, res, next){
+	var hands = cardsToImg(game.players[req.headers.cookie].hands);
+	res.end(JSON.stringify(hands));
+};
+var startGame = function(game){
+		game = new callBreak.CreateGame(nameOfPlayers());
+		game.distribute();
+};
 exports.post_handlers = [
 	{path : '^/join_user$' , handler : resForJoining},
-	{path : '^/html/call$' , handler : writeCall},	
+	{path : '^/html/call$' , handler : writeCall},
+	{path : '^/html/throwCard$' , handler : throwCard},	
 	{path: '', handler: method_not_allowed}
 ];
 
 exports.get_handlers = [
 	{path: '^/$', handler: serveIndex},
 	{path: '^/join$' , handler : serveJoinPage},
+	{path : '^/help$' , handler : serveHelpPage},
 	{path : '^/update$' , handler : sendUpdate},
 	{path: '^/html/cards$', handler: serveHandCards},
 	{path:'^/html/names$', handler: servePlayersNames},

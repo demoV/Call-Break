@@ -5,7 +5,9 @@ exports.Deck = function(){
 };
 exports.Deck.prototype = {
 	get ledSuit(){
-		return (this.thrownCards[0].card.suit);
+		if(this.thrownCards.length)
+			return (this.thrownCards[0].card.suit);
+		return '';
 	},
 	get firstCard(){
 		return this.thrownCards[0];
@@ -14,6 +16,7 @@ exports.Deck.prototype = {
 		var ledCard = this.firstCard;
 		return getHighestCard(this, ledCard);
 	}
+
 };
 
 var getHighestCard = function(self, ledCard){
