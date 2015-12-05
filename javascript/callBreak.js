@@ -2,7 +2,7 @@ var ld = require('lodash');
 var pack = require('./card.js').lib.generatePack();
 var Player = require('./player.js').entities.Player;
 var Deck = require('./Deck.js').Deck;
-var pointTable = require('./pointTable.js');
+// var pointTable = require('./pointTable.js');
 
 var initialize_player = function(loginPlayers){
 	var players = {};
@@ -11,12 +11,11 @@ var initialize_player = function(loginPlayers){
 	});
 	return players;
 };
-
 exports.CreateGame = function(players){
 	this.players = initialize_player(players);
 	this.pack = pack;
 	this.deck = new Deck();
-	this.pointTable = {updateScoreBoard : pointTable[save], showScoreBoard : pointTable[showPointTable]}
+	// this.pointTable = {updateScoreBoard : pointTable[save], showScoreBoard : pointTable[showPointTable]}
 };
 
 exports.CreateGame.prototype = {
@@ -25,7 +24,9 @@ exports.CreateGame.prototype = {
 	},
 	distribute : function(){
 		var playerId = Object.keys(this.players);
-		var shuffledCards = this.shuffle(this.pack);
+		if(!isCardsInHand(this.players[playerId[0]].hands))
+			return;
+		var shuffledCards = ld.shuffle(this.pack);
 		var self = this;
 		shuffledCards.forEach(function(card,index){
 			self.players[playerId[index%4]].hands[card.suit].push(card);
@@ -40,8 +41,62 @@ exports.CreateGame.prototype = {
 	},
 	writeCall: function(players,player,call){
 		players[player].call = call;
+	},
+	throwableCards: function(playerName){
+		if(!this.deck.thrownCards.length){
+			return throwableCardsForFirstPlayer(this, playerName);
+		}
+		var spadeCards = this.players[playerName].hands['spades'];
+		var ledSuit = this.deck.ledSuit;
+		var ledSuitCards = this.players[playerName].hands[ledSuit];
+		var highestCard = this.deck.highestCard().card;
+		if(ledSuitCards.length)
+			return throwableCardsOfLedSuit(this, playerName, ledSuit, highestCard)
+		if(ledSuit != 'spades' && spadeCards.length)
+			return throwableCardsIfNotHaveLedSuit(this, playerName, spadeCards, highestCard);
+		return throwableCardsForFirstPlayer(this, playerName);
+	},
+	setPlayersTurn: function(){
+		var self = this;
+		var keys = Object.keys(this.players);
+		this.players[keys[0]].turn =  true;
+		return function(){
+			var playerId = self.deck.highestCard().playerId;
+			console.log(playerId);
+			self.players[playerId].turn = true;
+			ld.remove(keys, function(key){return key == playerId});
+			keys.forEach(function(key){
+				self.players[key].turn = false;
+			});
+		}
 	}
 };
+var isCardsInHand = function(hands){
+	var keys = Object.keys(hands);
+	return keys.every(function(key){
+		return hands[key].length == 0;
+	})
+};
+var throwableCardsForFirstPlayer = function(self, playerName){
+	return ld.flatten([self.players[playerName].hands['diamonds'],
+				self.players[playerName].hands['hearts'],
+				self.players[playerName].hands['clubs'],
+				self.players[playerName].hands['spades'] ]);
+};
+var throwableCardsOfLedSuit = function(self, playerName, ledSuit, highestCard){
+	if(ledSuit == highestCard.suit)	
+		return self.players[playerName].hands[ledSuit].filter(function(card){
+				return card.rank > highestCard.rank;
+			});
+	return this.players[playerName].hands[ledSuit];
+};
+var throwableCardsIfNotHaveLedSuit = function(self, playerName, spadeCards, highestCard){
+	if(highestCard.suit != "spades")
+		return spadeCards;
+	return spadeCards.filter(function(card){
+		return card.rank > highestCard.rank;
+	});
+}
 
 var cardsInImg = function(hands){
 	var keys = Object.keys(hands);
@@ -58,6 +113,13 @@ var generateTableData = function(hands){
 	});
 };
 
+var isGreaterThan10 = function(card){
+	return card.rank > 10;
+};
+
+var isSpade = function(card){
+	return card.suit == 'spades';
+};
 var flattedAllSuitCards = function(player){
 	return ld.flattenDeep(Object.keys(player).map(function(suit){
 		return player[suit].map(function(card){
@@ -66,18 +128,19 @@ var flattedAllSuitCards = function(player){
 	}));
 };
 
-var isGreaterThan10 = function(card){
-	return card.rank > 10;
-};
-
-var isSpade = function(card){
-	return card.suit == 'spades';
-};
-
 var isHandsCardsAreCorrect = function(allplayers){
-	return Object.keys(allplayers).every(function(player){
-		var player = allplayers[player].hands;
-		var allCardsOfplayer = flattedAllSuitCards(player);
-		return ld.some(allCardsOfplayer,isGreaterThan10) && ld.some(allCardsOfplayer,isSpade);
-	});
-};
+	var isGreaterThan10 = function(card){
+		return card.rank > 10;
+	};
+	isSpade = function(card){
+		return card.suit == 'spades';
+	};
+	var checkhands = function(allplayers){
+		return Object.keys(allplayers).every(function(player){
+			var player = allplayers[player].hands;
+			var allCardsOfplayer = flattedAllSuitCards(player);
+			return ld.some(allCardsOfplayer,isGreaterThan10) && ld.some(allCardsOfplayer,isSpade);
+		});
+	};
+	return checkhands(allplayers);
+}

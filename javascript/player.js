@@ -23,8 +23,9 @@ entities.Player = function(name){
 entities.Player.prototype = {
 	throwCard: function(cardName){
 		if(!this.turn)
-			return;
+			return [];
 		var suit = cardName.split('_')[2];
+		this.turn = false;
 		return ld.remove(this.hands[suit], function(card){
 			return card == cardName;
 		});

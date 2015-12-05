@@ -1,31 +1,14 @@
+var ld = require('lodash');
 var fs = require('fs');
 var querystring = require('querystring');
-var ld = require('lodash');
 var callBreak = require('./javascript/callBreak.js');
+var lib = require('./serveGame.js');
+// var updatePointTable = require('./javascript/pointTable.js');
+
 var game;
-var updatePointTable = require('./javascript/pointTable.js');
 
 var userInfo = [];
 var isGameStarted = false;
-var nameOfPlayers = function(){
-	return userInfo.map(function(info){
-		return info.name;
-	});
-};
-var roundStart = function(){
-	game.distribute();
-};
-
-var startGame = function(){
-		game = new callBreak.CreateGame(nameOfPlayers());
-		game.distribute();
-};
-
-var isConnected = function(req , res){
-	return userInfo.some(function(user){
-		return req.headers.cookie == user.id;
-	})
-};
 
 var method_not_allowed = function(req, res){
 	res.statusCode = 405;
@@ -37,6 +20,7 @@ var serveIndex = function(req, res, next){
 	req.url = '/html/index.html';
 	next();
 };
+
 var serveStaticFile = function(req, res, next){
 	var filePath = './public' + req.url;
 	fs.readFile(filePath, function(err, data){
@@ -54,7 +38,13 @@ var serveStaticFile = function(req, res, next){
 var serveJoinPage = function(req ,res , next){
 	req.url = '/html/joinPage.html';
 	next();
-}
+};
+
+var serveHelpPage = function(req ,res , next){
+	req.url = '/html/help.html';
+	next();
+};
+
 var fileNotFound = function(req, res){
 	res.statusCode = 404;
 	res.end('Not Found');
@@ -63,14 +53,14 @@ var fileNotFound = function(req, res){
 
 var joinUser = function(req ,res ,name){
 	res.writeHead(200 ,{'Set-Cookie': name });
-	userInfo.push({name : name , id : name});
-	console.log(userInfo);
-	res.end(JSON.stringify( {isGameStarted : isGameStarted,
-						     noOfPlayers : userInfo.length } ));
-}
+	lib.userInfo.push({name : name , id : name});
+	console.log(lib.userInfo);
+	res.end(JSON.stringify( {isGameStarted : lib.isGameStarted,
+						     noOfPlayers : lib.userInfo.length } ));
+};
 
 var resForJoining = function(req , res){
-	if(isGameStarted)
+	if(lib.isGameStarted)
 			res.end('{isGameStarted : true}');
 	else{
 		var data = '';
@@ -79,56 +69,41 @@ var resForJoining = function(req , res){
 		});		
 		req.on('end' , function(){
 			var playerName = querystring.parse(data).name;
-			if(isConnected(req ,res))
+			if(lib.isConnected(playerName))
 				res.end('{alreadyConected : true }'); 
 			else
 				joinUser(req ,res , playerName) ;
-		})
-		if(userInfo.length == 4	){
-			isGameStarted = true;
+		});
+		if(lib.userInfo.length == 4){
+			lib.isGameStarted = true;
 		}
 	}
 };
 
 var sendUpdate = function(req , res){
-	if(userInfo.length == 4){
-		if(!game)
-			startGame();
+	if(lib.userInfo.length == 4){
+		// if(!lib.isGameStarted)
+			lib.startGame();
+		// game.distribute();
 		res.statusCode = 200;
 		res.end(JSON.stringify({status : 'started'}));
 	}else{
 		res.end(JSON.stringify({
-			isGameStarted : isGameStarted,
-			noOfPlayers : userInfo.length,
+			isGameStarted : lib.isGameStarted,
+			noOfPlayers : lib.userInfo.length,
 		}));
 	}
 };
-var cardsToImg = function(hands){
-	var keys = Object.keys(hands);
-	return ld.flatten(keys.map(function(suit){
-		return hands[suit].sort(function(a,b){
-			return b.rank - a.rank;
-		}).map(function(card){
-			return card.rank+(card.suit.slice(0,1)).toUpperCase()+'.png';
-		});
-	}));
-};
 
 var serveHandCards = function(req, res, next){
-	var hands = cardsToImg(game.players[req.headers.cookie].hands);
+	var hands = lib.getHandCards(req.headers.cookie);
+	// var hands = cardsToImg(game.players['pappu halkat'].hands);
 	res.end(JSON.stringify(hands));
 };
 
 var servePointTable = function(req,res){
 	updatePointTable.save(game.players);
 	res.end(updatePointTable.showPointTable);
-};
-
-var getPlayersPositions = function(playerName){
-	var playersName = nameOfPlayers();
-	var i = playersName.indexOf(playerName);
-	return {my: playersName[i],right_player: playersName[(i+1)%4],
-			top_player: playersName[(i+2)%4], left_player: playersName[(i+3)%4]};
 };
 
 var writeCall = function(req , res){
@@ -144,23 +119,50 @@ var writeCall = function(req , res){
 };
 
 var servePlayersNames = function(req,res,next){
-	var playersPosition = getPlayersPositions(req.headers.cookie);
+	var playersPosition = lib.getPlayersPositions(req.headers.cookie);
+	// var playersPosition = getPlayersPositions('pappu halkat');
 	res.end(JSON.stringify(playersPosition));
+};
+
+var throwCard = function(req, res, next){
+	var data = '';
+	req.on('data',function(chunk){
+			data += chunk;
+	});
+	req.on('end', function(){
+		lib.removeCard(data,req.headers.cookie);
+		res.end('thrown successfully');
+	});
+};
+
+var updateForTurn = function(req,res,next){
+	var playerName = req.headers.cookie;
+	res.end(JSON.stringify(lib.updateTable(playerName)));
+};
+
+var serveThrowableCards = function(req,res){
+	var playerName = req.headers.cookie;
+	throwableCards = lib.getThrowableCards(playerName);
+	res.end(JSON.stringify(throwableCards));
 };
 
 exports.post_handlers = [
 	{path : '^/join_user$' , handler : resForJoining},
-	{path : '^/html/call$' , handler : writeCall},	
+	{path : '^/html/call$' , handler : writeCall},
+	{path : '^/html/throwCard$' , handler : throwCard},	
 	{path: '', handler: method_not_allowed}
 ];
 
 exports.get_handlers = [
-	{path : '^/$', handler: serveIndex},
-	{path : '^/join$' , handler : serveJoinPage},
-	{path : '^/update$' , handler : sendUpdate},
-	{path : '^/html/cards$', handler: serveHandCards},
-	{path :'^/html/names$', handler: servePlayersNames},
-	{path : '^pointTable$', handler: servePointTable},
-	{path : '', handler: serveStaticFile},
-	{path : '', handler: fileNotFound}
+	{path: '^/$', handler: serveIndex},
+	{path: '^/join$' , handler : serveJoinPage},
+	{path: '^/help$' , handler : serveHelpPage},
+	{path: '^/update$' , handler : sendUpdate},
+	{path: '^/html/cards$', handler: serveHandCards},
+	{path:'^/html/names$', handler: servePlayersNames},
+	{path: '^/html/tableStatus$', handler: updateForTurn},
+	// {path : '^pointTable$', handler: servePointTable},
+	{path: '^/html/throwableCard$', handler: serveThrowableCards},
+	{path: '', handler: serveStaticFile},
+	{path: '', handler: fileNotFound}
 ];

@@ -1,34 +1,53 @@
+var hands;
 var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
-	setTimeout(showPopup(templateForCall,requestForCall),3000);
-	removeCard();
-	if(!isCardsAvailable()){
-		setTimeout(showPopup(
-			$.get('pointTable',function(data){
-				return JSON.parse(data);
+	// setTimeout(showPopup(templateForCall,requestForCall),3000);
+	// removeCard();
+	// if(!isCardsAvailable()){
+	// 	setTimeout(showPopup(
+	// 		$.get('pointTable',function(data){
+	// 			return JSON.parse(data);
+	// 		});
+	// 	}),requestForPointTable),5000);
+	// }
+	// setTimeout(showPopup,3000);
+	var interval = setInterval(requestForTableStatus, 4000);
+};
+
+var throwCard = function(){
+	var self = this;
+	$.post('throwCard' , {card : this.id}, function(response){
+		if(response == 'thrown successfully'){
+			_.remove(hands, function(card){
+				return card == self.id + '.png';
 			});
-		}),requestForPointTable),5000);
-	}
+		}
+		showhandCards(hands);
+	});
+}
+var removalCards = function(){
+	console.log('removalCards');
+	$('.throwableCards').each(function(){
+		$(this).one('click',throwCard);
+	})
+};
+var showhandCards = function(handCards){
+	var innerHtmlForHands = '';
+	hands.forEach(function(card){
+		innerHtmlForHands += ('<td id="'+card.slice(0,-4)+'"><img src="../resources/resource/'+card+'">'+'</td>');
+	});
+	$('#hands').html(innerHtmlForHands);
 };
 
-var removeCard = function(){
-		$('td' ).click(function() {
-		console.log('this')
-	    	console.log('div',this);
-	    	this.remove();
-	});	
-};
+// var isCardsAvailable = function(){
+// 	return document.querySelector('td') != null
+// };
 
-var isCardsAvailable = function(){
-	return document.querySelector('td') != null
-};
 var getHandCards = function(){
 	$.get('cards', function(data){
 		hands = JSON.parse(data);
-		hands.forEach(function(card){
-			$('#hands').append('<td>'+'<img src="../resources/resource/'+card+'">'+'</td>');
-		});
+		showhandCards(hands);
 	});
 };
 
@@ -41,11 +60,10 @@ var getPlayersNames = function(){
 		$('#hand_cards>#name').append('<h3>'+positions.my+'</h3>');
 	});
 };
+
 var templateForCall = '<h1>Select your call</h1><br>'+
 				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
 				'<br><output name="callOutputName" id="callOutputId">2</output><br><button>submit</button>';
-
-var templateForPointTable = '<h1>Point Table</h1><br>'+
 
 				
 var showPopup = function(template,request){
@@ -62,8 +80,46 @@ var requestForCall = function(){
 	$('#deck').removeClass('popup').html('');
 };
 
-var requestForPointTable = function(){
-	$('#deck').removeClass('popup').shtml('');
-};
+// var requestForPointTable = function(){
+// 	$('#deck').removeClass('popup').shtml('');
+// };
 
+var requestForThrowableCard = function(){
+	$.get('throwableCard',function(cards){
+		var throwableCards = JSON.parse(cards);
+		console.log(throwableCards,'throwableCards');
+		hands.forEach(function(card){
+			if(throwableCards.indexOf(card) != -1){
+				var cardId = '#' + card.slice(0,-4);
+				$(cardId).addClass('throwableCards');
+			}
+		});
+	});
+};
+var showDeck = function(deckCards){
+	console.log(deckCards,' deckCards');
+	var deckCardsHtml = '';
+	deckCards.forEach(function(thrownCard){
+		deckCardsHtml += '<img src="../resources/resource/' + thrownCard.card + '">';
+	});
+	$("#deck").html(deckCardsHtml);
+};
+var showLedSuit = function(ledSuit){
+	$('#ledSuit').html('<h2>Led Suit: ' + ledSuit + '</h2>');
+	$('#ledSuit').addClass('show');
+};
+var requestForTableStatus = function(){
+	console.log('requestForTableStatus');
+	$.get('tableStatus',function(data){
+		console.log(data);
+		var tableStatus = JSON.parse(data);
+		showDeck(tableStatus.deck);
+		if(tableStatus.ledSuit)
+			showLedSuit(tableStatus.ledSuit);
+		if(tableStatus.turn == true){
+			requestForThrowableCard();
+			removalCards();
+		}
+	});
+};
 $(document).ready(onLoad);
