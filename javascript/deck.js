@@ -5,9 +5,9 @@ exports.Deck = function(){
 };
 exports.Deck.prototype = {
 	get ledSuit(){
-		if(this.thrownCards.length)
+		// if(this.thrownCards.length)
 			return (this.thrownCards[0].card.suit);
-		return '';
+		// return '';
 	},
 	get firstCard(){
 		return this.thrownCards[0];
