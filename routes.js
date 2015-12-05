@@ -3,7 +3,7 @@ var querystring = require('querystring');
 var ld = require('lodash');
 var callBreak = require('./javascript/callBreak.js');
 var game;
-var currentRoundPoints = require('pointTable.js').pointTable();
+var updatePointTable = require('./javascript/pointTable.js');
 
 var userInfo = [];
 var isGameStarted = false;
@@ -58,7 +58,7 @@ var serveJoinPage = function(req ,res , next){
 var fileNotFound = function(req, res){
 	res.statusCode = 404;
 	res.end('Not Found');
-	console.log(res.statusCode);
+	// console.log(res.statusCode);
 };
 
 var joinUser = function(req ,res ,name){
@@ -84,7 +84,7 @@ var resForJoining = function(req , res){
 			else
 				joinUser(req ,res , playerName) ;
 		})
-		if(userInfo.length == 4){
+		if(userInfo.length == 4	){
 			isGameStarted = true;
 		}
 	}
@@ -118,9 +118,10 @@ var serveHandCards = function(req, res, next){
 	var hands = cardsToImg(game.players[req.headers.cookie].hands);
 	res.end(JSON.stringify(hands));
 };
-var startGame = function(){
-	game = new callBreak.CreateGame(nameOfPlayers());
-	game.distribute();
+
+var servePointTable = function(req,res){
+	updatePointTable.save(game.players);
+	res.end(updatePointTable.showPointTable);
 };
 
 var getPlayersPositions = function(playerName){
@@ -154,11 +155,12 @@ exports.post_handlers = [
 ];
 
 exports.get_handlers = [
-	{path: '^/$', handler: serveIndex},
-	{path: '^/join$' , handler : serveJoinPage},
+	{path : '^/$', handler: serveIndex},
+	{path : '^/join$' , handler : serveJoinPage},
 	{path : '^/update$' , handler : sendUpdate},
-	{path: '^/html/cards$', handler: serveHandCards},
-	{path:'^/html/names$', handler: servePlayersNames},
-	{path: '', handler: serveStaticFile},
-	{path: '', handler: fileNotFound}
+	{path : '^/html/cards$', handler: serveHandCards},
+	{path :'^/html/names$', handler: servePlayersNames},
+	{path : '^pointTable$', handler: servePointTable},
+	{path : '', handler: serveStaticFile},
+	{path : '', handler: fileNotFound}
 ];
