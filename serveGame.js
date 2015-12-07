@@ -85,12 +85,15 @@ var setTurnAfterHand = function(deckCards){
 		game.players[key].turn = false;
 	});
 };
+var handIsOver = function(){
+	setTurnAfterHand(deckCards);
+	game.deck.thrownCards = [];
+}
 var pushToDeck = function(card){
 	var deckCards = game.deck.thrownCards;
 	deckCards.push(card);
 	if(deckCards.length == 4){
-		setTurnAfterHand(deckCards);
-		game.deck.thrownCards = [];
+		setTimeout(handIsOver, 2000);
 	}
 	else
 		setPlayersTurn(card.playerId);
@@ -107,7 +110,12 @@ exports.removeCard = function(card, playerName){
 };
 
 exports.updateTable = function(playerName){
-	var tableStatus = {deck:deckCards(),turn:game.players[playerName].turn};
+	var tableStatus = {deck:deckCards(),turn:game.players[playerName].turn,
+					 currentHand: {isOver: false, winner: ''}};
+	if(game.deck.length == 4){
+		tableStatus.currentHand.isOver = true;
+		tableStatus.currentHand.winner = game.deck.highestCard().playerId;
+	}
 	if(game.deck.thrownCards[0])
 		tableStatus.ledSuit = game.deck.thrownCards[0].card.suit;
 	return tableStatus;

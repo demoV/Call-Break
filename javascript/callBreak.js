@@ -1,7 +1,7 @@
 var ld = require('lodash');
 var pack = require('./card.js').lib.generatePack();
 var Player = require('./player.js').entities.Player;
-var Deck = require('./Deck.js').Deck;
+var Deck = require('./deck.js').Deck;
 
 var initialize_player = function(loginPlayers){
 	var players = {};
@@ -50,7 +50,7 @@ exports.CreateGame.prototype = {
 		var ledSuitCards = this.players[playerName].hands[ledSuit];
 		var highestCard = this.deck.highestCard().card;
 		if(ledSuitCards.length)
-			return throwableCardsOfLedSuit(this, playerName, ledSuit, highestCard)
+			return throwableCardsOfLedSuit(this, playerName, ledSuit, highestCard, ledSuitCards);
 		if(ledSuit != 'spades' && spadeCards.length)
 			return throwableCardsIfNotHaveLedSuit(this, playerName, spadeCards, highestCard);
 		return throwableCardsForFirstPlayer(this, playerName);
@@ -82,7 +82,9 @@ var throwableCardsForFirstPlayer = function(self, playerName){
 				self.players[playerName].hands['clubs'],
 				self.players[playerName].hands['spades'] ]);
 };
-var throwableCardsOfLedSuit = function(self, playerName, ledSuit, highestCard){
+var throwableCardsOfLedSuit = function(self, playerName, ledSuit, highestCard, ledSuitCards){
+	if(ledSuitCards.every(function(card){return highestCard.rank > card.rank }))
+		return ledSuitCards;
 	if(ledSuit == highestCard.suit)	
 		return self.players[playerName].hands[ledSuit].filter(function(card){
 				return card.rank > highestCard.rank;

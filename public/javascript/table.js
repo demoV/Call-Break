@@ -3,7 +3,7 @@ var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
 	// setTimeout(showPopup,3000);
-	var interval = setInterval(requestForTableStatus, 4000);
+	var interval = setInterval(requestForTableStatus, 300);
 };
 
 var throwCard = function(){
@@ -68,7 +68,6 @@ var requestForCall = function(){
 var requestForThrowableCard = function(){
 	$.get('throwableCard',function(cards){
 		var throwableCards = JSON.parse(cards);
-		console.log(throwableCards,'throwableCards');
 		hands.forEach(function(card){
 			if(throwableCards.indexOf(card) != -1){
 				var cardId = '#' + card.slice(0,-4);
@@ -77,8 +76,10 @@ var requestForThrowableCard = function(){
 		});
 	});
 };
+var requestForHandWinner = function(){
+
+}
 var showDeck = function(deckCards){
-	console.log(deckCards,' deckCards');
 	var deckCardsHtml = '';
 	deckCards.forEach(function(thrownCard){
 		deckCardsHtml += '<img src="../resources/resource/' + thrownCard.card + '">';
@@ -89,12 +90,17 @@ var showLedSuit = function(ledSuit){
 	$('#ledSuit').html('<h2>Led Suit: ' + ledSuit + '</h2>');
 	$('#ledSuit').addClass('show');
 };
+var showHandWinner = function(){
+	
+}
 var requestForTableStatus = function(){
-	console.log('requestForTableStatus');
 	$.get('tableStatus',function(data){
 		console.log(data);
 		var tableStatus = JSON.parse(data);
-		showDeck(tableStatus.deck);
+		if(tableStatus.currentHand.isOver)
+			showHandWinner(tableStatus.currentHand.winner);
+		if(tableStatus.deck.length == 4)
+			requestForHandWinner();
 		if(tableStatus.ledSuit)
 			showLedSuit(tableStatus.ledSuit);
 		if(tableStatus.turn == true){
