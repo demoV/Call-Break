@@ -2,6 +2,15 @@ var hands;
 var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
+	// setTimeout(showPopup(templateForCall,requestForCall),3000);
+	// removeCard();
+	// if(!isCardsAvailable()){
+	// 	setTimeout(showPopup(
+	// 		$.get('pointTable',function(data){
+	// 			return JSON.parse(data);
+	// 		});
+	// 	}),requestForPointTable),5000);
+	// }
 	// setTimeout(showPopup,3000);
 	var interval = setInterval(requestForTableStatus, 4000);
 };
@@ -30,6 +39,11 @@ var showhandCards = function(handCards){
 	});
 	$('#hands').html(innerHtmlForHands);
 };
+
+// var isCardsAvailable = function(){
+// 	return document.querySelector('td') != null
+// };
+
 var getHandCards = function(){
 	$.get('cards', function(data){
 		hands = JSON.parse(data);
@@ -46,15 +60,16 @@ var getPlayersNames = function(){
 		$('#hand_cards>#name').append('<h3>'+positions.my+'</h3>');
 	});
 };
-var popupTemplate = '<h1>Select your call</h1><br>'+
+
+var templateForCall = '<h1>Select your call</h1><br>'+
 				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
 				'<br><output name="callOutputName" id="callOutputId">2</output><br><button>submit</button>';
 
 				
-var showPopup = function(){
+var showPopup = function(template,request){
 	$('#deck').addClass('popup');
-	$('#deck').html(popupTemplate);
-	$('#deck>button').click(requestForCall)
+	$('#deck').html(template);
+	$('#deck>button').click(request);
 }
 
 var requestForCall = function(){
@@ -62,8 +77,12 @@ var requestForCall = function(){
 	$.post('call',{call:call},function(data){
 		alert(data);
 	});
-	$('#deck').removeClass('popup').html('')
+	$('#deck').removeClass('popup').html('');
 };
+
+// var requestForPointTable = function(){
+// 	$('#deck').removeClass('popup').shtml('');
+// };
 
 var requestForThrowableCard = function(){
 	$.get('throwableCard',function(cards){

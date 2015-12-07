@@ -1,9 +1,9 @@
 var ld = require('lodash');
 var fs = require('fs');
 var currentRoundPoints = require('pointTable.js').pointTable();
+var lib = require('./serveGame.js');
 var querystring = require('querystring');
 var callBreak = require('./javascript/callBreak.js');
-var game;
 
 var game;
 var userInfo = [];
@@ -29,6 +29,12 @@ var isConnected = function(req , res){
 		return req.headers.cookie == user.id;
 	});
 };
+// var updatePointTable = require('./javascript/pointTable.js');
+
+var game;
+
+var userInfo = [];
+var isGameStarted = false;
 
 var method_not_allowed = function(req, res){
 	res.statusCode = 405;
@@ -40,6 +46,7 @@ var serveIndex = function(req, res, next){
 	req.url = '/html/index.html';
 	next();
 };
+
 var serveStaticFile = function(req, res, next){
 	var filePath = './public' + req.url;
 	fs.readFile(filePath, function(err, data){
@@ -62,11 +69,12 @@ var serveJoinPage = function(req ,res , next){
 var serveHelpPage = function(req ,res , next){
 	req.url = '/html/help.html';
 	next();
-}
+};
+
 var fileNotFound = function(req, res){
 	res.statusCode = 404;
 	res.end('Not Found');
-	console.log(res.statusCode);
+	// console.log(res.statusCode);
 };
 
 var joinUser = function(req ,res ,name){
@@ -138,6 +146,11 @@ var getPlayersPositions = function(playerName){
 	var i = playersName.indexOf(playerName);
 	return { my: playersName[i],right_player: playersName[(i+1)%4],
 			top_player: playersName[(i+2)%4], left_player: playersName[(i+3)%4]};
+};
+
+var servePointTable = function(req,res){
+	updatePointTable.save(game.players);
+	res.end(updatePointTable.showPointTable);
 };
 
 var writeCall = function(req , res){
@@ -213,6 +226,9 @@ exports.get_handlers = [
 	{path : '^/update$' , handler : sendUpdate},
 	{path: '^/html/cards$', handler: serveHandCards},
 	{path:'^/html/names$', handler: servePlayersNames},
+	{path: '^/html/tableStatus$', handler: updateForTurn},
+	// {path : '^pointTable$', handler: servePointTable},
+	{path: '^/html/throwableCard$', handler: serveThrowableCards},
 	{path: '', handler: serveStaticFile},
 	{path: '', handler: fileNotFound}
 ];

@@ -2,6 +2,7 @@ var ld = require('lodash');
 var pack = require('./card.js').lib.generatePack();
 var Player = require('./player.js').entities.Player;
 var Deck = require('./Deck.js').Deck;
+// var pointTable = require('./pointTable.js');
 
 var initialize_player = function(loginPlayers){
 	var players = {};
@@ -14,7 +15,7 @@ exports.CreateGame = function(players){
 	this.players = initialize_player(players);
 	this.pack = pack;
 	this.deck = new Deck();
-	this.pointTable = '';
+	// this.pointTable = {updateScoreBoard : pointTable[save], showScoreBoard : pointTable[showPointTable]}
 };
 
 exports.CreateGame.prototype = {
