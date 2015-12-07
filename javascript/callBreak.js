@@ -54,25 +54,12 @@ exports.CreateGame.prototype = {
 		if(ledSuit != 'spades' && spadeCards.length)
 			return throwableCardsIfNotHaveLedSuit(this, playerName, spadeCards, highestCard);
 		return throwableCardsForFirstPlayer(this, playerName);
-	},
-	setPlayersTurn: function(){
-		var self = this;
-		var keys = Object.keys(this.players);
-		this.players[keys[0]].turn =  true;
-		return function(){
-			var playerId = self.deck.highestCard().playerId;
-			console.log(playerId);
-			self.players[playerId].turn = true;
-			ld.remove(keys, function(key){return key == playerId});
-			keys.forEach(function(key){
-				self.players[key].turn = false;
-			});
-		}
 	}
 };
 var isCardsInHand = function(hands){
 	var keys = Object.keys(hands);
 	return keys.every(function(key){
+		console.log(hands[key],key);
 		return hands[key].length == 0;
 	})
 };
