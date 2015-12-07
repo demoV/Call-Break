@@ -44,6 +44,7 @@ exports.save = function(entry){
 };
 
 var findWinner = function(){
+
 	var pointTable = fs.existsSync(pointTableFile) && JSON.parse(fs.readFileSync(pointTableFile, 'utf8'))[0];
 	var allRounds = Object.keys(pointTable);
 	var playersName = Object.keys(pointTable.round1);
@@ -54,7 +55,7 @@ var findWinner = function(){
 	},positions);
 	allRounds.forEach(function(eachRound){
 		playersName.forEach(function(eachPlayer){
-			positions[eachPlayer] += pointTable[eachRound][eachPlayer].score;
+			positions[eachPlayer] += pointTable[eachRound][eachPlayer]['score'];
 		});
 	});
 	return {winnerName : Object.keys(positions).sort(function(firstplayer,secondPlayer){

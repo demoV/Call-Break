@@ -1,4 +1,6 @@
 var entities = require('../javascript/pointTable.js');
+var dataFile = './data/pointTable.json';
+var fs = require('fs');
 var chai = require('chai');
 var assert = chai.assert;
 var expect = chai.expect;
@@ -35,6 +37,9 @@ var players = {
 };
 describe('currentRoundPoints',function(){
 	var pointTable = entities.currentRoundPoints();
+	after(function(){
+		fs.writeFileSync(dataFile,'');
+	});
 	afterEach(function() {
 		pointTable = entities.currentRoundPoints();
 	});
@@ -54,13 +59,14 @@ describe('currentRoundPoints',function(){
 			pointTable(players);
 			expect(pointTable(players)).to.have.all.keys('round1','round2','round3');
 		});
-		it('should give "all round completed" message when 5 round are over',function(){
-			pointTable(players);
-			pointTable(players);
-			pointTable(players);
-			pointTable(players);
-			pointTable(players);
-			expect(pointTable(players)).to.be.equal('All Rounds Completed');
+		it('should give 5 round keys and one winnerName key after five round over',function(){
+			entities.save(players);
+			entities.save(players);
+			entities.save(players);
+			entities.save(players);
+			entities.save(players);
+			entities.save(players);
+			expect(JSON.parse(fs.readFileSync(dataFile,'utf8'))[0]).to.have.all.keys('round1','round2','round3','round4','round5','winnerName');
 		});
 		describe('Every round',function(){
 			it('should contain keys of players name',function(){
