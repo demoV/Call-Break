@@ -12,7 +12,7 @@ var countScore = function(currentRound){
 	});
 };
 
-var currentRoundPoints = function(){
+exports.currentRoundPoints = function(){
 	var allRounds = {round1:1,round2:1,round3:1,round4:1,round5:1};
 	var roundNumber = 0;
 	return function(players){
@@ -31,7 +31,7 @@ var currentRoundPoints = function(){
 	};
 };
 
-var eachRoundData = currentRoundPoints();
+var eachRoundData = exports.currentRoundPoints();
 
 exports.save = function(entry){
 	var roundPoint = eachRoundData(entry);
@@ -44,6 +44,7 @@ exports.save = function(entry){
 };
 
 var findWinner = function(){
+
 	var pointTable = fs.existsSync(pointTableFile) && JSON.parse(fs.readFileSync(pointTableFile, 'utf8'))[0];
 	var allRounds = Object.keys(pointTable);
 	var playersName = Object.keys(pointTable.round1);
@@ -54,7 +55,7 @@ var findWinner = function(){
 	},positions);
 	allRounds.forEach(function(eachRound){
 		playersName.forEach(function(eachPlayer){
-			positions[eachPlayer] += pointTable[eachRound][eachPlayer].score;
+			positions[eachPlayer] += pointTable[eachRound][eachPlayer]['score'];
 		});
 	});
 	return {winnerName : Object.keys(positions).sort(function(firstplayer,secondPlayer){
