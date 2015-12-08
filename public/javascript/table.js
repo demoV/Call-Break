@@ -42,13 +42,23 @@ var getHandCards = function(){
 	});
 };
 
+var showPlayersName = function(positions){
+	$('.top_player>#name').append('<h3>'+positions.top_player+'</h3>');
+	$('.right_side_player>#name').append('<h3>'+positions.right_player+'</h3>');
+	$('.left_side_player>#name').append('<h3>'+positions.left_player+'</h3>');
+	$('#hand_cards>#name').append('<h3>'+positions.my+'</h3>');
+};
+var setIdAtDeck = function(positions){
+	$('#deck #top').attr('name',positions.top_player);	
+	$('#deck #right').attr('name', positions.right_player);
+	$('#deck #left').attr('name', positions.left_player);
+	$('#deck #my').attr('name', positions.my);
+}
 var getPlayersNames = function(){
 	$.get('names', function(playersPosition){
 		var positions = JSON.parse(playersPosition);
-		$('.top_player>#name').append('<h3>'+positions.top_player+'</h3>');
-		$('.right_side_player>#name').append('<h3>'+positions.right_player+'</h3>');
-		$('.left_side_player>#name').append('<h3>'+positions.left_player+'</h3>');
-		$('#hand_cards>#name').append('<h3>'+positions.my+'</h3>');
+		showPlayersName(positions);
+		setIdAtDeck(positions);
 	});
 };
 
@@ -88,23 +98,24 @@ var requestForThrowableCard = function(){
 };
 
 var showDeck = function(deckCards){
-	var deckCardsHtml = '';
+	// var deckCardsHtml = '';
 	deckCards.forEach(function(thrownCard){
-		deckCardsHtml += '<img src="../resources/resource/' + thrownCard.card + '">';
+		var deckCardsHtml = '<img src="../resources/resource/' + thrownCard.card + '">';
+		$("div[name*="+thrownCard.playerId+"]" ).html(deckCardsHtml);
 	});
-	$("#deck").html(deckCardsHtml);
 };
 var showLedSuit = function(ledSuit){
 	$('#ledSuit').html('<h2>Led Suit: ' + ledSuit + '</h2>');
 	$('#ledSuit').addClass('show');
 };
-var showHandWinner = function(){
+var showHandWinner = function(winner){
 	
 }
 var requestForTableStatus = function(){
 	$.get('tableStatus',function(data){
 		console.log(data);
 		var tableStatus = JSON.parse(data);
+		showDeck(tableStatus.deck);
 		if(tableStatus.currentHand.isOver)
 			showHandWinner(tableStatus.currentHand.winner);
 		if(tableStatus.deck.length == 4)

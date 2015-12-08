@@ -36,7 +36,7 @@ input{
 	width: 30%;
 	margin-top: 10%;	
 }
-#deck{
+.deck{
      position:absolute;
      width:35%;
      height:350px;
