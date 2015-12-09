@@ -3,6 +3,7 @@ var fs = require('fs');
 var querystring = require('querystring');
 var callBreak = require('./javascript/callBreak.js');
 var lib = require('./serveGame.js');
+var p=require("./javascript/player.js").entities;
 
 var method_not_allowed = function(req, res){
 	res.statusCode = 405;
@@ -51,7 +52,7 @@ var joinUser = function(req ,res ,name){
 						     noOfPlayers : lib.userInfo.length } ));
 };
 
-var resForJoining = function(req , res){
+var resForJoining = function(req , res, next, game){
 	if(lib.isGameStarted)
 			res.end(JSON.stringify({isGameStarted : true}));
 	else{
@@ -61,6 +62,8 @@ var resForJoining = function(req , res){
 		});		
 		req.on('end' , function(){
 			var playerName = querystring.parse(data).name;
+			var player=new p.Player(playerName);
+			game.addPlayer(player);
 			if(lib.isConnected(playerName))
 				res.end(JSON.stringify({alreadyConnected : true })); 
 			else
@@ -72,8 +75,8 @@ var resForJoining = function(req , res){
 	}
 };
 
-var sendUpdate = function(req , res){
-	if(lib.userInfo.length == 4){
+var sendUpdate = function(req , res, next, game){
+	if(game.canStartGame()){
 		// if(!lib.isGameStarted)
 			lib.startGame();
 		// game.distribute();

@@ -1,0 +1,9 @@
+Move all Game logic from routes to Game
+Move all logic from ServeGame to Game
+Make Server initialize Game
+
+
+* sendUpdate to ask lib if game can start instead of checking for length
+* move game from global object to object with behavior
+* refactor entities to Player(player.js)
+* Move Object.properties into simple this. assignments
