@@ -47,7 +47,7 @@ var handsWithoutLedSuit = { diamonds:
      { suit: 'spades', rank: 8 },
      { suit: 'spades', rank: 7 } ] };
 describe('throwableCards' , function(){
-	var game = new callBreak.CreateGame(['lakha' , 'bhura' , 'champu' , 'sakaal'],distributor);
+	var game = new callBreak.CreateGame(['lakha' , 'bhura' , 'champu' , 'sakaal']);
 	beforeEach(function(){
 		game.deck.thrownCards = [];
 		game.players['bhura'].hands = {};

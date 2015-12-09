@@ -78,8 +78,6 @@ var showPopup = function(template,request){
 	$('.deck>button').click(request);
 }
 
-
-
 var postCall = function(){
 	var call = $('#call').val();
 	$.post('call',{call:call},function(data){
@@ -106,7 +104,6 @@ var requestForThrowableCard = function(){
 };
 
 var showDeck = function(deckCards){
-	// var deckCardsHtml = '';
 	if(deckCards.length == 0)
 		$("div[name]").html('');
 	deckCards.forEach(function(thrownCard){
