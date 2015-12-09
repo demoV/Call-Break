@@ -93,6 +93,7 @@ var serveHandCards = function(req, res, next){
 	res.end(JSON.stringify(hands));
 };
 
+
 var writeCall = function(req , res){
 	var data = '';
 	req.on('data' , function(chunk){
@@ -100,7 +101,8 @@ var writeCall = function(req , res){
 	});
 	req.on('end', function(){
 		call = querystring.parse(data).call;
-		game.players[req.headers.cookie].makeCall(+call);
+		lib.makeCallOf(req.headers.cookie, call);
+		// game.players[req.headers.cookie].makeCall(+call);
 		res.end('success');
 	});
 };

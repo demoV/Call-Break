@@ -19,6 +19,7 @@ entities.Player = function(name){
 			writable: true
 		}
 	});
+	this.round = {call:2, captured: 0};
 };
 entities.Player.prototype = {
 	throwCard: function(cardName){
@@ -35,6 +36,9 @@ entities.Player.prototype = {
 			return;
 		call = (this.round && this.round.call) || (call > 1) && call || 2;
 		this.round = {call: call, captured: 0};
+	},
+	wonHand: function(){
+		this.round.captured += 1;
 	}
 };
 

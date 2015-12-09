@@ -1,6 +1,6 @@
 #hand_cards {
-	position: absolute;
-    bottom: 0;
+	/*position: absolute;
+    bottom: 0;*/
 }
 #hand_cards , img{
 	height: 120px;
@@ -16,6 +16,10 @@
 	top: 30%;
 	right: 0;
     margin-right:2.5%; 
+}
+.my {
+	position: absolute;
+    bottom: 0;
 }
 
 .left_side_player {
@@ -57,4 +61,32 @@ input{
 }
 .show {
 	visibility: visible;
+}
+
+#top_player {
+	position:absolute;
+    top:20px;
+    right:50%;
+    margin-right:2.5%; 
+}
+#right_player {
+	position: absolute;
+	top: 30%;
+	right: 0;
+    margin-right:15%; 
+}
+
+#left_player {
+	position: absolute;
+	top: 30%;
+	left: 0;
+    margin-left:2.5%;
+}
+#bottom_player {
+	position: absolute;
+    bottom: 0;
+    margin-left:25%;
+}
+.turn{
+	background-color: green;
 }

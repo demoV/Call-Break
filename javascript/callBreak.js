@@ -96,6 +96,8 @@ var throwableCardsOfLedSuit = function(self, playerName, ledSuit, highestCard, l
 var throwableCardsIfNotHaveLedSuit = function(self, playerName, spadeCards, highestCard){
 	if(highestCard.suit != "spades")
 		return spadeCards;
+	if(spadeCards.every(function(card){ return card.rank < highestCard.rank}))
+		return throwableCardsForFirstPlayer(self, playerName);
 	return spadeCards.filter(function(card){
 		return card.rank > highestCard.rank;
 	});

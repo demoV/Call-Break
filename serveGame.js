@@ -43,20 +43,8 @@ exports.startGame = function(){
 exports.getPlayersPositions = function(playerName){
 	var playersName = nameOfPlayers();
 	var i = playersName.indexOf(playerName);
-	return { my: playersName[i],right_player: playersName[(i+1)%4],
+	return { bottom_player: playersName[i],right_player: playersName[(i+1)%4],
 			top_player: playersName[(i+2)%4], left_player: playersName[(i+3)%4]};
-};
-
-var writeCall = function(req , res){
-	var data = '';
-	req.on('data' , function(chunk){
-		data += chunk;
-	});
-	req.on('end', function(){
-		call = querystring.parse(data).call;
-		game.players[req.headers.cookie].makeCall(+call);
-		res.end('success');
-	});
 };
 
 var toCardName = function(cardImgName){
@@ -85,20 +73,37 @@ var setTurnAfterHand = function(deckCards){
 		game.players[key].turn = false;
 	});
 };
+// var handWinner = function(){
+
+// }
 var handIsOver = function(){
 	setTurnAfterHand(deckCards);
+	var handWinner = game.deck.highestCard().playerId;
+	game.players[handWinner].wonHand();
 	game.deck.thrownCards = [];
 }
 var pushToDeck = function(card){
 	var deckCards = game.deck.thrownCards;
 	deckCards.push(card);
 	if(deckCards.length == 4){
-		setTimeout(handIsOver, 2000);
+		setTimeout(handIsOver, 4000);
 	}
 	else
 		setPlayersTurn(card.playerId);
 	return;
+};
+var whoseTurnIs = function(){
+	var playerNameKeys = Object.keys(game.players);
+	return playerNameKeys.filter(function(key){
+		return game.players[key].turn
+	})[0];
 }
+var getPlayersCapturedHand = function(){
+	return nameOfPlayers().reduce(function(capturedinfo, playerName){
+		 capturedinfo[playerName] = game.players[playerName].round.captured;
+		 return capturedinfo;
+	},{});
+};
 exports.removeCard = function(card, playerName){
 	var card = querystring.parse(card).card;
 	card = toCardName(card);
@@ -111,17 +116,32 @@ exports.removeCard = function(card, playerName){
 
 exports.updateTable = function(playerName){
 	var tableStatus = {deck:deckCards(),turn:game.players[playerName].turn,
-					 currentHand: {isOver: false, winner: ''}};
-	if(game.deck.length == 4){
+					currentHand: {isOver: false, winner: ''},
+					capturedDetail: getPlayersCapturedHand(),
+					currentTurn: whoseTurnIs()};
+	if(game.deck.thrownCards.length == 4){
 		tableStatus.currentHand.isOver = true;
-		tableStatus.currentHand.winner = game.deck.highestCard().playerId;
+		var handWinner = game.deck.highestCard().playerId;
+		tableStatus.currentHand.winner = handWinner
 	}
 	if(game.deck.thrownCards[0])
 		tableStatus.ledSuit = game.deck.thrownCards[0].card.suit;
 	return tableStatus;
 };
 
+var isAllPlayersGaveCall = function(){
+	var players = Object.keys(game.players);
+	return players.every(function(player){
+		return game.players[player].round;
+	});
+};
+
+exports.writeCallOf = function(playerName, call){
+	game.players[playerName].makeCall(call);
+}
 exports.getThrowableCards = function(playerName){
+	if(!isAllPlayersGaveCall())
+		return [];
 	var throwableCards = game.throwableCards(playerName);
 	return throwableCards.map(function(card){
 			return card.rank+(card.suit.slice(0,1)).toUpperCase()+'.png';

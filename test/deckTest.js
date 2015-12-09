@@ -32,5 +32,14 @@ describe('deck', function(){
 			var highestCard = deck.highestCard();
 			expect(highestCard.playerId).to.eql('3');
 		});
+		it("takes 'spades'  priority", function(){
+			var deck = new Deck();
+			deck.thrownCards.push({card: {suit: 'diamonds', rank: 10}, playerId: '2'},
+						 		{card: {suit: 'diamonds', rank: 13}, playerId: '3'},
+						 		{card: {suit: 'spades', rank: 3}, playerId: '4'},
+						 	{card: {suit: 'diamonds', rank: 5}, playerId:'1'});
+			var highestCard = deck.highestCard().card;
+			expect(highestCard).to.eql( {suit: 'spades', rank: 3});
+		});
 	})
 })

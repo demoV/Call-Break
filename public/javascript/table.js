@@ -2,8 +2,7 @@ var hands;
 var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
-	// setTimeout(showPopup(templateForCall,requestForCall),3000);
-	var interval = setInterval(requestForTableStatus, 300);
+	var interval = setInterval(requestForTableStatus, 3000);
 };
 
 var throwCard = function(){
@@ -41,24 +40,30 @@ var getHandCards = function(){
 		showhandCards(hands);
 	});
 };
-
+var setNameAttrToPlayersDiv = function(positions){
+	$('.top_player').attr('pName', positions.top_player);
+	$('.right_side_player').attr('pName', positions.right_player);
+	$('.left_side_player').attr('pName', positions.left_player);
+	$('.my').attr('pName', positions.bottom_player);
+}
 var showPlayersName = function(positions){
-	$('.top_player>#name').append('<h3>'+positions.top_player+'</h3>');
-	$('.right_side_player>#name').append('<h3>'+positions.right_player+'</h3>');
-	$('.left_side_player>#name').append('<h3>'+positions.left_player+'</h3>');
-	$('#hand_cards>#name').append('<h3>'+positions.my+'</h3>');
+	$('.top_player>#name').html('<h3>'+positions.top_player+'</h3>');
+	$('.right_side_player>#name').html('<h3>'+positions.right_player+'</h3>');
+	$('.left_side_player>#name').html('<h3>'+positions.left_player+'</h3>');
+	$('.my>#name').html('<h3>'+positions.bottom_player+'</h3>');
 };
 var setIdAtDeck = function(positions){
-	$('#deck #top').attr('name',positions.top_player);	
-	$('#deck #right').attr('name', positions.right_player);
-	$('#deck #left').attr('name', positions.left_player);
-	$('#deck #my').attr('name', positions.my);
+	var keys = Object.keys(positions);
+	keys.forEach(function(key){
+		$('.deck #' + key).attr('name', positions[key]);
+	});
 }
 var getPlayersNames = function(){
 	$.get('names', function(playersPosition){
 		var positions = JSON.parse(playersPosition);
 		showPlayersName(positions);
 		setIdAtDeck(positions);
+		setNameAttrToPlayersDiv(positions);
 	});
 };
 
@@ -68,26 +73,29 @@ var templateForCall = '<h1>Select your call</h1><br>'+
 
 				
 var showPopup = function(template,request){
-	$('#deck').addClass('popup');
-	$('#deck').html(template);
-	$('#deck>button').click(request);
+	$('.deck').addClass('popup');
+	$('.deck').html(template);
+	$('.deck>button').click(request);
 }
 
-var requestForCall = function(){
+
+
+var postCall = function(){
 	var call = $('#call').val();
 	$.post('call',{call:call},function(data){
 		alert(data);
 	});
-	$('#deck').removeClass('popup').html('');
+	$('.deck').removeClass('popup').html('');
 };
 
 // var requestForPointTable = function(){
-// 	$('#deck').removeClass('popup').shtml('');
+// 	$('.deck').removeClass('popup').shtml('');
 // };
 
 var requestForThrowableCard = function(){
 	$.get('throwableCard',function(cards){
 		var throwableCards = JSON.parse(cards);
+		console.log(throwableCards);
 		hands.forEach(function(card){
 			if(throwableCards.indexOf(card) != -1){
 				var cardId = '#' + card.slice(0,-4);
@@ -99,6 +107,8 @@ var requestForThrowableCard = function(){
 
 var showDeck = function(deckCards){
 	// var deckCardsHtml = '';
+	if(deckCards.length == 0)
+		$("div[name]").html('');
 	deckCards.forEach(function(thrownCard){
 		var deckCardsHtml = '<img src="../resources/resource/' + thrownCard.card + '">';
 		$("div[name*="+thrownCard.playerId+"]" ).html(deckCardsHtml);
@@ -109,17 +119,32 @@ var showLedSuit = function(ledSuit){
 	$('#ledSuit').addClass('show');
 };
 var showHandWinner = function(winner){
-	
+	$('#hand_winner').html('<h1> Captured By: ' + winner + '</h1>');
+}
+var showTurn = function(playerId){
+	$("div[pName]").removeClass('turn');
+	$("div[pName*=" + playerId + "]").addClass('turn');
+}
+var showCapturedHand = function(capturedDetail){
+	var keys = Object.keys(capturedDetail);
+	keys.forEach(function(key){
+		console.log(key,'capturedDetail');
+		$("div[pName*=" + key + "] > #captured").html('<h3>Captured: '+ capturedDetail[key] + '</h3>');	
+	});
+	// $("div[pName*=" + handWinner + "] > #captured").html('<h3>Captured: '+ totelCaptured + '</h3>');
 }
 var requestForTableStatus = function(){
 	$.get('tableStatus',function(data){
 		console.log(data);
 		var tableStatus = JSON.parse(data);
 		showDeck(tableStatus.deck);
-		if(tableStatus.currentHand.isOver)
-			showHandWinner(tableStatus.currentHand.winner);
-		if(tableStatus.deck.length == 4)
-			requestForHandWinner();
+		showCapturedHand(tableStatus.capturedDetail);
+		showTurn(tableStatus.currentTurn);
+		if(tableStatus.currentHand.isOver){
+			var handWinner = tableStatus.currentHand.winner;
+			var totelCaptured = tableStatus.currentHand.captured;
+			showHandWinner(handWinner);
+		}
 		if(tableStatus.ledSuit)
 			showLedSuit(tableStatus.ledSuit);
 		if(tableStatus.turn == true){

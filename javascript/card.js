@@ -2,6 +2,11 @@ var ld = require('lodash');
 var lib = {};
 exports.lib = lib;
 
+
+lib.Suits = {
+	
+}
+
 lib.Card = function(suit , rank){
 	Object.defineProperties(this,{
 		'suit': {
