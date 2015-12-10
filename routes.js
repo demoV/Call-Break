@@ -111,7 +111,8 @@ var writeCall = function(req , res){
 };
 
 var servePlayersNames = function(req,res,next){
-	var playersPosition = lib.getPlayersPositions(req.headers.cookie);
+	// var playersPosition = lib.getPlayersPositions(req.headers.cookie);
+	var playersPosition=game.getPlayerSequenceFor(req.headers.cookie);
 	// var playersPosition = getPlayersPositions('pappu halkat');
 	res.end(JSON.stringify(playersPosition));
 };
