@@ -3,12 +3,13 @@ var assert  = chai.assert;
 var expect = chai.expect;
 var g = require('../javascript/game.js').game;
 var player = require("../javascript/player.js").entities;
-
+var p = require("../javascript/pack.js").lib;
 var game;
 var player1,player2,player3,player4;
 
 beforeEach(function(){
-	game=new g.Game();
+	var pack=p.createPack();
+	game=new g.Game(pack);
 
 	player1=new player.Player("A");
 	player2=new player.Player("B");
@@ -20,7 +21,6 @@ beforeEach(function(){
 	game.addPlayer(player3);
 
 });
-
 
 describe("addPlayer",function(){
 	it("cannot add more than 4 players",function() {
@@ -59,4 +59,12 @@ describe("getPlayerSequenceFor",function(){
 	});
 
 	it("should throw an error for a player not in the game");	
+});
+
+describe("start",function(){
+	it("should make player1 the first player",function() {
+		game.start();
+		expect(game.currentPlayer()).to.be.eql(player1);
+	});	
 }); 
+

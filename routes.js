@@ -77,7 +77,7 @@ var resForJoining = function(req , res, next, game){
 
 var sendUpdate = function(req , res, next, game){
 	if(game.canStartGame()){
-		lib.startGame();
+		game.start();
 		// game.distribute();
 		res.statusCode = 200;
 		res.end(JSON.stringify({status : 'started'}));

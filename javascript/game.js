@@ -1,10 +1,14 @@
+var Deck=require("./deck.js").Deck;
+
 var game={};
 exports.game=game;
 
-game.Game=function(deck) {
+game.Game=function(pack) {
 	this.players={};
 	this.playerSequence=[];
-	this.deck=deck;
+	this.pack=pack;
+	this.deck=new Deck();
+	this.currentPlayerIndex=-1;
 };
 
 game.Game.prototype = {
@@ -29,5 +33,11 @@ game.Game.prototype = {
 		sequence=sequence.concat(playerNames.slice(indexOfPlayer));
 		sequence=sequence.concat(playerNames.slice(0,indexOfPlayer));
 		return sequence;
+	},
+	start:function() {
+		this.currentPlayerIndex=0;
+	},
+	currentPlayer:function() {
+		return this.playerSequence[this.currentPlayerIndex];
 	}
 };

@@ -39,6 +39,9 @@ entities.Player.prototype = {
 	},
 	wonHand: function(){
 		this.round.captured += 1;
+	},
+	addCardToHand: function(card) {
+		this.hands[card.suit].push(card);
 	}
 };
 

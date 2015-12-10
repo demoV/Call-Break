@@ -1,4 +1,6 @@
 var entities = require('../javascript/player.js').entities;
+var Card = require("../javascript/card.js").lib.Card;
+var Suits = Card.suits;
 var chai = require('chai');
 var assert = chai.assert;
 var expect = chai.expect;
@@ -6,26 +8,12 @@ var expect = chai.expect;
 describe('Player', function(){
 	var Player = entities.Player;
 	var player = new Player();
-	it('should instanseof Player', function(){
-		expect(Player).to.exist;
-		expect(player).to.be.an.instanceof(Player);
-	});
-	it('should have 4 properties name and hands', function(){
-		expect(player).to.have.all.keys(['name', 'hands', 'turn']);
-	});
-	it('is not writable for name property', function(){
-		var demo = new Player('demo');
-		demo.name = 'Charlee';
-		expect(demo.name).to.eql('demo');
-		expect(demo.name).to.not.eql('Charlee');
-	});
-	it('should not configurable for name and hands property', function(){
-		var demo = new Player('demo');
-		delete demo.name;
-		delete demo.hands;
-		expect(demo).to.have.property('name');	
-		expect(demo).to.have.property('hands');	
-	});
+	it('should be able to receive a card and add it to its hand', function(){
+		var card=new Card(Suits.diamonds,2);
+		player.addCardToHand(card);
+		player.turn=true;
+		expect(player.throwCard(card.toString())).to.eql([card]);
+	});	
 	it('can throw a card of given name', function(){
 		var demo = new Player('demo');
 		demo.turn = true;
