@@ -1,9 +1,10 @@
 var game={};
 exports.game=game;
 
-game.Game=function() {
+game.Game=function(deck) {
 	this.players={};
 	this.playerSequence=[];
+	this.deck=deck;
 };
 
 game.Game.prototype = {

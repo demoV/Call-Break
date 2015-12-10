@@ -1,5 +1,5 @@
 var ld = require('lodash');
-var pack = require('./card.js').lib.generatePack();
+var pack = require('./pack.js').lib.createPack();
 var Player = require('./player.js').entities.Player;
 var Deck = require('./deck.js').Deck;
 

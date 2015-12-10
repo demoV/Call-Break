@@ -1,11 +1,12 @@
 var Deck = require('../javascript/deck.js').Deck;
 var cardModule = require('../javascript/card.js').lib;
+var p=require("../javascript/pack.js").lib;
 var chai = require('chai');
 var assert = chai.assert;
 var expect = chai.expect;
 
 describe('deck', function(){
-	var pack = cardModule.generatePack();
+	var pack = p.createPack();
 	var deck = new Deck();
 	deck.thrownCards.push({card: {suit: 'diamonds', rank: 5}, playerId:'1'},
 						 {card: {suit: 'diamonds', rank: 10}, playerId: '2'},

@@ -64,7 +64,7 @@ var resForJoining = function(req , res, next, game){
 			var playerName = querystring.parse(data).name;
 			var player=new p.Player(playerName);
 			game.addPlayer(player);
-			if(lib.isConnected(playerName))
+			if(game.hasPlayer(playerName))
 				res.end(JSON.stringify({alreadyConnected : true })); 
 			else
 				joinUser(req ,res , playerName) ;
@@ -77,8 +77,7 @@ var resForJoining = function(req , res, next, game){
 
 var sendUpdate = function(req , res, next, game){
 	if(game.canStartGame()){
-		// if(!lib.isGameStarted)
-			lib.startGame();
+		lib.startGame();
 		// game.distribute();
 		res.statusCode = 200;
 		res.end(JSON.stringify({status : 'started'}));
@@ -111,10 +110,8 @@ var writeCall = function(req , res){
 };
 
 var servePlayersNames = function(req,res,next,game){
-	// var playersPosition = lib.getPlayersPositions(req.headers.cookie);
-	var playersPosition=game.getPlayerSequenceFor(req.headers.cookie);
-	// var playersPosition = getPlayersPositions('pappu halkat');
-	res.end(JSON.stringify(playersPosition));
+	var playerSequence=game.getPlayerSequenceFor(req.headers.cookie);
+	res.end(JSON.stringify(playerSequence));
 };
 
 var throwCard = function(req, res, next){
