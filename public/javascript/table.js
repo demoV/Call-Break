@@ -58,9 +58,18 @@ var setIdAtDeck = function(positions){
 		$('.deck #' + key).attr('name', positions[key]);
 	});
 }
+
+var seqAsTablePositions=function(playerSequence) {
+	return { bottom_player: playerSequence[0],
+			right_player: playerSequence[1],
+			top_player: playerSequence[2], 
+			left_player: playerSequence[3]};
+}
+
 var getPlayersNames = function(){
-	$.get('names', function(playersPosition){
-		var positions = JSON.parse(playersPosition);
+	$.get('names', function(_playerSequence){
+		var playerSequence = JSON.parse(_playerSequence);
+		var positions=seqAsTablePositions(playerSequence);
 		showPlayersName(positions);
 		setIdAtDeck(positions);
 		setNameAttrToPlayersDiv(positions);
