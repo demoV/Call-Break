@@ -2,6 +2,7 @@ var http = require('http');
 var EventEmitter = require('events').EventEmitter;
 var routes = require('./routes.js');
 var g = require("./javascript/game.js").game;
+var p = require("./javascript/pack.js").lib;
 var game;
 var get_handlers = routes.get_handlers;
 var post_handlers = routes.post_handlers;
@@ -50,7 +51,7 @@ var requestHandler = function(req, res){
 		method_not_allowed(req, res);
 };
 
-game=new g.Game();
+game=new g.Game(p.createPack());
 var server = http.createServer(requestHandler);
 server.listen(4000);
 

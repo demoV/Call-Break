@@ -19,29 +19,6 @@ exports.CreateGame = function(players){
 };
 
 exports.CreateGame.prototype = {
-	shuffle : function(pack){
-		return ld.shuffle(pack);
-	},
-	distribute : function(){
-		var playerId = Object.keys(this.players);
-		if(!isCardsInHand(this.players[playerId[0]].hands))
-			return;
-		var shuffledCards = ld.shuffle(this.pack);
-		var self = this;
-		shuffledCards.forEach(function(card,index){
-			self.players[playerId[index%4]].hands[card.suit].push(card);
-		});
-		if(!isHandsCardsAreCorrect(this.players)){
-			var self = this.players;
-			Object.keys(this.players).forEach(function(player){
-				self[player].hands = {diamonds: [], clubs: [], hearts: [], spades: []};
-			});
-			this.distribute();
-		};
-	},
-	writeCall: function(players,player,call){
-		players[player].call = call;
-	},
 	throwableCards: function(playerName){
 		if(!this.deck.thrownCards.length){
 			return throwableCardsForFirstPlayer(this, playerName);

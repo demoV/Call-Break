@@ -35,8 +35,8 @@ exports.getHandCards = function(playerName){
 exports.startGame = function(){
 	if(!game){
 		game = new callBreak.CreateGame(nameOfPlayers());
-		game.distribute();
-		game.setPlayersTurn();	
+		// game.distribute();
+		// game.setPlayersTurn();	
 	}
 };
 
@@ -106,8 +106,7 @@ var getPlayersCapturedHand = function(){
 };
 exports.removeCard = function(card, playerName){
 	var card = querystring.parse(card).card;
-	card = toCardName(card);
-	var thrownCard = {card: (game.players[playerName].throwCard(card))[0], playerId: playerName};
+	var thrownCard = {card: game.players[playerName].throwCard(card), playerId: playerName};
 	if(thrownCard.card){
 		pushToDeck(thrownCard);
 	}

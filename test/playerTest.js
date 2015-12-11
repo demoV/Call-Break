@@ -11,19 +11,8 @@ describe('Player', function(){
 	it('should be able to receive a card and add it to its hand', function(){
 		var card=new Card(Suits.diamonds,2);
 		player.addCardToHand(card);
-		player.turn=true;
-		expect(player.throwCard(card.toString())).to.eql([card]);
+		expect(player.throwCard(card)).to.eql(card);
 	});	
-	it('can throw a card of given name', function(){
-		var demo = new Player('demo');
-		demo.turn = true;
-		demo.hands.diamonds.push({suit: 'diamonds', rank: 4, toString: function(){return 'four_of_diamonds';}});
-		var thrownCard = demo.throwCard('four_of_diamonds');
-		expect(demo.hands.diamonds).to.have.length(0);
-		expect(thrownCard[0]).to.have.all.keys(['suit', 'rank', 'toString']);
-		expect(thrownCard[0]).to.have.property('suit', 'diamonds').that.is.a('string');
-		expect(thrownCard[0]).to.have.property('rank', 4).that.is.a('number');
-	});
 	it('should have prototype throwCard', function(){
 		expect(player).to.respondTo('throwCard');
 	});

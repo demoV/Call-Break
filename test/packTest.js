@@ -30,9 +30,43 @@ describe('createPack', function(){
 	});
 });
 
+describe("addCard",function(){
+	var emptyPack;
+	beforeEach(function(){
+		emptyPack = lib.emptyPack();
+	});
+	it("should add a given card",function() {
+		var card = new Card(Suits.clubs, 7);
+		var secondCard = new Card(Suits.clubs, 5);
+		
+		emptyPack.addCard(card);
+		expect(emptyPack.cards).to.eql([card]);
+
+		expect(emptyPack.cards).to.have.length(1);
+		
+		emptyPack.addCard(secondCard);
+		expect(emptyPack.cards).to.have.length(2);
+		expect(emptyPack.cards).to.eql([card, secondCard]);
+	});	
+}); 
+
+describe("removeCard",function(){
+	it("should remove a given card from pack",function() {
+		var card=new Card(Suits.diamonds,2);
+		var removedCard=pack.removeCard(card);
+		expect(removedCard).to.eql(card);
+		expect(pack.numberOfCards()).to.equal(51);				
+	});	
+	it("should not be able to remove a card not in the pack",function(){
+		var card=new Card("Triangle",2);
+		var removedCard=pack.removeCard(card);
+		expect(removedCard).to.be.undefined;
+		expect(pack.numberOfCards()).to.equal(52);				
+	});
+}); 
 
 describe("topCard",function(){
 	it("should draw the top card in the pack",function() {
-		expect(pack.drawCard()).to.eql(new Card(Card.suits.clubs,2));	
+		expect(pack.drawTopCard()).to.eql(new Card(Card.suits.clubs,2));	
 	});	
 }); 

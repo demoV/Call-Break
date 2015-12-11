@@ -63,8 +63,18 @@ describe("getPlayerSequenceFor",function(){
 
 describe("start",function(){
 	it("should make player1 the first player",function() {
+		game.addPlayer(player4);
 		game.start();
 		expect(game.currentPlayer()).to.be.eql(player1);
 	});	
-}); 
+ 	it("should distribute 13 cards to each player",function() {
+ 		game.addPlayer(player4);
+ 		game.start();
+ 		expect(game.handOf(player1.name).numberOfCards()).to.equal(13);
+ 		expect(game.handOf(player2.name).numberOfCards()).to.equal(13);
+ 		expect(game.handOf(player3.name).numberOfCards()).to.equal(13);
+ 		expect(game.handOf(player4.name).numberOfCards()).to.equal(13);
+ 	});
+ 	it("should not start game unless there are four players");	
+});
 

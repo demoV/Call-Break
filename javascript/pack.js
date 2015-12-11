@@ -15,13 +15,16 @@ lib.createPack = function(){
 	return pack;
 };
 
+lib.emptyPack = function() {
+	return new Pack([]);
+}
 
 var Pack=function(cards) {
 	this.cards=cards;
 }
 
 Pack.prototype = {
-	drawCard:function() {
+	drawTopCard:function() {
 		return this.cards.shift();
 	},
 	numberOfCards:function() {
@@ -32,5 +35,18 @@ Pack.prototype = {
 			return card.suit==suit;
 		});
 		return new Pack(filteredCards);
+	},
+	addCard:function(card) {
+		this.cards.push(card);
+	},
+	removeCard:function(card) {
+		var result=ld.remove(this.cards,card);
+		return result[0];
+	},
+	map:function(callback) {
+		return this.cards.map(callback);
+	},
+	shuffle:function() {
+		this.cards=ld.shuffle(this.cards);
 	}
 }

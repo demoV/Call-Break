@@ -78,23 +78,26 @@ var resForJoining = function(req , res, next, game){
 var sendUpdate = function(req , res, next, game){
 	if(game.canStartGame()){
 		game.start();
-		// game.distribute();
 		res.statusCode = 200;
 		res.end(JSON.stringify({status : 'started'}));
 	}else{
 		res.end(JSON.stringify({
-			isGameStarted : lib.isGameStarted,
-			noOfPlayers : lib.userInfo.length,
+			isGameStarted : game.hasGameStarted(),
+			noOfPlayers : game.numberOfPlayers()
 		}));
 	}
 };
 
-var serveHandCards = function(req, res, next){
-	var hands = lib.getHandCards(req.headers.cookie);
-	// var hands = cardsToImg(game.players['pappu halkat'].hands);
-	res.end(JSON.stringify(hands));
+var serveHandCards = function(req, res, next, game){
+	var hand=game.handOf(req.headers.cookie);
+	var cardImages=hand.map(cardToImg);
+	console.log(req.headers.cookie,"\n---------\n",cardImages);
+	res.end(JSON.stringify(cardImages));
 };
 
+var cardToImg=function(card) {
+	return card.rank.toString()+card.suit[0].toUpperCase()+".png";
+}
 
 var writeCall = function(req , res){
 	var data = '';
