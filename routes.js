@@ -117,13 +117,14 @@ var servePlayersNames = function(req,res,next,game){
 	res.end(JSON.stringify(playerSequence));
 };
 
-var throwCard = function(req, res, next){
+var throwCard = function(req, res, next,game){
 	var data = '';
 	req.on('data',function(chunk){
 			data += chunk;
 	});
 	req.on('end', function(){
-		lib.removeCard(data,req.headers.cookie);
+		// lib.removeCard(data,req.headers.cookie);
+		game.makePlay(req.headers.cookie,data)
 		res.end('thrown successfully');
 	});
 };
@@ -133,9 +134,10 @@ var updateForTurn = function(req,res,next,game){
 	res.end(JSON.stringify(game.status()));
 };
 
-var serveThrowableCards = function(req,res){
+var serveThrowableCards = function(req,res,next,game){
 	var playerName = req.headers.cookie;
-	throwableCards = lib.getThrowableCards(playerName);
+	// throwableCards = lib.getThrowableCards(playerName);
+	var throwableCards=game.throwableCards(playerName);
 	res.end(JSON.stringify(throwableCards));
 };
 

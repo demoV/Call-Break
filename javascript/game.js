@@ -1,4 +1,6 @@
 var ld=require("lodash");
+var cardIdGenerator=require("./cardIdGenerator.js").lib;
+var Turn=require("./turn.js").Turn;
 var game={};
 exports.game=game;
 
@@ -6,8 +8,9 @@ game.Game=function(pack) {
 	this.players={};
 	this.playerSequence=[];
 	this.pack=pack;
-	this.currentPlayerIndex=-1;
+	this.currentPlayerIndex=0;
 	this.gameHasStarted=false;
+	this.currentTurn=new Turn();
 };
 
 game.Game.prototype = {
@@ -72,11 +75,20 @@ game.Game.prototype = {
 	},
 	status:function() {
 		return {
-			deck:[],
+			deck:this.currentTurn.cardIds(),
 			turn:true,
 			capturedDetail:this.captures(),
 			currentHand:{isOver:false,winner:""},
-			currentTurn:this.currentPlayer().name
+			currentTurn:this.playerSequence[this.currentPlayerIndex].name
 		}
+	},
+	makePlay:function(playerId,cardId) {
+		var player=this.players[playerId];
+		var card=cardIdGenerator.toCard(cardId);
+		this.currentTurn.addPlay({player:player,card:card});
+		this.currentPlayerIndex=(this.currentPlayerIndex+1)%(this.playerSequence.length);
+	},
+	throwableCards:function(playerId) {
+		return this.players[playerId].hand.map(cardIdGenerator.toId);
 	}
 };

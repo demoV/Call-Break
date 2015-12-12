@@ -1,5 +1,6 @@
 var ld = require('lodash');
 var Suits=require('./card.js').lib.Card.suits;
+var cardIdGenerator=require("./cardIdGenerator.js").lib;
 
 exports.Turn = function(){
 	this.plays=[];
@@ -23,6 +24,11 @@ exports.Turn.prototype = {
 			if(ledCard.suit == Suits.spades && c.suit == Suits.spades && c.rank > ledCard.rank)
 				return play2
 			return play1;
+		});
+	},
+	cardIds:function() {
+		return this.plays.map(function(play){
+			return cardIdGenerator.toId(play.card);
 		});
 	}
 

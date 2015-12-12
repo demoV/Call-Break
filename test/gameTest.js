@@ -92,7 +92,3 @@ describe("status",function(){
 		expect(game.status()).to.eql(expectedStatus);
 	});	
 });
-
-describe("makePlay",function(){
- 	it("should determine winner at the end of a turn");
- });  

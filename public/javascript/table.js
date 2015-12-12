@@ -104,8 +104,9 @@ var requestForThrowableCard = function(){
 		var throwableCards = JSON.parse(cards);
 		console.log(throwableCards);
 		hands.forEach(function(card){
-			if(throwableCards.indexOf(card) != -1){
+			if(throwableCards.indexOf(card.slice(0,-4)) != -1){
 				var cardId = '#' + card.slice(0,-4);
+				console.log(cardId);
 				$(cardId).addClass('throwableCards');
 			}
 		});

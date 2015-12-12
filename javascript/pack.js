@@ -11,16 +11,21 @@ lib.createPack = function(){
 			return new Card(suit , rank);
 			});
 		});
-	var pack=new Pack(ld.flatten(array_of_cards));
+	var pack=new Pack(ld.flatten(array_of_cards),ld.shuffle);
 	return pack;
 };
 
 lib.emptyPack = function() {
-	return new Pack([]);
+	return new Pack([],ld.shuffle);
 }
 
-var Pack=function(cards) {
+lib.packWith=function(cards,shuffler){
+	return new Pack(cards,shuffler);
+}
+
+var Pack=function(cards,shuffler) {
 	this.cards=cards;
+	this.shuffler=shuffler;
 }
 
 Pack.prototype = {
@@ -47,6 +52,6 @@ Pack.prototype = {
 		return this.cards.map(callback);
 	},
 	shuffle:function() {
-		this.cards=ld.shuffle(this.cards);
+		this.cards=this.shuffler(this.cards);
 	}
 }
