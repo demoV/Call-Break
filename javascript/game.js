@@ -78,17 +78,28 @@ game.Game.prototype = {
 			deck:this.currentTurn.cardIds(),
 			turn:true,
 			capturedDetail:this.captures(),
-			currentHand:{isOver:false,winner:""},
+			currentHand:{isOver:false,winner:this.winnerOfTurn()},
 			currentTurn:this.playerSequence[this.currentPlayerIndex].name
 		}
 	},
 	makePlay:function(playerId,cardId) {
+		if(this.isCurrentTurnComplete())
+			this.currentTurn=new Turn();
 		var player=this.players[playerId];
 		var card=cardIdGenerator.toCard(cardId);
 		this.currentTurn.addPlay({player:player,card:card});
 		this.currentPlayerIndex=(this.currentPlayerIndex+1)%(this.playerSequence.length);
 	},
-	throwableCards:function(playerId) {
+	winnerOfTurn:function() {
+		if(this.isCurrentTurnComplete())
+			return this.currentTurn.winningPlay().player.name;
+		return "";		
+	},
+	isCurrentTurnComplete:function() {
+		return this.currentTurn.numberOfPlaysSoFar()==this.playerSequence.length;
+	},
+	throwableCardsFor:function(playerId) {
 		return this.players[playerId].hand.map(cardIdGenerator.toId);
 	}
+
 };

@@ -43,6 +43,11 @@ describe('turn', function(){
 			var highestCard = turn.winningPlay();
 			expect(turn.winningPlay()).to.eql({player:p3,card:c3});
 		});
+	});
+	describe("throwableCards",function(){
+	}); 
+});
+	
 		// it("takes 'spades' card as highest priority", function(){
 		// 	var turn = new turn();
 		// 	turn.thrownCards.push({card: {suit: 'diamonds', rank: 5}, playerId:'1'},
@@ -65,5 +70,4 @@ describe('turn', function(){
 		// 	var highestCard = turn.highestCard().card;
 		// 	expect(highestCard).to.eql( {suit: 'spades', rank: 3});
 		// });
-	})
-});
+	

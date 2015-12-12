@@ -7,7 +7,8 @@ exports.Turn = function(){
 };
 exports.Turn.prototype = {
 	runningSuit:function() {
-		return this.plays[0].card.suit;
+		var firstPlay=this.plays[0];
+		return firstPlay && firstPlay.card.suit;
 	},
 	addPlay:function(play){
 		this.plays.push(play);
@@ -30,6 +31,8 @@ exports.Turn.prototype = {
 		return this.plays.map(function(play){
 			return cardIdGenerator.toId(play.card);
 		});
+	},
+	numberOfPlaysSoFar:function() {
+		return this.plays.length;
 	}
-
 };

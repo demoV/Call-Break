@@ -41,6 +41,12 @@ Pack.prototype = {
 		});
 		return new Pack(filteredCards);
 	},
+	cardsHigherThan:function(rank){
+		var filteredCards=this.cards.filter(function(card){
+			return card.rank>rank;
+		});
+		return new Pack(filteredCards);
+	},
 	addCard:function(card) {
 		this.cards.push(card);
 	},

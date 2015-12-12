@@ -26,58 +26,61 @@ beforeEach(function(){
 	player4=new player.Player("D");
 });
 
-/*
-   [ { suit: 'diamonds', rank: 4 },
-     { suit: 'diamonds', rank: 10 } ],
-  clubs: 
-   [ { suit: 'clubs', rank: 10 },
-     { suit: 'clubs', rank: 9 },
-     { suit: 'clubs', rank: 11 } ],
-  hearts: 
-   [ { suit: 'hearts', rank: 11 },
-     { suit: 'hearts', rank: 14 },
-     { suit: 'hearts', rank: 8 } ],
-  spades: 
-   [ { suit: 'spades', rank: 4 },
-     { suit: 'spades', rank: 13 },
-     { suit: 'spades', rank: 14 },
-     { suit: 'spades', rank: 8 },
-     { suit: 'spades', rank: 7 } ]
-*/     
-
 describe("makePlay",function(){
-	it("should know the first play made",function() {
-		var hands=[["2S"],["3S"],["4S"],["5S"]];
+	var game;
+	beforeEach(function(){
+		var hands=[["2S","2D"],["3S","3D"],["4S","4D"],["5S","5D"]];
 		var pack=convertHandsToPack(hands);
-		var game=new g.Game(pack);
+		game=new g.Game(pack);
 
 		game.addPlayer(player1);
 		game.addPlayer(player2);
 		game.addPlayer(player3);
 		game.addPlayer(player4);
 		game.start();
-
+	});
+	it("should know the first play made",function() {
 		game.makePlay("A","2S");
 		var expectedStatus={
 			deck:["2S"]
 		};
 		expect(game.status().deck).to.eql(expectedStatus.deck);
 	});	
-
+	it("should know all the plays for the first turn",function() {
+		game.makePlay("A","2S");
+		game.makePlay("B","3S");
+		game.makePlay("C","4S");
+		game.makePlay("D","5S");
+		var expectedStatus={
+			deck:["2S","3S","4S","5S"]			
+		};
+		expect(game.status().deck).to.eql(expectedStatus.deck);
+	});
+	it("should know the winner of the previous turn",function(){
+		game.makePlay("A","2S");
+		game.makePlay("B","3S");
+		game.makePlay("C","4S");
+		game.makePlay("D","5S");
+		var expectedStatus={
+			currentHand:{isOver:false,winner:"D"}			
+		};
+		expect(game.status().currentHand).to.eql(expectedStatus.currentHand);
+	})
 	it("should know who the current turn belongs to",function(){
-		var hands=[["2S"],["3S"],["4S"],["5S"]];
-		var pack=convertHandsToPack(hands);
-		var game=new g.Game(pack);
-
-		game.addPlayer(player1);
-		game.addPlayer(player2);
-		game.addPlayer(player3);
-		game.addPlayer(player4);
-		game.start();
-
 		expect(game.status().currentTurn).to.equal("A");
 		game.makePlay("A","2S");
 		expect(game.status().currentTurn).to.equal("B");
+	});
+	it("should create a new turn at the end of 4 plays",function(){
+		game.makePlay("A","2S");
+		game.makePlay("B","3S");
+		game.makePlay("C","4S");
+		game.makePlay("D","5S");
+		game.makePlay("A","2D");
+		var expectedStatus={
+			deck:["2D"]
+		}
+		expect(game.status().deck).to.eql(expectedStatus.deck);
 	});
 
 }); 
