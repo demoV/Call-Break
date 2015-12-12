@@ -6,7 +6,7 @@ exports.entities = entities;
 entities.Player = function(name){
 	this.name=name;
 	this.hand=packLib.emptyPack();
-	this.round = {call:2, captured: 0};
+	// this.round = {call:2, captured: 0};
 };
 
 entities.Player.prototype = {

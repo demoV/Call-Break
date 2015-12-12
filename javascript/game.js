@@ -1,4 +1,3 @@
-var Deck=require("./deck.js").Deck;
 var ld=require("lodash");
 var game={};
 exports.game=game;
@@ -7,7 +6,6 @@ game.Game=function(pack) {
 	this.players={};
 	this.playerSequence=[];
 	this.pack=pack;
-	this.deck=new Deck();
 	this.currentPlayerIndex=-1;
 	this.gameHasStarted=false;
 };
@@ -65,5 +63,20 @@ game.Game.prototype = {
 	},
 	hasGameStarted:function() {
 		return this.gameHasStarted;
+	},
+	captures:function() {
+		return this.playerSequence.reduce(function(detail,p){
+			detail[p.name]=0;
+			return detail;
+		},{})
+	},
+	status:function() {
+		return {
+			deck:[],
+			turn:true,
+			capturedDetail:this.captures(),
+			currentHand:{isOver:false,winner:""},
+			currentTurn:this.currentPlayer().name
+		}
 	}
 };

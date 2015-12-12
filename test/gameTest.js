@@ -78,3 +78,21 @@ describe("start",function(){
  	it("should not start game unless there are four players");	
 });
 
+describe("status",function(){
+	it("should provide a status at the start of a game",function() {
+		game.addPlayer(player4);
+		game.start();
+		var expectedStatus={
+			deck:[],
+			turn:true,
+			currentHand: {isOver:false, winner: ''},
+			capturedDetail: {A:0,B:0,C:0,D:0},
+			currentTurn:"A"	
+		};
+		expect(game.status()).to.eql(expectedStatus);
+	});	
+});
+
+describe("makePlay",function(){
+ 	it("should determine winner at the end of a turn");
+ });  

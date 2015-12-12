@@ -33,17 +33,17 @@ exports.CreateGame.prototype = {
 			return throwableCardsIfNotHaveLedSuit(this, playerName, spadeCards, highestCard);
 		return throwableCardsForFirstPlayer(this, playerName);
 	},
-	setPlayersTurn: function(){
+	setPlayersDeck: function(){
 		var self = this;
 		var keys = Object.keys(this.players);
-		this.players[keys[0]].turn =  true;
+		this.players[keys[0]].deck =  true;
 		return function(){
 			var playerId = self.deck.highestCard().playerId;
 			console.log(playerId);
-			self.players[playerId].turn = true;
+			self.players[playerId].deck = true;
 			ld.remove(keys, function(key){return key == playerId});
 			keys.forEach(function(key){
-				self.players[key].turn = false;
+				self.players[key].deck = false;
 			});
 		}
  	}

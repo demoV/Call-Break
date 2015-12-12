@@ -128,9 +128,9 @@ var throwCard = function(req, res, next){
 	});
 };
 
-var updateForTurn = function(req,res,next){
+var updateForTurn = function(req,res,next,game){
 	var playerName = req.headers.cookie;
-	res.end(JSON.stringify(lib.updateTable(playerName)));
+	res.end(JSON.stringify(game.status()));
 };
 
 var serveThrowableCards = function(req,res){

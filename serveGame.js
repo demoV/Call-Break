@@ -129,10 +129,10 @@ exports.updateTable = function(playerName){
 };
 
 var isAllPlayersGaveCall = function(){
-	var players = Object.keys(game.players);
-	return players.every(function(player){
-		return game.players[player].round;
-	});
+	// var players = Object.keys(game.players);
+	// return players.every(function(player){
+	// 	return game.players[player].round;
+	// });
 };
 
 exports.writeCallOf = function(playerName, call){
