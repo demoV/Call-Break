@@ -99,7 +99,11 @@ game.Game.prototype = {
 		return this.currentTurn.numberOfPlaysSoFar()==this.playerSequence.length;
 	},
 	throwableCardsFor:function(playerId) {
-		
+		if(playerId!=this.currentPlayer().name)
+			return [];
+		var hand=this.getPlayerByName(playerId).hand
+		console.log(hand);
+		return this.currentTurn.throwableCardsIn(hand).map(cardIdGenerator.toId);
 	}
 
 };

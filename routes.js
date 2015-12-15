@@ -137,7 +137,7 @@ var updateForTurn = function(req,res,next,game){
 var serveThrowableCards = function(req,res,next,game){
 	var playerName = req.headers.cookie;
 	// throwableCards = lib.getThrowableCards(playerName);
-	var throwableCards=game.throwableCards(playerName);
+	var throwableCards=game.throwableCardsFor(playerName);
 	res.end(JSON.stringify(throwableCards));
 };
 
