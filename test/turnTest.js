@@ -24,10 +24,10 @@ describe('turn', function(){
 	beforeEach(function(){
 		turn=new Turn();
 		
-		c1=new Card(Suits.diamonds,5);
-		c2=new Card(Suits.diamonds,10);
-		c3=new Card(Suits.diamonds,13);
-		c4=new Card(Suits.diamonds,9);
+		c1=new Card(Suits.diamonds,2);
+		c2=new Card(Suits.diamonds,3);
+		c3=new Card(Suits.diamonds,4);
+		c4=new Card(Suits.diamonds,5);
 		
 		turn.addPlay({player:p1,card:c1});
 		turn.addPlay({player:p2,card:c2});
@@ -41,33 +41,108 @@ describe('turn', function(){
 	describe('winningPlay', function(){
 		it('can give the highest card of turn', function(){
 			var highestCard = turn.winningPlay();
-			expect(turn.winningPlay()).to.eql({player:p3,card:c3});
+			expect(turn.winningPlay()).to.eql({player:p4,card:c4});
 		});
 	});
 	describe("throwableCards",function(){
+		it("considers all cards of the first player of a turn to be throwable",function(){
+			var turn=new Turn();
+			var hand=p.packWith([c1,c2,c3,c4]);
+			var throwableCards=turn.throwableCardsIn(hand);
+			expect(throwableCards).to.eql(hand);
+		});
+		it("only higher ranked cards of the running suit after the first player",function() {
+			var turn=new Turn();
+			turn.addPlay({player:p1,card:c1});
+			var c5=new Card(Suits.spades,2);
+			var c6=new Card(Suits.clubs,3);
+			var playersHand=p.packWith([c2,c3,c4,c5,c6]);
+			var expectedThrowable=p.packWith([c2,c3,c4]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
+		it("only trump if running suit is not available",function() {
+			var turn=new Turn();
+			turn.addPlay({player:p1,card:c1});
+			var c5=new Card(Suits.spades,2);
+			var c6=new Card(Suits.clubs,3);
+			var playersHand=p.packWith([c5,c6]);
+			var expectedThrowable=p.packWith([c5]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
+		it("any card if trump or running suit is not available",function() {
+			var turn=new Turn();
+			turn.addPlay({player:p1,card:c1});
+			var c6=new Card(Suits.clubs,3);
+			var playersHand=p.packWith([c6]);
+			var expectedThrowable=p.packWith([c6]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
+		it("only running suit cards if running suit is available, even if trump has been played",function() {
+			var turn=new Turn();
+			turn.addPlay({player:p1,card:c1});
+			var c5=new Card(Suits.spades,2);
+			turn.addPlay({player:p2,card:c5});
+			var c6=new Card(Suits.clubs,3);
+			var playersHand=p.packWith([c2,c3,c4,c6]);
+			var expectedThrowable=p.packWith([c2,c3,c4]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
+		it("only higher ranked running suit cards if available",function() {
+			var turn=new Turn();
+			turn.addPlay({player:p1,card:c2});
+			var playersHand=p.packWith([c1,c3,c4]);
+			var expectedThrowable=p.packWith([c3,c4]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
+		it("only lower ranked running suit cards if higher ranked card not available",function() {
+			var turn=new Turn();
+			turn.addPlay({player:p1,card:c2});
+			var c6=new Card(Suits.clubs,3);
+			var playersHand=p.packWith([c1,c6]);
+			var expectedThrowable=p.packWith([c1]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
+		it("any card if trump of higher card not available",function() {
+			var turn=new Turn();
+			turn.addPlay({player:p1,card:c2});
+			var c5=new Card(Suits.spades,5);
+			var c6=new Card(Suits.spades,2);
+			var c7=new Card(Suits.clubs,5);
+			turn.addPlay({player:p2,card:c5});
+			var playersHand=p.packWith([c6,c7]);
+			var expectedThrowable=p.packWith([c6,c7]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
+		it("only higher trump can be played if running suit is trump and is available",function(){
+			var turn=new Turn();
+			var c5=new Card(Suits.spades,3);
+			turn.addPlay({player:p1,card:c5});
+			var c6=new Card(Suits.spades,2);
+			var c7=new Card(Suits.spades,5);
+			var c8=new Card(Suits.spades,6);
+			var c9=new Card(Suits.spades,7);
+			var playersHand=p.packWith([c6,c7,c8,c9]);
+			var expectedThrowable=p.packWith([c7,c8,c9]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
+		it("only lower trump can be played if running suit is trump and higher trump is unavailable",function(){
+			var turn=new Turn();
+			var c5=new Card(Suits.spades,3);
+			turn.addPlay({player:p1,card:c5});
+			var c6=new Card(Suits.spades,2);
+			var playersHand=p.packWith([c1,c2,c3,c6]);
+			var expectedThrowable=p.packWith([c6]);
+			var throwable=turn.throwableCardsIn(playersHand);
+			expect(throwable).to.eql(expectedThrowable);
+		});
 	}); 
 });
-	
-		// it("takes 'spades' card as highest priority", function(){
-		// 	var turn = new turn();
-		// 	turn.thrownCards.push({card: {suit: 'diamonds', rank: 5}, playerId:'1'},
-		// 				 {card: {suit: 'diamonds', rank: 10}, playerId: '2'},
-		// 				 {card: {suit: 'diamonds', rank: 13}, playerId: '3'},
-		// 				 {card: {suit: 'spades', rank: 3}, playerId: '4'});
-		// 	var highestCard = turn.highestCard().card;
-		// 	expect(highestCard).to.eql( {suit: 'spades', rank: 3});
-		// });
-		// it('also gives playerId,', function(){
-		// 	var highestCard = turn.highestCard();
-		// 	expect(highestCard.playerId).to.eql('3');
-		// });
-		// it("takes 'spades'  priority", function(){
-		// 	var turn = new turn();
-		// 	turn.thrownCards.push({card: {suit: 'diamonds', rank: 10}, playerId: '2'},
-		// 				 		{card: {suit: 'diamonds', rank: 13}, playerId: '3'},
-		// 				 		{card: {suit: 'spades', rank: 3}, playerId: '4'},
-		// 				 	{card: {suit: 'diamonds', rank: 5}, playerId:'1'});
-		// 	var highestCard = turn.highestCard().card;
-		// 	expect(highestCard).to.eql( {suit: 'spades', rank: 3});
-		// });
 	

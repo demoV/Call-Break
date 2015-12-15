@@ -10,8 +10,10 @@ lib.throwableCards=function(winningCard,runningSuit,hand) {
 	if(winningCard.suit==runningSuit)
 		sameSuitHigherRank=sameSuit.cardsHigherThan(winningCard.rank);
 	var allSpades=hand.cardsOfSuit(Suits.spades);
-	var allSpadesHIgherRank=allSpades.cardsHigherThan(winningCard.rank);
-	var handPriority=[sameSuitHigherRank,sameSuit,allSpadesHIgherRank,allSpades,hand];
+	var allSpadesHIgherRank=allSpades;
+	if(winningCard.suit==Suits.spades)
+		allSpadesHIgherRank=allSpades.cardsHigherThan(winningCard.rank);
+	var handPriority=[sameSuitHigherRank,sameSuit,allSpadesHIgherRank,hand];
 	return ld.find(handPriority,function(hand){
 		return hand.numberOfCards()>0;
 	});

@@ -1,6 +1,7 @@
 var ld = require('lodash');
 var Suits=require('./card.js').lib.Card.suits;
 var cardIdGenerator=require("./cardIdGenerator.js").lib;
+var throwable=require("../javascript/throwableCard.js").lib;
 
 exports.Turn = function(){
 	this.plays=[];
@@ -34,5 +35,10 @@ exports.Turn.prototype = {
 	},
 	numberOfPlaysSoFar:function() {
 		return this.plays.length;
+	},
+	throwableCardsIn:function(hand) {
+		if(!this.runningSuit())
+			return hand;		
+		return throwable.throwableCards(this.winningPlay().card,this.runningSuit(),hand);
 	}
 };
