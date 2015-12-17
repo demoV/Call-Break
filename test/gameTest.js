@@ -16,7 +16,7 @@ beforeEach(function(){
 	player3=new player.Player("C");
 	player4=new player.Player("D");
 
-	game.addPlayer(player1)			
+	game.addPlayer(player1)
 	game.addPlayer(player2);
 	game.addPlayer(player3);
 
@@ -33,8 +33,8 @@ describe("addPlayer",function(){
 		expect(game.hasPlayer(player3)).to.be.true;
 		expect(game.hasPlayer(player4)).to.be.true;
 		expect(game.hasPlayer(player5)).to.be.false;
-	});	
-}); 
+	});
+});
 
 describe("canStartGame",function(){
 	it("should start when there are four players",function() {
@@ -45,8 +45,8 @@ describe("canStartGame",function(){
 
 	it("should not start when there are fewer than four players",function() {
 		expect(game.canStartGame()).to.be.false;
-	});	
-}); 
+	});
+});
 
 describe("getPlayerSequenceFor",function(){
 	it("should provide the original sequence for the first player",function() {
@@ -58,7 +58,7 @@ describe("getPlayerSequenceFor",function(){
 		expect(game.getPlayerSequenceFor(player4.name)).to.eql(["D","A","B","C"]);
 	});
 
-	it("should throw an error for a player not in the game");	
+	it("should throw an error for a player not in the game");
 });
 
 describe("start",function(){
@@ -66,7 +66,7 @@ describe("start",function(){
 		game.addPlayer(player4);
 		game.start();
 		expect(game.currentPlayer()).to.be.eql(player1);
-	});	
+	});
  	it("should distribute 13 cards to each player",function() {
  		game.addPlayer(player4);
  		game.start();
@@ -75,7 +75,7 @@ describe("start",function(){
  		expect(game.handOf(player3.name).numberOfCards()).to.equal(13);
  		expect(game.handOf(player4.name).numberOfCards()).to.equal(13);
  	});
- 	it("should not start game unless there are four players");	
+ 	it("should not start game unless there are four players");
 });
 
 describe("status",function(){
@@ -87,8 +87,8 @@ describe("status",function(){
 			turn:true,
 			currentHand: {isOver:false, winner: ''},
 			capturedDetail: {A:0,B:0,C:0,D:0},
-			currentTurn:"A"	
+			currentTurn:"A"
 		};
 		expect(game.status()).to.eql(expectedStatus);
-	});	
+	});
 });

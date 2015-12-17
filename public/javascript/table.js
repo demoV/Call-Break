@@ -62,7 +62,7 @@ var setIdAtDeck = function(positions){
 var seqAsTablePositions=function(playerSequence) {
 	return { bottom_player: playerSequence[0],
 			right_player: playerSequence[1],
-			top_player: playerSequence[2], 
+			top_player: playerSequence[2],
 			left_player: playerSequence[3]};
 }
 
@@ -80,7 +80,7 @@ var templateForCall = '<h1>Select your call</h1><br>'+
 				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
 				'<br><output name="callOutputName" id="callOutputId">2</output><br><button>submit</button>';
 
-				
+
 var showPopup = function(template,request){
 	$('.deck').addClass('popup');
 	$('.deck').html(template);
@@ -94,11 +94,6 @@ var postCall = function(){
 	});
 	$('.deck').removeClass('popup').html('');
 };
-
-// var requestForPointTable = function(){
-// 	$('.deck').removeClass('popup').shtml('');
-// };
-
 var requestForThrowableCard = function(){
 	$.get('throwableCard',function(cards){
 		var throwableCards = JSON.parse(cards);
@@ -136,7 +131,7 @@ var showCapturedHand = function(capturedDetail){
 	var keys = Object.keys(capturedDetail);
 	keys.forEach(function(key){
 		console.log(key,'capturedDetail');
-		$("div[pName*=" + key + "] > #captured").html('<h3>Captured: '+ capturedDetail[key] + '</h3>');	
+		$("div[pName*=" + key + "] > #captured").html('<h3>Captured: '+ capturedDetail[key] + '</h3>');
 	});
 	// $("div[pName*=" + handWinner + "] > #captured").html('<h3>Captured: '+ totelCaptured + '</h3>');
 }

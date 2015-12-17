@@ -18,21 +18,21 @@ var sendReaquestForUpdate = function(){
 		}
 		$('#game_status').html(gameStatus(JSON.parse(data).noOfPlayers));
 	});
-	 
+
 }
 
 var sendReaquestToJoin = function(){
 	var userName = $('#user_name').val();
 	$('#user_name').val('')
-//	document.querySelector('#user_name').value = '';
 	$.post('join_user',{name:userName} , function(data){
+		$('.join').remove();
 		if(JSON.parse(data).alreadyConnected){
 			$('#game_status').html(alreadyConnected());
 		}
 		if(JSON.parse(data).isGameStarted){
 			$('#game_status').html(gameStarted());
 		}
-	}); 
+	});
 }
 
 var onReady = function(){

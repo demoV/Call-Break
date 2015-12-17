@@ -54,7 +54,7 @@ game.Game.prototype = {
 	},
 	handOf:function(playerName) {
 		var player=this.getPlayerByName(playerName);
-		return player.hand;	
+		return player.hand;
 	},
 	distribute:function() {
 		var playerIndex=0;
@@ -93,7 +93,7 @@ game.Game.prototype = {
 	winnerOfTurn:function() {
 		if(this.isCurrentTurnComplete())
 			return this.currentTurn.winningPlay().player.name;
-		return "";		
+		return "";
 	},
 	isCurrentTurnComplete:function() {
 		return this.currentTurn.numberOfPlaysSoFar()==this.playerSequence.length;
