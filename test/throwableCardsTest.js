@@ -1,9 +1,9 @@
-var packLib=require("../javascript/pack.js").lib;
-var Card=require("../javascript/card.js").lib.Card;
+var packLib=require("../lib/pack.js").lib;
+var Card=require("../lib/card.js").lib.Card;
 var Suits=Card.suits;
-var throwable=require("../javascript/throwableCard.js").lib;
+var throwable=require("../lib/throwableCard.js").lib;
 var ld=require("lodash");
-var cardIdGenerator=require("../javascript/cardIdGenerator.js").lib;
+var cardIdGenerator=require("../lib/cardIdGenerator.js").lib;
 var chai = require('chai');
 var assert = chai.assert;
 var expect = chai.expect;

@@ -1,4 +1,4 @@
-var callBreak = require('../javascript/callBreak.js');
+var callBreak = require('../lib/callBreak.js');
 var chai = require('chai');
 var expect = chai.expect;
 

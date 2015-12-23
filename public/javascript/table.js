@@ -3,10 +3,15 @@ var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
 	var interval = setInterval(requestForTableStatus, 3000);
+	setTimeout(addClick, 4000);
 };
 
+var addClick = function(){
+	$('.throwableCards').one('click',throwCard);
+}
 var throwCard = function(){
 	var self = this;
+	$('.throwableCards').removeClass('throwableCards');
 	$.post('throwCard' , {card : this.id}, function(response){
 		if(response == 'thrown successfully'){
 			_.remove(hands, function(card){
@@ -17,22 +22,17 @@ var throwCard = function(){
 	});
 }
 var removalCards = function(){
-	console.log('removalCards');
-	$('.throwableCards').each(function(){
-		$(this).one('click',throwCard);
-	})
+	$('.throwableCards').one('click',throwCard);
 };
 var showhandCards = function(handCards){
 	var innerHtmlForHands = '';
 	hands.forEach(function(card){
-		innerHtmlForHands += ('<td id="'+card.slice(0,-4)+'"><img src="../resources/resource/'+card+'">'+'</td>');
+		innerHtmlForHands += ('<td class="throwableCards" id="'+card.slice(0,-4)+'"><img src="../resources/resource/'+card+'">'+'</td>');
 	});
 	$('#hands').html(innerHtmlForHands);
+	setTimeout(addClick, 1000);
+	return;
 };
-
-// var isCardsAvailable = function(){
-// 	return document.querySelector('td') != null
-// };
 
 var getHandCards = function(){
 	$.get('cards', function(data){
@@ -57,14 +57,14 @@ var setIdAtDeck = function(positions){
 	keys.forEach(function(key){
 		$('.deck #' + key).attr('name', positions[key]);
 	});
-}
+};
 
 var seqAsTablePositions=function(playerSequence) {
 	return { bottom_player: playerSequence[0],
 			right_player: playerSequence[1],
 			top_player: playerSequence[2], 
 			left_player: playerSequence[3]};
-}
+};
 
 var getPlayersNames = function(){
 	$.get('names', function(_playerSequence){
@@ -117,7 +117,7 @@ var showDeck = function(deckCards){
 	if(deckCards.length == 0)
 		$("div[name]").html('');
 	deckCards.forEach(function(thrownCard){
-		var deckCardsHtml = '<img src="../resources/resource/' + thrownCard.card + '">';
+		var deckCardsHtml = '<img src="../resources/resource/' + thrownCard.card + '.png">';
 		$("div[name*="+thrownCard.playerId+"]" ).html(deckCardsHtml);
 	});
 };
@@ -154,10 +154,11 @@ var requestForTableStatus = function(){
 		}
 		if(tableStatus.ledSuit)
 			showLedSuit(tableStatus.ledSuit);
-		if(tableStatus.turn == true){
-			requestForThrowableCard();
-			removalCards();
-		}
+		// if(tableStatus.turn == true){
+			// requestForThrowableCard();
+			// removalCards();
+		// }
 	});
 };
+
 $(document).ready(onLoad);

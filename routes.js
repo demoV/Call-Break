@@ -1,9 +1,9 @@
 var ld = require('lodash');
 var fs = require('fs');
 var querystring = require('querystring');
-var callBreak = require('./javascript/callBreak.js');
+var callBreak = require('./lib/callBreak.js');
 var lib = require('./serveGame.js');
-var p=require("./javascript/player.js").entities;
+var p=require("./lib/player.js").entities;
 
 var method_not_allowed = function(req, res){
 	res.statusCode = 405;
@@ -123,9 +123,15 @@ var throwCard = function(req, res, next,game){
 			data += chunk;
 	});
 	req.on('end', function(){
-		// lib.removeCard(data,req.headers.cookie);
-		game.makePlay(req.headers.cookie,data)
-		res.end('thrown successfully');
+		var thrownCard = querystring.parse(data);
+		if(!game.isCardThrowableFor(req.headers.cookie,thrownCard.card) 
+			|| game.currentPlayer().name != req.headers.cookie)
+			res.end('notAllowed');
+		else{
+			game.makePlay(req.headers.cookie,thrownCard.card)
+			res.end('thrown successfully');	
+		}
+		
 	});
 };
 

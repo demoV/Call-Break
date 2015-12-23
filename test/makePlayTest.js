@@ -2,10 +2,10 @@ var chai = require('chai');
 var assert  = chai.assert;
 var expect = chai.expect;
 var ld=require("lodash");
-var g = require('../javascript/game.js').game;
-var player = require("../javascript/player.js").entities;
-var p = require("../javascript/pack.js").lib;
-var cardIdGenerator=require("../javascript/cardIdGenerator.js").lib;
+var g = require('../lib/game.js').game;
+var player = require("../lib/player.js").entities;
+var p = require("../lib/pack.js").lib;
+var cardIdGenerator=require("../lib/cardIdGenerator.js").lib;
 
 var player1,player2,player3,player4;
 var game;
@@ -42,7 +42,7 @@ describe("makePlay",function(){
 	it("should know the first play made",function() {
 		game.makePlay("A","2S");
 		var expectedStatus={
-			deck:["2S"]
+			deck:[{card: '2S', playerId: 'A'}]
 		};
 		expect(game.status().deck).to.eql(expectedStatus.deck);
 	});	
@@ -50,9 +50,10 @@ describe("makePlay",function(){
 		game.makePlay("A","2S");
 		game.makePlay("B","3S");
 		game.makePlay("C","4S");
-		game.makePlay("D","5S");
+		// game.makePlay("D","5S");
 		var expectedStatus={
-			deck:["2S","3S","4S","5S"]			
+			deck:[{card: '2S', playerId: 'A'},{card: '3S', playerId: 'B'},
+				{card: '4S', playerId: 'C'}]			
 		};
 		expect(game.status().deck).to.eql(expectedStatus.deck);
 	});
@@ -78,7 +79,7 @@ describe("makePlay",function(){
 		game.makePlay("D","5S");
 		game.makePlay("A","2D");
 		var expectedStatus={
-			deck:["2D"]
+			deck:[{card:"2D", playerId:'A'}]
 		}
 		expect(game.status().deck).to.eql(expectedStatus.deck);
 	});
@@ -117,4 +118,23 @@ describe("throwableCardsFor",function(){
 	it("should return all cards of trump if trump is running suit");
 	it("should return all cards if running suit and trump not present");
 
+}); 
+describe("isCardThrowableFor",function(){
+	it("shoud return false for not throwableCards",function() {
+		var isThrowable = game.isCardThrowableFor('A','9D');
+		expect(isThrowable).to.equal(false);
+	});	
+	it("shoud return true for throwableCards",function() {
+		var isThrowable = game.isCardThrowableFor('A','2D');
+		expect(isThrowable).to.equal(true);
+	});	
+}); 
+describe("setTurn",function(){
+	it("shoud set the turn of the next player if turn is not over",function() {
+		game.makePlay("A","2S");
+		game.makePlay("B","3S");
+		// game.setTurn();
+		var currentPlayer = game.currentPlayer();
+		expect(currentPlayer).to.eql(player3);
+	});	
 }); 

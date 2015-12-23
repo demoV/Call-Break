@@ -1,8 +1,8 @@
 var chai = require('chai');
 var assert  = chai.assert;
 var expect = chai.expect;
-var lib=require("../javascript/pack.js").lib;
-var Card=require("../javascript/card.js").lib.Card;
+var lib=require("../lib/pack.js").lib;
+var Card=require("../lib/card.js").lib.Card;
 var Suits=Card.suits;
 
 var pack;

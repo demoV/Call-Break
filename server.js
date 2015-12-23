@@ -1,8 +1,8 @@
 var http = require('http');
 var EventEmitter = require('events').EventEmitter;
 var routes = require('./routes.js');
-var g = require("./javascript/game.js").game;
-var p = require("./javascript/pack.js").lib;
+var g = require("./lib/game.js").game;
+var p = require("./lib/pack.js").lib;
 var game;
 var get_handlers = routes.get_handlers;
 var post_handlers = routes.post_handlers;

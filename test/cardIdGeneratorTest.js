@@ -1,8 +1,8 @@
 var chai = require('chai');
 var assert  = chai.assert;
 var expect = chai.expect;
-var Card=require("../javascript/card.js").lib.Card;
-var cardIdGenerator=require("../javascript/cardIdGenerator.js").lib;
+var Card=require("../lib/card.js").lib.Card;
+var cardIdGenerator=require("../lib/cardIdGenerator.js").lib;
 var Suits=Card.suits;
 
 describe("toId",function(){

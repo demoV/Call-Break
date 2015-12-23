@@ -1,9 +1,9 @@
 var chai = require('chai');
 var assert  = chai.assert;
 var expect = chai.expect;
-var g = require('../javascript/game.js').game;
-var player = require("../javascript/player.js").entities;
-var p = require("../javascript/pack.js").lib;
+var g = require('../lib/game.js').game;
+var player = require("../lib/player.js").entities;
+var p = require("../lib/pack.js").lib;
 var game;
 var player1,player2,player3,player4;
 
@@ -92,3 +92,4 @@ describe("status",function(){
 		expect(game.status()).to.eql(expectedStatus);
 	});	
 });
+

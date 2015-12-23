@@ -1,4 +1,4 @@
-var entities = require('../javascript/pointTable.js');
+var entities = require('../lib/pointTable.js');
 var dataFile = './data/pointTable.json';
 var fs = require('fs');
 var chai = require('chai');

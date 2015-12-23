@@ -1,5 +1,5 @@
-var entities = require('../javascript/player.js').entities;
-var Card = require("../javascript/card.js").lib.Card;
+var entities = require('../lib/player.js').entities;
+var Card = require("../lib/card.js").lib.Card;
 var Suits = Card.suits;
 var chai = require('chai');
 var assert = chai.assert;

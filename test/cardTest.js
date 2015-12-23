@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert  = chai.assert;
 var expect = chai.expect;
-var lib = require('../javascript/card.js').lib;
+var lib = require('../lib/card.js').lib;
 
 describe('Card', function(){
 	var sampleCard = new lib.Card('diamonds' , 14 );

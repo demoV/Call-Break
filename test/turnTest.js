@@ -1,9 +1,9 @@
-var Turn = require('../javascript/turn.js').Turn;
-var cardModule = require('../javascript/card.js').lib;
+var Turn = require('../lib/turn.js').Turn;
+var cardModule = require('../lib/card.js').lib;
 var Card=cardModule.Card;
 var Suits=Card.suits;
-var p=require("../javascript/pack.js").lib;
-var Player=require("../javascript/player.js").entities.Player;
+var p=require("../lib/pack.js").lib;
+var Player=require("../lib/player.js").entities.Player;
 var chai = require('chai');
 var assert = chai.assert;
 var expect = chai.expect;
