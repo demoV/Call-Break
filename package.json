@@ -21,9 +21,12 @@
   "homepage": "https://github.com/demoV/Call-Break#readme",
   "devDependencies": {
     "chai": "^3.4.1",
-    "mocha": "^2.3.4"
+    "mocha": "^2.3.4",
+    "sinon": "^1.17.2",
+    "supertest": "^1.1.0"
   },
   "dependencies": {
+    "express": "^4.13.3",
     "lodash": "^3.10.1"
   }
 }
