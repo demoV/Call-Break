@@ -29,9 +29,12 @@ var serveStaticFile = function(req, res, next){
 	});
 };
 
-var serveJoinPage = function(req ,res , next){
-	req.url = '/html/joinPage.html';
-	next();
+var serveJoinPage = function(req ,res , next ,game){
+	var player = new p.Player(req.headers.cookie);
+	if(!game.hasPlayer(player)){
+		req.url = '/html/joinPage.html';
+		next();
+	};
 };
 
 var serveHelpPage = function(req ,res , next){
@@ -44,35 +47,24 @@ var fileNotFound = function(req, res){
 	console.log(res.statusCode);
 };
 
-var joinUser = function(req ,res ,name){
-	res.writeHead(200 ,{'Set-Cookie': name });
-	lib.userInfo.push({name : name , id : name});
-	console.log(lib.userInfo);
-	res.end(JSON.stringify( {isGameStarted : lib.isGameStarted,
-						     noOfPlayers : lib.userInfo.length } ));
-};
-
 var resForJoining = function(req , res, next, game){
-	if(lib.isGameStarted)
-			res.end(JSON.stringify({isGameStarted : true}));
-	else{
 		var data = '';
 		req.on('data',function(chunk){
 			data += chunk;
-		});		
+		});
 		req.on('end' , function(){
 			var playerName = querystring.parse(data).name;
-			var player=new p.Player(playerName);
-			game.addPlayer(player);
-			if(game.hasPlayer(playerName))
-				res.end(JSON.stringify({alreadyConnected : true })); 
-			else
-				joinUser(req ,res , playerName) ;
+			var player=new p.Player(req.headers.cookie);
+			if(game.hasPlayer(player)){
+				res.end(JSON.stringify({alreadyConnected : true }));
+			}
+			else{
+				res.writeHead(200 ,{'Set-Cookie': playerName });
+				var player=new p.Player(playerName);
+				game.addPlayer(player);
+				res.end();
+			}
 		});
-		if(lib.userInfo.length == 4){
-			lib.isGameStarted = true;
-		}
-	}
 };
 
 var sendUpdate = function(req , res, next, game){
@@ -150,7 +142,7 @@ var serveThrowableCards = function(req,res,next,game){
 exports.post_handlers = [
 	{path : '^/join_user$' , handler : resForJoining},
 	{path : '^/html/call$' , handler : writeCall},
-	{path : '^/html/throwCard$' , handler : throwCard},	
+	{path : '^/html/throwCard$' , handler : throwCard},
 	{path: '', handler: method_not_allowed}
 ];
 
