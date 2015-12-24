@@ -28,11 +28,11 @@ describe("addPlayer",function(){
 		game.addPlayer(player4);
 		game.addPlayer(player5);
 
-		expect(game.hasPlayer(player1)).to.be.true;
-		expect(game.hasPlayer(player2)).to.be.true;
-		expect(game.hasPlayer(player3)).to.be.true;
-		expect(game.hasPlayer(player4)).to.be.true;
-		expect(game.hasPlayer(player5)).to.be.false;
+		expect(game.hasPlayer('A')).to.be.true;
+		expect(game.hasPlayer('B')).to.be.true;
+		expect(game.hasPlayer('C')).to.be.true;
+		expect(game.hasPlayer('D')).to.be.true;
+		expect(game.hasPlayer('E')).to.be.false;
 	});
 });
 
