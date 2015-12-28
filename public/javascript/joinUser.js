@@ -1,4 +1,3 @@
-
 var gameStarted = function(){
 	return '<h3> A game is already running</h3>'
 }
@@ -24,7 +23,7 @@ var sendReaquestForUpdate = function(){
 var sendReaquestToJoin = function(){
 	var userName = $('#user_name').val();
 	$('#user_name').val('')
-	$.post('join_user',{name:userName} , function(data){
+	$.post('join_user',{userName:userName} , function(data){
 		$('.join').remove();
 		if(JSON.parse(data).alreadyConnected){
 			$('#game_status').html(alreadyConnected());
@@ -33,11 +32,11 @@ var sendReaquestToJoin = function(){
 			$('#game_status').html(gameStarted());
 		}
 	});
+	setInterval(sendReaquestForUpdate , 4000);
 }
 
 var onReady = function(){
 	$('#join').click(sendReaquestToJoin);
-	var interval = setInterval(sendReaquestForUpdate , 4000);
 }
 
 $(onReady);
