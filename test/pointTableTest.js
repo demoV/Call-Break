@@ -1,90 +1,70 @@
-var entities = require('../lib/pointTable.js');
+var PointTable = require('../lib/pointTable.js');
 var dataFile = './data/pointTable.json';
 var fs = require('fs');
 var chai = require('chai');
 var assert = chai.assert;
 var expect = chai.expect;
+var sinon = require('sinon');
 
 var players = {
-	akshay: {
-		name : 'akshay',
-		round : {
-			call : 3,
-			capturedHands : 3
-		}
+	A: {
+		round : {call : 3, capturedHands : 3}
+    },
+	B: {
+		round : {call : 5, capturedHands : 4}
 	},
-	lalit: {
-		name : 'lalit',
-		round : {
-			call : 5,
-			capturedHands : 4	
-		}
+	C: {
+		round : {call : 2, capturedHands : 3}
 	},
-	adarsh: {
-		name : 'adarsh',
-		round : {
-			call : 2,
-			capturedHands : 3	
-		}
-	},
-	durga: {
-		name : 'durga',
-		round : {
-			call : 4,
-			capturedHands : 3	
-		}
+	D: {
+        round : {call : 4, capturedHands : 3}
 	}
 };
-describe('currentRoundPoints',function(){
-	var pointTable = entities.currentRoundPoints();
-	after(function(){
-		fs.writeFileSync(dataFile,'');
-	});
-	afterEach(function() {
-		pointTable = entities.currentRoundPoints();
-	});
-	it('should exists',function(){
-		expect(entities.currentRoundPoints).to.exist;
-	});
-	it('should return a function',function(){
-		expect(entities.currentRoundPoints()).instanceof(Function);
-	});
 
-	describe('pointTable',function(){
-		it('should return an object',function(){
-			expect(pointTable(players)).instanceof(Object);
-		});
-		it('should contain keys (round1,round2,round3)',function(){
-			pointTable(players);
-			pointTable(players);
-			expect(pointTable(players)).to.have.all.keys('round1','round2','round3');
-		});
-		it('should give 5 round keys and one winnerName key after five round over',function(){
-			entities.save(players);
-			entities.save(players);
-			entities.save(players);
-			entities.save(players);
-			entities.save(players);
-			entities.save(players);
-			expect(JSON.parse(fs.readFileSync(dataFile,'utf8'))[0]).to.have.all.keys('round1','round2','round3','round4','round5','winnerName');
-		});
-		describe('Every round',function(){
-			it('should contain keys of players name',function(){
-				expect(pointTable(players).round1).to.have.all.keys('akshay','lalit','durga','adarsh');
-			});
-			it('object keys should contain three keys(call and capturedHands,score)',function(){
-				expect(pointTable(players).round1.akshay).to.have.all.keys('call','capturedHands','score');
-			});
-			it('score key should contain lesser than or equal score to the capturedHands of each player object',function(){
-				expect(pointTable(players).round1.durga.score).to.be.below(pointTable(players).round1.durga.capturedHands);
-			});
-			it('call key should be greater than 1',function(){
-				expect(pointTable(players).round1.adarsh.call).to.have.at.least(2);
-			});
-			it('call key should be smaller than 9',function(){
-				expect(pointTable(players).round1.lalit.call).to.have.at.most(8);
-			});
-		});
-	});
+describe('PointTable',function(){
+    var pointTableData = {};
+    var pointTable;
+    beforeEach(function(){
+        pointTable = new PointTable();
+    });
+    describe('update pointTable',function(){
+        it('should update/save points of all players of specified round',function(){
+            var update = function(players,previousData){
+                players.A.round.score = 3;
+                players.B.round.score = -5;
+                players.C.round.score = 2;
+                players.D.round.score = 4;
+                pointTableData['round1'] ={
+                    A:players.A.round,
+                    B:players.B.round,
+                    C:players.C.round,
+                    D:players.D.round
+                };
+            }
+            pointTable.updatePointTableOf = sinon.stub(update(players,pointTableData));
+            var expectedPointTable = {
+                round1:{
+                    A:{call:3,capturedHands:3,score:3},
+                    B:{call:5,capturedHands:4,score:-5},
+                    C:{call:2,capturedHands:3,score:2},
+                    D:{call:4,capturedHands:3,score:4}
+                }
+            }
+            pointTable.getPointTable = sinon.stub().returns(pointTableData);
+            expect(pointTable.getPointTable()).to.eql(expectedPointTable);
+        });
+    });
+    describe('show winner',function(){
+        it('should tell who is the winner of the round',function(){
+            var PlayersData = {
+                round1:{
+                    A:{call:3,capturedHands:4,score:3},
+                    B:{call:4,capturedHands:3,score:-3},
+                    C:{call:2,capturedHands:3,score:2},
+                    D:{call:4,capturedHands:3,score:-4}
+                }
+            }
+            expect(pointTable.showWinner(PlayersData)).to.eql({winnerName:'A'});
+        });
+    });
 });
-
