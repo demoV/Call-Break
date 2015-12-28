@@ -133,8 +133,21 @@ describe("setTurn",function(){
 	it("shoud set the turn of the next player if turn is not over",function() {
 		game.makePlay("A","2S");
 		game.makePlay("B","3S");
-		// game.setTurn();
 		var currentPlayer = game.currentPlayer();
 		expect(currentPlayer).to.eql(player3);
 	});	
 }); 
+describe("isRoundOver",function(){
+	it("should give true if all player played all cards",function() {
+		game.makePlay('A', '2S');
+		game.makePlay('B', '3S');
+		game.makePlay('C', '4S');
+		game.makePlay('D', '5S');
+		game.makePlay('A', '2D');
+		game.makePlay('B', '3D');
+		game.makePlay('C', '4D');
+		game.makePlay('D', '5D');
+		expect(game.isRoundOver()).to.be.true;
+	});	
+}); 
+

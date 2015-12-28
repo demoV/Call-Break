@@ -2,7 +2,7 @@ var http = require('http');
 var controller = require('./lib/controller.js');
 var g = require("./lib/game.js").game;
 var p = require("./lib/pack.js").lib;
-var game=new g.Game(p.createPack());
+var game=new g.Game(p.createPack(), p.emptyPack());
 
 var requestHandler = controller(game);
 
