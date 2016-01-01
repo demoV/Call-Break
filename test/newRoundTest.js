@@ -24,7 +24,10 @@ var noShuffler=function(cards) {
 	return cards;
 }
 
-beforeEach(function(){
+
+
+describe("collect thrown cards",function(){
+	beforeEach(function(){
 	player1=new player.Player("A");
 	player2=new player.Player("B");
 	player3=new player.Player("C");
@@ -51,8 +54,6 @@ beforeEach(function(){
 	game.addPlayer(player4);
 	game.start();
 });
-
-describe("collect thrown cards",function(){
 	it("should take cards of first turn and give to discardPile",function() {
 		game.makePlay('A', '2S');
 		game.makePlay('B', '3S');
@@ -76,16 +77,19 @@ describe("collect thrown cards",function(){
 		game.makePlay('B', '3S');
 		game.makePlay('C', '4S');
 		game.makePlay('D', '5S');
-		game.makePlay('A', '2S');
-		game.makePlay('B', '3S');
-		game.makePlay('C', '4S');
-		game.makePlay('D', '5S');
+
+		game.collectThrownCards();
+
+		game.makePlay('A', '2D');
+		game.makePlay('B', '3D');
+		game.makePlay('C', '4D');
+		game.makePlay('D', '5D');
+		
 		game.collectThrownCards();
 		
 		expectedPack = {
 			cards: [c1, c2, c3, c4, c5, c6, c7, c8]
 		}
-		console.log(game.discardPile.cards)
 		expect(game.discardPile.cards).to.eql(expectedPack.cards);
 	});	
 }); 
