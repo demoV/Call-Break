@@ -1,6 +1,6 @@
 #hand_cards {
-	/*position: absolute;
-    bottom: 0;*/
+	position: absolute;
+    bottom: 0;
 }
 #hand_cards , img{
 	height: 120px;
@@ -53,9 +53,9 @@ input{
 	border-radius: 5px;
 	opacity: 0.7;
 }
-/*.throwableCards {
+.throwableCards {
 	height: 250px;
-}*/
+}
 .hidden {
 	visibility: hidden;
 }
@@ -89,4 +89,14 @@ input{
 }
 .turn{
 	background-color: green;
+}
+
+table {
+    border: 10px solid;
+    color: black;
+}
+
+th {
+    border: 2px solid;
+    color: black;
 }
