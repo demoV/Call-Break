@@ -91,12 +91,7 @@ input{
 	background-color: green;
 }
 
-table {
+#pointTable {
     border: 10px solid;
-    color: black;
-}
-
-th {
-    border: 2px solid;
     color: black;
 }
