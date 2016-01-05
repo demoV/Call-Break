@@ -22,11 +22,7 @@ describe('Player', function(){
 		demo.makeCall(5);
 		expect(demo.round.call).to.eql(5).that.is.a('number');
 	});
-	it("can't make call if turn is false", function(){
-		var demo = new Player('demo');
-		demo.makeCall(5);
-		expect(demo.round).to.not.exist;
-	});
+	
 	it("can't make call less than 2 ", function(){
 		var demo = new Player('demo');
 		demo.turn = true;

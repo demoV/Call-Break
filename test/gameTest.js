@@ -93,3 +93,18 @@ describe("status",function(){
 
 	});	
 });
+
+describe('callFor',function(){
+	it('should write the call for current player',function(){
+		game.addPlayer(player4);
+		game.start();
+		game.callFor('A', 2);
+		expect(game.getPlayerByName('A').round.call).to.eql(2);
+	});
+	it('should not write call if player is not current player' ,function(){
+		game.addPlayer(player4);
+		game.start();
+		game.callFor('B' ,3);
+		expect(game.getPlayerByName('B').round.call).to.eql(0);
+	});
+})
