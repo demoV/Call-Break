@@ -7,9 +7,7 @@ var qs = require('querystring');
 describe('controller',function(){
 	describe('GET /',function(){
 		it('should serve the landing page',function(done){
-
 			var handler = controller();
-
 			request(handler)
 				.get('/')
 				.expect(/<h1>Call-Break<\/h1>/)
@@ -18,13 +16,11 @@ describe('controller',function(){
 	});
 	describe('GET /join',function(){
 		it('should serve the login page if client is not exist in game',function(done){
-
 			var game = {
 						hasPlayer : sinon.stub().returns(false)
 					}
 
 			var handler = controller(game);
-
 			request(handler)
 				.get('/join')
 				.expect(/JOIN TABLE/)
@@ -123,7 +119,7 @@ describe('controller',function(){
 			var handler = controller(game);
 
 			request(handler)
-				.get('/cards')
+				.get('/html/cards')
 				.set('Cookie','name=A')
 				.expect(200)
 				.expect(JSON.stringify(handCards),done)
@@ -141,7 +137,7 @@ describe('controller',function(){
 			var handler = controller(game);
 
 			request(handler)
-				.get('/names')
+				.get('/html/names')
 				.set('Cookie','name=A')
 				.expect(200)
 				.expect(JSON.stringify(playerSequence),done)
@@ -167,7 +163,7 @@ describe('controller',function(){
 			var handler = controller(game)
 
 			request(handler)
-				.get('/tableStatus')
+				.get('/html/tableStatus')
 				.set('Cookie' , 'name=A')
 				.expect(200)
 				.expect(JSON.stringify(status) ,done)
@@ -182,7 +178,7 @@ describe('controller',function(){
 			var handler = controller(game)
 
 			request(handler)
-				.get('/tableStatus')
+				.get('/html/tableStatus')
 				.set('Cookie' , 'name=A')
 				.expect(302)
 				.expect(/JOIN TABLE/ ,done)
@@ -195,6 +191,7 @@ describe('controller',function(){
 			var card = {card : 'AC'}
 			var game = { isCardThrowableFor : sinon.stub(),
 				currentPlayer : sinon.stub(),
+				collectThrownCards: sinon.spy(),
 				makePlay : sinon.spy()
 			}
 
@@ -202,18 +199,17 @@ describe('controller',function(){
 			game.currentPlayer.returns({name : 'A'});
 
 			var handler = controller(game);
-
 			request(handler)
-				.post('/throwCard')
+				.post('/html/throwCard')
 				.set('Cookie','name=A')
 				.send(qs.stringify(card))
 				.expect('thrown successfully')
 				.expect(200)
 				.end(function(err ,res){
-					assert.ok(game.makePlay.withArgs('A','AC').calledOnce)
+					assert.ok(game.makePlay.withArgs('A','AC').calledOnce);
+					assert.ok(game.collectThrownCards.calledOnce);
 					done();
 				})
-				
 		});
 
 		it('should not allow to throw card if it,s not player,s turn even cards is thrwable for player',function(done){
@@ -228,7 +224,7 @@ describe('controller',function(){
 			var handler = controller(game);
 
 			request(handler)
-				.post('/throwCard')
+				.post('/html/throwCard')
 				.set('Cookie','name=A')
 				.send(qs.stringify(card))
 				.expect('notAllowed')
@@ -247,7 +243,7 @@ describe('controller',function(){
 			var handler = controller(game);
 
 			request(handler)
-				.post('/throwCard')
+				.post('/html/throwCard')
 				.set('Cookie','name=A')
 				.send(qs.stringify(card))
 				.expect('notAllowed')
@@ -271,7 +267,7 @@ describe('controller',function(){
 			var handler = controller();
 
 			request(handler)
-				.delete('/throwCards')
+				.delete('/html/throwCards')
 				.expect('Method is not allowed')
 				.expect(405 ,done)
 		});

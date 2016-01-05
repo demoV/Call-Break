@@ -54,17 +54,4 @@ describe('PointTable',function(){
             expect(pointTable.getPointTable()).to.eql(expectedPointTable);
         });
     });
-    describe('show winner',function(){
-        it('should tell who is the winner of the round',function(){
-            var PlayersData = {
-                round1:{
-                    A:{call:3,capturedHands:4,score:3},
-                    B:{call:4,capturedHands:3,score:-3},
-                    C:{call:2,capturedHands:3,score:2},
-                    D:{call:4,capturedHands:3,score:-4}
-                }
-            }
-            expect(pointTable.showWinner(PlayersData)).to.eql({winnerName:'A'});
-        });
-    });
 });

@@ -29,7 +29,8 @@ beforeEach(function(){
 	player4=new player.Player("D");
 	var hands=[["2S","2D"],["3S","3D"],["4S","4D"],["5S","5D"]];
 	var pack=convertHandsToPack(hands);
-	game=new g.Game(pack);
+	var emptyPack = p.emptyPack();
+	game=new g.Game(pack, emptyPack);
 
 	game.addPlayer(player1);
 	game.addPlayer(player2);
@@ -72,17 +73,17 @@ describe("makePlay",function(){
 		game.makePlay("A","2S");
 		expect(game.status().currentTurn).to.equal("B");
 	});
-	it("should create a new turn at the end of 4 plays",function(){
-		game.makePlay("A","2S");
-		game.makePlay("B","3S");
-		game.makePlay("C","4S");
-		game.makePlay("D","5S");
-		game.makePlay("A","2D");
-		var expectedStatus={
-			deck:[{card:"2D", playerId:'A'}]
-		}
-		expect(game.status().deck).to.eql(expectedStatus.deck);
-	});
+	// it("should create a new turn at the end of 4 plays",function(){
+	// 	game.makePlay("A","2S");
+	// 	game.makePlay("B","3S");
+	// 	game.makePlay("C","4S");
+	// 	game.makePlay("D","5S");
+	// 	game.makePlay("A","2D");
+	// 	var expectedStatus={
+	// 		deck:[{card:"2D", playerId:'A'}]
+	// 	}
+	// 	expect(game.status().deck).to.eql(expectedStatus.deck);
+	// });
 
 }); 
 
@@ -129,12 +130,32 @@ describe("isCardThrowableFor",function(){
 		expect(isThrowable).to.equal(true);
 	});	
 }); 
+
+describe("isRoundOver",function(){
+	it("should give true if all player played all cards",function() {
+		game.makePlay('A', '2S');
+		game.makePlay('B', '3S');
+		game.makePlay('C', '4S');
+		game.makePlay('D', '5S');
+
+		game.collectThrownCards();
+		game.makePlay('A', '2D');
+		game.makePlay('B', '3D');
+		game.makePlay('C', '4D');
+		game.makePlay('D', '5D');
+
+		game.collectThrownCards();
+		expect(game.isRoundOver()).to.be.true;
+		game.startNewRound();
+	});	
+}); 
 describe("setTurn",function(){
 	it("shoud set the turn of the next player if turn is not over",function() {
 		game.makePlay("A","2S");
 		game.makePlay("B","3S");
-		// game.setTurn();
 		var currentPlayer = game.currentPlayer();
 		expect(currentPlayer).to.eql(player3);
 	});	
 }); 
+
+
