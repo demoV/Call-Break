@@ -63,6 +63,7 @@ describe("makePlay",function(){
 		game.makePlay("B","3S");
 		game.makePlay("C","4S");
 		game.makePlay("D","5S");
+		game.collectThrownCards();
 		var expectedStatus={
 			currentHand:{isOver:false,winner:"D"}			
 		};

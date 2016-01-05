@@ -88,14 +88,45 @@ describe("status",function(){
 			currentHand: {isOver:false, winner: ''},
 			capturedDetail: {A:0,B:0,C:0,D:0},
 			currentTurn:"A",
-			isRoundOver: false
+			isAllPlayerCalled : false,
+			isRoundOver: false,
+			pointTable : ''
 		};
 		expect(game.status()).to.eql(expectedStatus);
 
 	});	
 });
+describe('callFor',function(){
+	it('should write the call of given palyer',function(){
+		game.callFor('A' ,2);
+		expect(player1.round.call).to.be.eql(2);
+	});
+	it('should not write the call of given player if he is not current player',function(){
+		game.callFor('B',2);
+		expect(player2.round.call).to.be.eql(0);
+	});
+});
 
+describe('isAllPlayerCalled',function(){
+	it('should return true if all player have make call',function(){
+		game.addPlayer(player4);
+		game.callFor('A',2);	
+		game.callFor('B',5);	
+		game.callFor('C',4);	
+		game.callFor('D',2);
+		expect(game.isAllPlayerCalled()).to.be.eql(true);
+	});
+	it('should return false if all player have not make call',function(){
+		game.addPlayer(player4);
+		game.callFor('A',2);	
+		game.callFor('B',5);	
+		game.callFor('C',4);	
 
+		expect(game.isAllPlayerCalled()).to.be.eql(false);
+	});
+});
 
-
+describe('isPlayerCanThrowCard',function(){
+	it('should return true if palyer is allowed to throw card');
+});
 

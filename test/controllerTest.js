@@ -7,7 +7,9 @@ var qs = require('querystring');
 describe('controller',function(){
 	describe('GET /',function(){
 		it('should serve the landing page',function(done){
+
 			var handler = controller();
+
 			request(handler)
 				.get('/')
 				.expect(/<h1>Call-Break<\/h1>/)
@@ -16,11 +18,13 @@ describe('controller',function(){
 	});
 	describe('GET /join',function(){
 		it('should serve the login page if client is not exist in game',function(done){
+
 			var game = {
 						hasPlayer : sinon.stub().returns(false)
 					}
 
 			var handler = controller(game);
+
 			request(handler)
 				.get('/join')
 				.expect(/JOIN TABLE/)
@@ -145,13 +149,30 @@ describe('controller',function(){
 		});
 	});
 
+	describe('POST /call',function(){
+		it('should write the players call',function(done){
+			var game = { callFor : sinon.spy()};
+			var handler = controller(game);
+
+			request(handler)
+				.post('/html/call')
+				.send(qs.stringify({call : 2}))
+				.set('Cookie','name=A')
+				.expect(200)
+				.end(function(err ,res){
+					assert.ok(game.callFor.withArgs('A',2).calledOnce);
+					done();
+				})
+		});
+	});
+
 	describe('GET /tableStatus',function(){
 		it('should give the current status of game if palyer exist in the game',function(done){
 			var status ={ deck:[],
 				turn:true,
 				capturedDetail: {},
 				currentHand:{isOver:false,winner: "" },
-				currentTurn: "A"
+				currentTurn: "A",
 			}
 
 			var game = { status : sinon.stub(),
@@ -190,15 +211,18 @@ describe('controller',function(){
 		it('should throw the card if provided card is allowed to throw',function(done){
 			var card = {card : 'AC'}
 			var game = { isCardThrowableFor : sinon.stub(),
-				currentPlayer : sinon.stub(),
-				collectThrownCards: sinon.spy(),
-				makePlay : sinon.spy()
+				isAllPlayerCalled : sinon.stub(),
+				isCurrentPlayer : sinon.stub(),
+				makePlay : sinon.spy(),
+				collectThrownCards : sinon.spy()
 			}
 
 			game.isCardThrowableFor.withArgs('A','AC').returns(true);
-			game.currentPlayer.returns({name : 'A'});
-
+			game.isCurrentPlayer.withArgs('A').returns(true);
+			game.isAllPlayerCalled.returns(true);
+			
 			var handler = controller(game);
+
 			request(handler)
 				.post('/html/throwCard')
 				.set('Cookie','name=A')
@@ -210,15 +234,16 @@ describe('controller',function(){
 					assert.ok(game.collectThrownCards.calledOnce);
 					done();
 				})
+				
 		});
 
 		it('should not allow to throw card if it,s not player,s turn even cards is thrwable for player',function(done){
 			var card = {card : 'AD'};
 			var game = {
 					isCardThrowableFor :sinon.stub(),
-					currentPlayer : sinon.stub()
+					isCurrentPlayer : sinon.stub()
 				};
-			game.currentPlayer.returns({name : 'B'});
+			game.isCurrentPlayer.withArgs('A').returns(false);
 			game.isCardThrowableFor.withArgs('A','AD').returns(true);
 
 			var handler = controller(game);
@@ -231,13 +256,14 @@ describe('controller',function(){
 				.expect(200,done)
 		});
 
-		it('should allow to throw card if card is not thowable for player even it,s player turn',function(done){
+		it('should not allow to throw card if card is not thowable for player even it,s player turn',function(done){
 			var card = {card : 'AD'};
 			var game = {
 					isCardThrowableFor :sinon.stub(),
-					currentPlayer : sinon.stub()
+					isCurrentPlayer : sinon.stub(),
+					collectThrownCards : sinon.spy()
 				};
-			game.currentPlayer.returns({name : 'A'});
+			game.isCurrentPlayer.withArgs('A').returns(true);
 			game.isCardThrowableFor.withArgs('A','AD').returns(false);
 
 			var handler = controller(game);
@@ -247,7 +273,7 @@ describe('controller',function(){
 				.set('Cookie','name=A')
 				.send(qs.stringify(card))
 				.expect('notAllowed')
-				.expect(200,done)
+				.expect(200,done)	
 		});
 	});
 
@@ -267,7 +293,7 @@ describe('controller',function(){
 			var handler = controller();
 
 			request(handler)
-				.delete('/html/throwCards')
+				.delete('/throwCards')
 				.expect('Method is not allowed')
 				.expect(405 ,done)
 		});
