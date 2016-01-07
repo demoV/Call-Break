@@ -31,6 +31,7 @@ describe('Player', function(){
 		demo.makeCall(0);
 		expect(demo.round.call).to.eql(2).that.is.a('number');
 	});
+	
 	it('can not call 2 or more times in one round', function(){
 		var demo = new Player('demo');
 		demo.turn = true;

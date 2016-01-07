@@ -4,6 +4,7 @@ var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
 	interval = setInterval(requestForTableStatus, 3000);
+	// setIntervalTo(interval, 3000, requestForTableStatus);
 	setTimeout(addClick, 4000);
 };
 
@@ -79,22 +80,27 @@ var getPlayersNames = function(){
 
 var templateForCall = '<h1>Select your call</h1><br>'+
 				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
-				'<br><output name="callOutputName" id="callOutputId">2</output><br><button>submit</button>';
+				'<br><output name="callOutputName" id="callOutputId">2</output><br><input type=button id="btn">';
 
 
 var showPopup = function(template,request){
-	$('.deck').addClass('popup');
-	$('.deck').html(template);
-	$('.deck>#roundOver').click(request);
+	$('.popup').removeClass('hidden');
+	$('.popup').html(template);
+	$('.popup>#btn').click(request);
 }
 
-var postCall = function(){
-	var call = $('#call').val();
+var postCall= function(){
+	var call = $('#callInputId').val();
 	$.post('call',{call:call},function(data){
-		alert(data);
+		data = JSON.parse(data);
+		console.log(data);
+			alert(data.call);
 	});
-	$('.deck').removeClass('popup').html('');
+	$('.popup').addClass('hidden');
+	// setIntervalTo(interval, 3000, requestForTableStatus);
+	interval = setInterval(requestForTableStatus, 3000);
 };
+
 var requestForThrowableCard = function(){
 	$.get('throwableCard',function(cards){
 		var throwableCards = JSON.parse(cards);
@@ -132,7 +138,8 @@ var showCapturedHand = function(capturedDetail){
 	var keys = Object.keys(capturedDetail);
 	keys.forEach(function(key){
 		console.log(key,'capturedDetail');
-		$("div[pName*=" + key + "] > #captured").html('<h3>Captured: '+ capturedDetail[key] + '</h3>');
+		$("div[pName*=" + key + "] > #captured").html('<h3>Captured: '+ capturedDetail[key].captured + '</h3>');
+		$("div[pName*=" + key + "] > #call").html('<h3>Call: '+ capturedDetail[key].call + '</h3>');
 	});
 	// $("div[pName*=" + handWinner + "] > #captured").html('<h3>Captured: '+ totelCaptured + '</h3>');
 }
@@ -157,11 +164,18 @@ var reqForNewRound = function(){
 		var status = JSON.parse(response);
 		if(status){
 			isNewRoundStart();
-			$('.deck').removeClass('popup');
+			$('.popup').addClass('hidden');
 		}
 			
 			// setIntervalTo(interval, 3000, isNewRoundStart);
 	});	
+}
+
+var showCallPopup = function(currentPlayerName, isAllPlayerCalled){
+	if((document.cookie.slice(5) == currentPlayerName) && !isAllPlayerCalled){
+		clearInterval(interval);
+		showPopup(templateForCall,postCall);	
+	}
 }
 
 var requestForTableStatus = function(){
@@ -169,20 +183,19 @@ var requestForTableStatus = function(){
 		console.log(status);
 		var tableStatus = JSON.parse(status);
 		if(tableStatus.isRoundOver==true){
-			stopIntervalOf(interval);
-			showPopup('<input type=button id="roundOver">', reqForNewRound);
+			clearInterval(interval);
+			showPopup(tableStatus.pointTable + '<input type=button id="btn">', reqForNewRound);
 		}
+		showCallPopup(tableStatus.currentTurn, tableStatus.isAllPlayerCalled);
 		showDeck(tableStatus.deck);
 		showCapturedHand(tableStatus.capturedDetail);
 		showTurn(tableStatus.currentTurn);
 		
 		var handWinner = tableStatus.currentHand.winner;
-		// var totelCaptured = tableStatus.currentHand.captured;
+		
 		showHandWinner(handWinner);
 		if(tableStatus.ledSuit)
 			showLedSuit(tableStatus.ledSuit);	
-		
-		
 		
 	});
 };
