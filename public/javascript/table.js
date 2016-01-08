@@ -49,10 +49,10 @@ var setNameAttrToPlayersDiv = function(positions){
 	$('.my').attr('pName', positions.bottom_player);
 }
 var showPlayersName = function(positions){
-	$('.top_player>#name').html('<h3>'+positions.top_player+'</h3>');
+	$('.top_player #name').html('<h3>'+positions.top_player+'</h3>');
 	$('.right_side_player>#name').html('<h3>'+positions.right_player+'</h3>');
 	$('.left_side_player>#name').html('<h3>'+positions.left_player+'</h3>');
-	$('.my>#name').html('<h3>'+positions.bottom_player+'</h3>');
+	$('.my #name').html('<h3>'+positions.bottom_player+'</h3>');
 };
 var setIdAtDeck = function(positions){
 	var keys = Object.keys(positions);
@@ -125,7 +125,6 @@ var showDeck = function(deckCards){
 };
 var showLedSuit = function(ledSuit){
 	$('#ledSuit').html('<h2>Led Suit: ' + ledSuit + '</h2>');
-	$('#ledSuit').addClass('show');
 };
 var showHandWinner = function(winner){
 	$('#hand_winner').html('<h1> Captured By: ' + winner + '</h1>');
@@ -137,9 +136,8 @@ var showTurn = function(playerId){
 var showCapturedHand = function(capturedDetail){
 	var keys = Object.keys(capturedDetail);
 	keys.forEach(function(key){
-		console.log(key,'capturedDetail');
-		$("div[pName*=" + key + "] > #captured").html('<h3>Captured: '+ capturedDetail[key].captured + '</h3>');
-		$("div[pName*=" + key + "] > #call").html('<h3>Call: '+ capturedDetail[key].call + '</h3>');
+		$("div[pName*=" + key + "]  #captured").html('<h3>Captured: '+ capturedDetail[key].captured + '</h3>');
+		$("div[pName*=" + key + "]  #call").html('<h3>Call: '+ capturedDetail[key].call + '</h3>');
 	});
 	// $("div[pName*=" + handWinner + "] > #captured").html('<h3>Captured: '+ totelCaptured + '</h3>');
 }
