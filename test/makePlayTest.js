@@ -51,7 +51,6 @@ describe("makePlay",function(){
 		game.makePlay("A","2S");
 		game.makePlay("B","3S");
 		game.makePlay("C","4S");
-		// game.makePlay("D","5S");
 		var expectedStatus={
 			deck:[{card: '2S', playerId: 'A'},{card: '3S', playerId: 'B'},
 				{card: '4S', playerId: 'C'}]			
@@ -159,4 +158,44 @@ describe("setTurn",function(){
 	});	
 }); 
 
+describe('status',function(){
+	it('should give the winner name when game is over',function(){
+		game.callFor('A',2);
+		game.callFor('B',2);
+		game.callFor('C',2);
+		game.callFor('D',2);
+
+		game.pointTable.noOfTotalRounds = 2;
+
+		game.makePlay('A', '2S');
+		game.makePlay('B', '3S');
+		game.makePlay('C', '4S');
+		game.makePlay('D', '5S');
+
+		game.collectThrownCards();
+
+		game.makePlay('A', '2D');
+		game.makePlay('B', '3D');
+		game.makePlay('C', '4D');
+		game.makePlay('D', '5D');
+
+		game.collectThrownCards();
+
+		game.makePlay('A', '2S');
+		game.makePlay('B', '3S');
+		game.makePlay('C', '4S');
+
+		game.makePlay('D', '5S');
+
+		game.collectThrownCards();
+
+		game.makePlay('A', '2D');
+		game.makePlay('B', '3D');
+		game.makePlay('C', '4D');
+		game.makePlay('D', '5D');
+
+		game.collectThrownCards();
+		expect(game.status().winner).to.be.eql('D');
+	});
+});
 
