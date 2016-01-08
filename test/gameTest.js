@@ -86,7 +86,24 @@ describe("status",function(){
 			deck:[],
 			ledSuit: '',
 			currentHand: {isOver:false, winner: ''},
-			capturedDetail: {A:0,B:0,C:0,D:0},
+			capturedDetail: {
+                "A": {
+                    "call": 0,
+                    "captured": 0
+                },
+                "B": {
+                    "call": 0,
+                    "captured": 0
+                },
+                "C": {
+                    "call": 0,
+                    "captured": 0
+                },
+                "D": {
+                    "call": 0,
+                    "captured": 0
+                },
+            },
 			currentTurn:"A",
 			isAllPlayerCalled : false,
 			isRoundOver: false,

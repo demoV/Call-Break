@@ -153,3 +153,8 @@ section {
 .turn{
 	background-color: green;
 }
+
+#pointTable {
+    border: 10px solid;
+    color: black;
+}
