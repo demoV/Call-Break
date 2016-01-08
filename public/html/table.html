@@ -1,55 +1,59 @@
 <html>
 <head>
-	<link rel="stylesheet" href="/styles/table.css">
+	<link rel="stylesheet" href="../styles/table.css">
 	<script type="text/javascript" src="../resources/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="../javascript/table.js"></script>
 	<script type="text/javascript" src="../resources/handlebars.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
-	<link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+	<link rel="shortcut icon" href="data:image/x-icon;" type="image/x-icon">
 	<title></title>
 </head>
 <body>
 <section>
-	<div class="hidden" id="ledSuit"></div>
+
+	<div class="led">
+		<div id="ledSuit"></div>
+		<div id="hand_winner"></div>
+	</div>
+	<div class="round"></div>
+
 	<div class="top_player">
-		<div id="name"></div>
-		<div id="call"></div>
-		<div id="captured"></div>
-		<div>
-			<img src="../resources/card.png" id="back_side_img">
+		<div id="topName">
+			<div id="name" > </div>
+			<div id="call" > </div>
+			<div id="captured"> </div>
 		</div>
-			
+		<img src="../resources/card.png" class="card" id="back_side_img" >
 	</div>
 
 	<div class="right_side_player">
-			<img src="../resources/card.png" id="back_side_img">
+			<img src="../resources/card.png" class="card" id="back_side_img">
 		<div id="name"></div>
 		<div id="call"></div>
 		<div id="captured"></div>
 	</div>
 
 	<div class="left_side_player">
-			<img src="../resources/card.png" id="back_side_img">
-		<div id="name"></div>	
+			<img src="../resources/card.png" class="card" id="back_side_img">
+		<div id="name"></div>	 
 		<div id="call"></div>
 		<div id="captured"></div>
 	</div>
-	<footer>
-		<div class="my">
-			<div id="captured"></div>
-			<div id="call"></div>
-			<div id="name"></div>
-			<div id="hand_cards">
-				<table>
-					<tr id="hands">	
-					</tr>
-				</table>
-				</div>	
-			</div>	
-	</footer>
-	
-	<div id="hand_winner">
-	</div>
+
+	<!-- <footer> -->
+	<div class="my">
+		<div id="myInfor">
+			<div id="name" style="width:30%"></div>
+			<div id="call" style="width:30%"></div>
+			<div id="captured" style="width:30%"></div>
+		</div>
+		<div id="hand_cards">
+			<table align="center">
+				<tr id="hands"></tr>
+			</table>
+		</div>	
+	</div>	
+	<!-- </footer> -->
 
 	<div class="deck">
 		<div id="right_player"></div>
@@ -57,8 +61,7 @@
 		<div id="left_player"></div>
 		<div id="bottom_player"></div>
 	</div>
-	<div class="popup hidden">	
-	</div>
+	<div class="popup hidden">	</div>
 </section>
 </body>
 </html>
