@@ -123,7 +123,7 @@ describe('controller',function(){
 			var handler = controller(game);
 
 			request(handler)
-				.get('/cards')
+				.get('/html/cards')
 				.set('Cookie','name=A')
 				.expect(200)
 				.expect(JSON.stringify(handCards),done)
@@ -141,11 +141,28 @@ describe('controller',function(){
 			var handler = controller(game);
 
 			request(handler)
-				.get('/names')
+				.get('/html/names')
 				.set('Cookie','name=A')
 				.expect(200)
 				.expect(JSON.stringify(playerSequence),done)
 
+		});
+	});
+
+	describe('POST /call',function(){
+		it('should write the players call',function(done){
+			var game = { callFor : sinon.spy()};
+			var handler = controller(game);
+
+			request(handler)
+				.post('/html/call')
+				.send(qs.stringify({call : 2}))
+				.set('Cookie','name=A')
+				.expect(200)
+				.end(function(err ,res){
+					assert.ok(game.callFor.withArgs('A',2).calledOnce);
+					done();
+				})
 		});
 	});
 
@@ -155,7 +172,7 @@ describe('controller',function(){
 				turn:true,
 				capturedDetail: {},
 				currentHand:{isOver:false,winner: "" },
-				currentTurn: "A"
+				currentTurn: "A",
 			}
 
 			var game = { status : sinon.stub(),
@@ -167,7 +184,7 @@ describe('controller',function(){
 			var handler = controller(game)
 
 			request(handler)
-				.get('/tableStatus')
+				.get('/html/tableStatus')
 				.set('Cookie' , 'name=A')
 				.expect(200)
 				.expect(JSON.stringify(status) ,done)
@@ -182,7 +199,7 @@ describe('controller',function(){
 			var handler = controller(game)
 
 			request(handler)
-				.get('/tableStatus')
+				.get('/html/tableStatus')
 				.set('Cookie' , 'name=A')
 				.expect(302)
 				.expect(/JOIN TABLE/ ,done)
@@ -194,23 +211,27 @@ describe('controller',function(){
 		it('should throw the card if provided card is allowed to throw',function(done){
 			var card = {card : 'AC'}
 			var game = { isCardThrowableFor : sinon.stub(),
-				currentPlayer : sinon.stub(),
-				makePlay : sinon.spy()
+				isAllPlayerCalled : sinon.stub(),
+				isCurrentPlayer : sinon.stub(),
+				makePlay : sinon.spy(),
+				collectThrownCards : sinon.spy()
 			}
 
 			game.isCardThrowableFor.withArgs('A','AC').returns(true);
-			game.currentPlayer.returns({name : 'A'});
-
+			game.isCurrentPlayer.withArgs('A').returns(true);
+			game.isAllPlayerCalled.returns(true);
+			
 			var handler = controller(game);
 
 			request(handler)
-				.post('/throwCard')
+				.post('/html/throwCard')
 				.set('Cookie','name=A')
 				.send(qs.stringify(card))
 				.expect('thrown successfully')
 				.expect(200)
 				.end(function(err ,res){
-					assert.ok(game.makePlay.withArgs('A','AC').calledOnce)
+					assert.ok(game.makePlay.withArgs('A','AC').calledOnce);
+					assert.ok(game.collectThrownCards.calledOnce);
 					done();
 				})
 				
@@ -220,38 +241,39 @@ describe('controller',function(){
 			var card = {card : 'AD'};
 			var game = {
 					isCardThrowableFor :sinon.stub(),
-					currentPlayer : sinon.stub()
+					isCurrentPlayer : sinon.stub()
 				};
-			game.currentPlayer.returns({name : 'B'});
+			game.isCurrentPlayer.withArgs('A').returns(false);
 			game.isCardThrowableFor.withArgs('A','AD').returns(true);
 
 			var handler = controller(game);
 
 			request(handler)
-				.post('/throwCard')
+				.post('/html/throwCard')
 				.set('Cookie','name=A')
 				.send(qs.stringify(card))
 				.expect('notAllowed')
 				.expect(200,done)
 		});
 
-		it('should allow to throw card if card is not thowable for player even it,s player turn',function(done){
+		it('should not allow to throw card if card is not thowable for player even it,s player turn',function(done){
 			var card = {card : 'AD'};
 			var game = {
 					isCardThrowableFor :sinon.stub(),
-					currentPlayer : sinon.stub()
+					isCurrentPlayer : sinon.stub(),
+					collectThrownCards : sinon.spy()
 				};
-			game.currentPlayer.returns({name : 'A'});
+			game.isCurrentPlayer.withArgs('A').returns(true);
 			game.isCardThrowableFor.withArgs('A','AD').returns(false);
 
 			var handler = controller(game);
 
 			request(handler)
-				.post('/throwCard')
+				.post('/html/throwCard')
 				.set('Cookie','name=A')
 				.send(qs.stringify(card))
 				.expect('notAllowed')
-				.expect(200,done)
+				.expect(200,done)	
 		});
 	});
 

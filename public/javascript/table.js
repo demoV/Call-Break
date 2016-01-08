@@ -1,8 +1,10 @@
 var hands;
+var interval;
 var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
-	var interval = setInterval(requestForTableStatus, 3000);
+	interval = setInterval(requestForTableStatus, 3000);
+	// setIntervalTo(interval, 3000, requestForTableStatus);
 	setTimeout(addClick, 4000);
 };
 
@@ -18,8 +20,8 @@ var throwCard = function(){
 				return card == self.id + '.png';
 			});
 		}
-		showhandCards(hands);
 	});
+	showhandCards(hands);
 }
 var removalCards = function(){
 	$('.throwableCards').one('click',throwCard);
@@ -78,22 +80,27 @@ var getPlayersNames = function(){
 
 var templateForCall = '<h1>Select your call</h1><br>'+
 				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
-				'<br><output name="callOutputName" id="callOutputId">2</output><br><button>submit</button>';
+				'<br><output name="callOutputName" id="callOutputId">2</output><br><input type=button id="btn">';
 
 
 var showPopup = function(template,request){
-	$('.deck').addClass('popup');
-	$('.deck').html(template);
-	$('.deck>button').click(request);
+	$('.popup').removeClass('hidden');
+	$('.popup').html(template);
+	$('.popup>#btn').click(request);
 }
 
-var postCall = function(){
-	var call = $('#call').val();
+var postCall= function(){
+	var call = $('#callInputId').val();
 	$.post('call',{call:call},function(data){
-		alert(data);
+		data = JSON.parse(data);
+		console.log(data);
+			alert(data.call);
 	});
-	$('.deck').removeClass('popup').html('');
+	$('.popup').addClass('hidden');
+	// setIntervalTo(interval, 3000, requestForTableStatus);
+	interval = setInterval(requestForTableStatus, 3000);
 };
+
 var requestForThrowableCard = function(){
 	$.get('throwableCard',function(cards){
 		var throwableCards = JSON.parse(cards);
@@ -131,28 +138,65 @@ var showCapturedHand = function(capturedDetail){
 	var keys = Object.keys(capturedDetail);
 	keys.forEach(function(key){
 		console.log(key,'capturedDetail');
-		$("div[pName*=" + key + "] > #captured").html('<h3>Captured: '+ capturedDetail[key] + '</h3>');
+		$("div[pName*=" + key + "] > #captured").html('<h3>Captured: '+ capturedDetail[key].captured + '</h3>');
+		$("div[pName*=" + key + "] > #call").html('<h3>Call: '+ capturedDetail[key].call + '</h3>');
 	});
 	// $("div[pName*=" + handWinner + "] > #captured").html('<h3>Captured: '+ totelCaptured + '</h3>');
 }
+var setIntervalTo = function(interval, time, callBack){
+	interval = setInterval(callBack, time);
+};
+var stopIntervalOf = function(interval){
+	clearInterval(interval);
+}
+
+var isNewRoundStart = function(){
+	$.get('isStarted', function(response){
+		var status = JSON.parse(response);
+		// if(status){
+			// stopIntervalOf(interval);
+			onLoad();
+		// }game
+	})
+};
+var reqForNewRound = function(){
+	$.post('newRound', {status: true}, function(response){
+		var status = JSON.parse(response);
+		if(status){
+			isNewRoundStart();
+			$('.popup').addClass('hidden');
+		}
+			
+			// setIntervalTo(interval, 3000, isNewRoundStart);
+	});	
+}
+
+var showCallPopup = function(currentPlayerName, isAllPlayerCalled){
+	if((document.cookie.slice(5) == currentPlayerName) && !isAllPlayerCalled){
+		clearInterval(interval);
+		showPopup(templateForCall,postCall);	
+	}
+}
+
 var requestForTableStatus = function(){
-	$.get('tableStatus',function(data){
-		console.log(data);
-		var tableStatus = JSON.parse(data);
+	$.get('tableStatus',function(status){
+		console.log(status);
+		var tableStatus = JSON.parse(status);
+		if(tableStatus.isRoundOver==true){
+			clearInterval(interval);
+			showPopup(tableStatus.pointTable + '<input type=button id="btn">', reqForNewRound);
+		}
+		showCallPopup(tableStatus.currentTurn, tableStatus.isAllPlayerCalled);
 		showDeck(tableStatus.deck);
 		showCapturedHand(tableStatus.capturedDetail);
 		showTurn(tableStatus.currentTurn);
-		if(tableStatus.currentHand.isOver){
-			var handWinner = tableStatus.currentHand.winner;
-			var totelCaptured = tableStatus.currentHand.captured;
-			showHandWinner(handWinner);
-		}
+		
+		var handWinner = tableStatus.currentHand.winner;
+		
+		showHandWinner(handWinner);
 		if(tableStatus.ledSuit)
-			showLedSuit(tableStatus.ledSuit);
-		// if(tableStatus.turn == true){
-			// requestForThrowableCard();
-			// removalCards();
-		// }
+			showLedSuit(tableStatus.ledSuit);	
+		
 	});
 };
 

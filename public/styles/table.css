@@ -48,6 +48,11 @@ input{
      left:30%;
 }
 .popup{
+	position:absolute;
+    width:35%;
+    height:350px;
+    top:27%;
+    left:30%;
 	background-color: skyblue;
 	text-align: center;
 	border-radius: 5px;
