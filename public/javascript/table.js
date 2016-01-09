@@ -8,6 +8,44 @@ var onLoad = function(){
 	setTimeout(addClick, 4000);
 };
 
+//-----------------------pointTable Template-------------------------------//
+
+var tempforPlayerName = function(playerName){
+    return '<th>'+playerName+'</th>'
+}
+
+var tableHeadTemp = function(playerNames){
+    var heading = ''
+    heading += '<table "id=PointTable"><tr><th>rounds</th>'
+    playersNames.forEach(function(player){
+        heading += tempforPlayerName(player);
+    });
+    return heading+'</tr>';
+};
+
+var roundTemplate = function(round){
+    return '<tr><td>'+round+'<br>score</td>';
+};
+
+var tempforPlayerScore = function(playerScore){
+    return '<td>{{'+playerScore+'}}</td>' 
+};
+
+var representationOfPointTable =function(playerNames,totalRounds,playersData){
+    var pointTableTemplate = '';
+    pointTableTemplate += tableHeadTemp(playerNames);
+    totalRounds.forEach(function(round){
+        pointTableTemplate += roundTemplate(round);
+        playerNames.forEach(function(player){
+            pointTableTemplate += tempforPlayerScore(playersData[round][player]));
+        });
+        pointTableTemplate += '</tr>';
+    });
+    return pointTableTemplate+'</table>';
+};
+
+//--------------------Template Fn End--------------------------------------//
+
 var addClick = function(){
 	$('.throwableCards').one('click',throwCard);
 }
@@ -184,7 +222,11 @@ var requestForTableStatus = function(){
 		var tableStatus = JSON.parse(status);
 		if(tableStatus.isRoundOver==true){
 			clearInterval(interval);
-			showPopup(tableStatus.pointTable + '<input type=button id="btn">', reqForNewRound);
+//            var pointTableData = tableStatus.pointTable;
+//            var allRounds = Object.keys(pointTableData);
+//            var playersName = Object.keys(pointTableData.round1);
+//			showPopup(representationOfPointTable(playersName,allRounds,pointTableData) + '<input type=button id="btn">', reqForNewRound);
+            showPopup(tableStatus.pointTable + '<input type=button id="btn">', reqForNewRound);
 		}
 		showCallPopup(tableStatus.currentTurn, tableStatus.isAllPlayerCalled);
 		showDeck(tableStatus.deck);
