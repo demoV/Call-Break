@@ -1,96 +1,154 @@
-#hand_cards {
+section {
+	background-color: CAE9FF;
+	border-width: 2px;
+	display: inline-block;
 	position: absolute;
-    bottom: 0;
+	top: 5%;
+	right: 5%;
+	left: 5%;
+	bottom: 5%;
+
 }
-#hand_cards , img{
-	height: 120px;
+
+.led {
+	background-color: #B6E1E3;
+	position: absolute;
+    width: 28%;
 }
+
 .top_player {
+	background-color: #B6E1E3;
+	display: inline-block;
 	position:absolute;
     top:20px;
-    right:50%;
-    margin-right:2.5%; 
+    left:36%;
+    width: 25%;
+}
+.top_player img {
+	position: relative;
+    left: 20%;
+    top: 10;
+    height: 17%;
+    width: 28%;
 }
 .right_side_player {
+	border-radius: 8%;
+	background-color: #B6E1E3;
 	position: absolute;
-	top: 30%;
-	right: 0;
-    margin-right:2.5%; 
+	top: 35%;
+	right: 2%;
+    width: 20%;
+}
+.left_side_player {
+	border-radius: 8%;
+	background-color: #B6E1E3;
+	position: absolute;
+	top: 35%;
+	left: 2%;
+    width: 20%;
 }
 .my {
+	overflow: scroll;
+	width: 100%;
+	background-color: #B6E1E3;
 	position: absolute;
     bottom: 0;
 }
+.deck{
+	background-color: #B6E1E3;
+	position:absolute;
+	width:40%;
+	height:35;
+	top:31%;
+	left:30%;
+	overflow: scroll;
+}
+.popup {
+	background-color: skyblue;
+     position:absolute;
+     width:40%;
+     height:350px;
+     top:31%;
+     left:30%;
+     overflow: scroll;
+}
+#topName{
+	display: inline-block;
+	float: right;
+}
 
-.left_side_player {
+.card {
+	position: relative;
+	padding-bottom: 10%;
+    left: 30%;
+    top: 10;
+    height: 17%;
+    width: 36%;*/
+}
+
+.playerInfo{
+	padding: 0.5% 3% 1% 3%;
+	margin: 0.5% 0 1% 0;
+}
+.topPlayer {
+	position: relative;
+}
+#hands img{
+	position: static;
+	height: 50%;
+	/*width: 100%*/
+}
+.deck img{
+	position: relative;
+	height: 37%;
+	width: 100%
+}
+#myinfor{
+	position: relative;
+	left: 25%;
+	width: 50%;
+	display: inline-flex;
+}
+#top_player {
+	background-color: green;
+	position:absolute;
+    top:20px;
+    left: 38%;
+    margin-right:2.5%; 
+	width: 17%
+}
+#right_player {
+	background-color: green;
 	position: absolute;
 	top: 30%;
-	left: 0;
-    margin-left:2.5%;
+	right: 10%;
+	width: 17%
 }
 
-#back_side_img {
-	height: 180px;
+#left_player {
+	flex	:1;
+	background-color: green;
+	position: absolute;
+	top: 30%;
+	left: 8%;
+    width: 17%
 }
-#name {
-	font-family: sans-serif;
-}
-
-input{
-	width: 30%;
-	margin-top: 10%;	
-}
-.deck{
-     position:absolute;
-     width:35%;
-     height:350px;
-     top:27%;
-     left:30%;
-}
-.popup{
-	position:absolute;
-    width:35%;
-    height:350px;
-    top:27%;
-    left:30%;
-	background-color: skyblue;
-	text-align: center;
-	border-radius: 5px;
-	opacity: 0.7;
-}
-.throwableCards {
-	height: 250px;
+#bottom_player {
+	background-color: green;
+	position: absolute;
+    bottom: 5%;
+    left: 38%;
+    
+    width: 17%;
 }
 .hidden {
 	visibility: hidden;
 }
-.show {
-	visibility: visible;
-}
-
-#top_player {
-	position:absolute;
-    top:20px;
-    right:50%;
-    margin-right:2.5%; 
-}
-#right_player {
+.round {
+	background-color: #B6E1E3;
 	position: absolute;
-	top: 30%;
-	right: 0;
-    margin-right:15%; 
-}
-
-#left_player {
-	position: absolute;
-	top: 30%;
-	left: 0;
-    margin-left:2.5%;
-}
-#bottom_player {
-	position: absolute;
-    bottom: 0;
-    margin-left:25%;
+	right: 2%;
+	width: 25%
 }
 .turn{
 	background-color: green;

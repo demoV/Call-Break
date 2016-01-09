@@ -45,7 +45,7 @@ describe('PointTable',function(){
            var  readPointTableOutput = {round1:{ A: 3,B: -5,C: 2,D: -4}};
             pointTable.readPointTable = sinon.stub().returns(readPointTableOutput);
            var expectedResult = { round1: { A: 3, B: -5, C: 2, D: -4 },
-                             totalPoints: { A: 3, B: -5, C: 2, D: -4 } }
+                             total: { A: 3, B: -5, C: 2, D: -4 } }
            expect(pointTable.getPointTable()).to.eql(expectedResult);
         });
         it('should give me the data of all players of two rounds with total Points of all players',function(){
@@ -54,7 +54,7 @@ describe('PointTable',function(){
             pointTable.readPointTable = sinon.stub().returns(readPointTableOutput);
            var expectedResult = {round1: { A: 3, B: -5, C: 2, D: -4 },
                              round2: { A: -2, B: 5, C: 4, D: 3 },
-                             totalPoints: { A: 1, B: 0, C: 6, D: -1 } };
+                             total: { A: 1, B: 0, C: 6, D: -1 } };
            expect(pointTable.getPointTable()).to.eql(expectedResult);
         });
         it('should give me the data of all players of three rounds with total Points of all players',function(){
@@ -65,7 +65,7 @@ describe('PointTable',function(){
             var expectedResult = {round1: { A: 3, B: -5, C: 2, D: -4 },
                                   round2: { A: -2, B: 5, C: 4, D: 3 },
                                   round3: { A: 2, B: 2, C: 4, D: 5 },
-                                  totalPoints: { A: 3, B: 2, C: 10, D: 4}};
+                                  total: { A: 3, B: 2, C: 10, D: 4}};
             expect(pointTable.getPointTable()).to.eql(expectedResult);
         });
         it('should give me the data of all players of four rounds with total Points of all players',function(){
@@ -78,7 +78,7 @@ describe('PointTable',function(){
                                   round2: { A: -2, B: 5, C: 4, D: 3 },
                                   round3: { A: 2, B: 2, C: 4, D: 5 },
                                   round4:{ A: 6,B: 3,C: -3,D: 3},
-                                  totalPoints: { A: 9, B: 5, C: 7, D: 7}};
+                                  total: { A: 9, B: 5, C: 7, D: 7}};
             expect(pointTable.getPointTable()).to.eql(expectedResult);
         });
     it('should give me the data of all players of five rounds with total Points of all players',function(){
@@ -93,7 +93,7 @@ describe('PointTable',function(){
                                   round3: { A: 2, B: 2, C: 4, D: 5 },
                                   round4:{ A: 6,B: 3,C: -3,D: 3},
                                   round5:{ A: -2,B: 2,C: 5,D: 4},
-                                  totalPoints: { A: 7, B: 7, C: 12, D: 11}};
+                                  total: { A: 7, B: 7, C: 12, D: 11}};
             expect(pointTable.getPointTable()).to.eql(expectedResult);
         });
     });
