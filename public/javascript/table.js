@@ -17,7 +17,7 @@ var tempforPlayerName = function(playerName){
 var tableHeadTemp = function(playerNames){
     var heading = ''
     heading += '<table "id=PointTable"><tr><th>rounds</th>'
-    playersNames.forEach(function(player){
+    playerNames.forEach(function(player){
         heading += tempforPlayerName(player);
     });
     return heading+'</tr>';
@@ -28,7 +28,7 @@ var roundTemplate = function(round){
 };
 
 var tempforPlayerScore = function(playerScore){
-    return '<td>{{'+playerScore+'}}</td>' 
+    return '<td>'+playerScore+'</td>' 
 };
 
 var representationOfPointTable =function(playerNames,totalRounds,playersData){
@@ -37,7 +37,7 @@ var representationOfPointTable =function(playerNames,totalRounds,playersData){
     totalRounds.forEach(function(round){
         pointTableTemplate += roundTemplate(round);
         playerNames.forEach(function(player){
-            pointTableTemplate += tempforPlayerScore(playersData[round][player]));
+            pointTableTemplate += tempforPlayerScore(playersData[round][player]);
         });
         pointTableTemplate += '</tr>';
     });
@@ -135,7 +135,6 @@ var postCall= function(){
 			alert(data.call);
 	});
 	$('.popup').addClass('hidden');
-	// setIntervalTo(interval, 3000, requestForTableStatus);
 	interval = setInterval(requestForTableStatus, 3000);
 };
 
@@ -161,27 +160,32 @@ var showDeck = function(deckCards){
 		$("div[name*="+thrownCard.playerId+"]" ).html(deckCardsHtml);
 	});
 };
+
 var showLedSuit = function(ledSuit){
 	$('#ledSuit').html('<h2>Led Suit: ' + ledSuit + '</h2>');
 };
+
 var showHandWinner = function(winner){
 	$('#hand_winner').html('<h1> Captured By: ' + winner + '</h1>');
 }
+
 var showTurn = function(playerId){
 	$("div[pName]").removeClass('turn');
 	$("div[pName*=" + playerId + "]").addClass('turn');
 }
+
 var showCapturedHand = function(capturedDetail){
 	var keys = Object.keys(capturedDetail);
 	keys.forEach(function(key){
 		$("div[pName*=" + key + "]  #captured").html('<h3>Captured: '+ capturedDetail[key].captured + '</h3>');
 		$("div[pName*=" + key + "]  #call").html('<h3>Call: '+ capturedDetail[key].call + '</h3>');
 	});
-	// $("div[pName*=" + handWinner + "] > #captured").html('<h3>Captured: '+ totelCaptured + '</h3>');
 }
+
 var setIntervalTo = function(interval, time, callBack){
 	interval = setInterval(callBack, time);
 };
+
 var stopIntervalOf = function(interval){
 	clearInterval(interval);
 }
@@ -201,9 +205,7 @@ var reqForNewRound = function(){
 		if(status){
 			isNewRoundStart();
 			$('.popup').addClass('hidden');
-		}
-			
-			// setIntervalTo(interval, 3000, isNewRoundStart);
+		}			
 	});	
 }
 
@@ -214,29 +216,33 @@ var showCallPopup = function(currentPlayerName, isAllPlayerCalled){
 	}
 }
 
+var showTableStatus = function(tableStatus){
+	var handWinner = tableStatus.currentHand.winner;
+	showCallPopup(tableStatus.currentTurn, tableStatus.isAllPlayerCalled);
+	showDeck(tableStatus.deck);
+	showCapturedHand(tableStatus.capturedDetail);
+	showTurn(tableStatus.currentTurn);
+	showHandWinner(handWinner);
+	if(tableStatus.ledSuit)
+		showLedSuit(tableStatus.ledSuit);
+}
+
+var showPointTable =function(tableStatus){
+	var pointTableData = tableStatus.pointTable;
+	var allRounds = Object.keys(pointTableData);
+	var playersName = Object.keys(pointTableData.round1);
+	showPopup(representationOfPointTable(playersName,allRounds,pointTableData) + '<input type=button id="btn">', reqForNewRound);
+}
+
 var requestForTableStatus = function(){
 	$.get('tableStatus',function(status){
 		console.log(status);
 		var tableStatus = JSON.parse(status);
 		if(tableStatus.isRoundOver==true){
 			clearInterval(interval);
-//            var pointTableData = tableStatus.pointTable;
-//            var allRounds = Object.keys(pointTableData);
-//            var playersName = Object.keys(pointTableData.round1);
-//			showPopup(representationOfPointTable(playersName,allRounds,pointTableData) + '<input type=button id="btn">', reqForNewRound);
-            showPopup(tableStatus.pointTable + '<input type=button id="btn">', reqForNewRound);
+           	showPointTable(tableStatus);
 		}
-		showCallPopup(tableStatus.currentTurn, tableStatus.isAllPlayerCalled);
-		showDeck(tableStatus.deck);
-		showCapturedHand(tableStatus.capturedDetail);
-		showTurn(tableStatus.currentTurn);
-		
-		var handWinner = tableStatus.currentHand.winner;
-		
-		showHandWinner(handWinner);
-		if(tableStatus.ledSuit)
-			showLedSuit(tableStatus.ledSuit);	
-		
+		showTableStatus(tableStatus);	
 	});
 };
 
