@@ -141,7 +141,4 @@ describe('isGameOver',function(){
 	});
 });
 
-describe('isPlayerCanThrowCard',function(){
-	it('should return true if palyer is allowed to throw card');
-});
 

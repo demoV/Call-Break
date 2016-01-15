@@ -4,7 +4,6 @@ var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
 	interval = setInterval(requestForTableStatus, 3000);
-	// setIntervalTo(interval, 3000, requestForTableStatus);
 	setTimeout(addClick, 4000);
 };
 
@@ -31,7 +30,7 @@ var tempforPlayerScore = function(playerScore){
     return '<td>'+playerScore+'</td>' 
 };
 
-var representationOfPointTable =function(playerNames,totalRounds,playersData){
+var getPointTable =function(playerNames,totalRounds,playersData){
     var pointTableTemplate = '';
     pointTableTemplate += tableHeadTemp(playerNames);
     totalRounds.forEach(function(round){
@@ -41,33 +40,43 @@ var representationOfPointTable =function(playerNames,totalRounds,playersData){
         });
         pointTableTemplate += '</tr>';
     });
-    return pointTableTemplate+'</table>';
+    return pointTableTemplate+'</table>'+'<input type=button id="btn" value="next round">';
 };
 
 //--------------------Template Fn End--------------------------------------//
 
 var addClick = function(){
 	$('.throwableCards').one('click',throwCard);
-}
+};
 var throwCard = function(){
 	var self = this;
 	$('.throwableCards').removeClass('throwableCards');
 	$.post('throwCard' , {card : this.id}, function(response){
-		if(response == 'thrown successfully'){
+		if(response.thrown){
 			_.remove(hands, function(card){
 				return card == self.id + '.png';
 			});
+			// $('#'+self.id).remove();
 		}
 	});
-	showhandCards(hands);
-}
+	showhandCards();
+};
 var removalCards = function(){
 	$('.throwableCards').one('click',throwCard);
 };
-var showhandCards = function(handCards){
+
+var setThrowableClass = function(card){
+	var template ='<td class="throwableCards" id="cardId">'+
+				  '<img src="../resources/resource/card"></td>';
+	var cardDetatil = {cardId: card.slice(0,-4) , card : card};
+	return template.replace(/cardId|card/g,function myFunction(x){
+		return cardDetatil[x];});
+}
+
+var showhandCards = function(){
 	var innerHtmlForHands = '';
-	hands.forEach(function(card){
-		innerHtmlForHands += ('<td class="throwableCards" id="'+card.slice(0,-4)+'"><img src="../resources/resource/'+card+'">'+'</td>');
+	[].forEach.call(hands,function(card){
+		innerHtmlForHands += setThrowableClass(card);
 	});
 	$('#hands').html(innerHtmlForHands);
 	setTimeout(addClick, 1000);
@@ -76,8 +85,8 @@ var showhandCards = function(handCards){
 
 var getHandCards = function(){
 	$.get('cards', function(data){
-		hands = JSON.parse(data);
-		showhandCards(hands);
+		hands = data;
+		showhandCards();
 	});
 };
 var setNameAttrToPlayersDiv = function(positions){
@@ -108,7 +117,7 @@ var seqAsTablePositions=function(playerSequence) {
 
 var getPlayersNames = function(){
 	$.get('names', function(_playerSequence){
-		var playerSequence = JSON.parse(_playerSequence);
+		var playerSequence = _playerSequence;
 		var positions=seqAsTablePositions(playerSequence);
 		showPlayersName(positions);
 		setIdAtDeck(positions);
@@ -118,7 +127,7 @@ var getPlayersNames = function(){
 
 var templateForCall = '<h1>Select your call</h1><br>'+
 				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
-				'<br><output name="callOutputName" id="callOutputId">2</output><br><input type=button id="btn">';
+				'<br><output name="callOutputName" id="callOutputId">2</output><br><input type=button id="btn" value="submit">';
 
 
 var showPopup = function(template,request){
@@ -130,8 +139,6 @@ var showPopup = function(template,request){
 var postCall= function(){
 	var call = $('#callInputId').val();
 	$.post('call',{call:call},function(data){
-		data = JSON.parse(data);
-		console.log(data);
 			alert(data.call);
 	});
 	$('.popup').addClass('hidden');
@@ -140,12 +147,10 @@ var postCall= function(){
 
 var requestForThrowableCard = function(){
 	$.get('throwableCard',function(cards){
-		var throwableCards = JSON.parse(cards);
-		console.log(throwableCards);
+		var throwableCards = cards;
 		hands.forEach(function(card){
 			if(throwableCards.indexOf(card.slice(0,-4)) != -1){
 				var cardId = '#' + card.slice(0,-4);
-				console.log(cardId);
 				$(cardId).addClass('throwableCards');
 			}
 		});
@@ -156,8 +161,8 @@ var showDeck = function(deckCards){
 	if(deckCards.length == 0)
 		$("div[name]").html('');
 	deckCards.forEach(function(thrownCard){
-		var deckCardsHtml = '<img src="../resources/resource/' + thrownCard.card + '.png">';
-		$("div[name*="+thrownCard.playerId+"]" ).html(deckCardsHtml);
+		var deckCardsHtml = '<img src="../resources/resource/'+thrownCard.card + '.png">';
+		$("div[name*="+thrownCard.playerId+"]").html(deckCardsHtml);
 	});
 };
 
@@ -177,8 +182,10 @@ var showTurn = function(playerId){
 var showCapturedHand = function(capturedDetail){
 	var keys = Object.keys(capturedDetail);
 	keys.forEach(function(key){
-		$("div[pName*=" + key + "]  #captured").html('<h3>Captured: '+ capturedDetail[key].captured + '</h3>');
-		$("div[pName*=" + key + "]  #call").html('<h3>Call: '+ capturedDetail[key].call + '</h3>');
+		var hands = capturedDetail[key].captured;
+		var call = capturedDetail[key].call;
+		$("div[pName*=" + key + "] #captured").html('<h3>Captured: '+hands+ '</h3>');
+		$("div[pName*=" + key + "] #call").html('<h3>Call: '+call+ '</h3>');
 	});
 }
 
@@ -192,7 +199,7 @@ var stopIntervalOf = function(interval){
 
 var isNewRoundStart = function(){
 	$.get('isStarted', function(response){
-		var status = JSON.parse(response);
+		var status = response;
 		// if(status){
 			// stopIntervalOf(interval);
 			onLoad();
@@ -201,7 +208,7 @@ var isNewRoundStart = function(){
 };
 var reqForNewRound = function(){
 	$.post('newRound', {status: true}, function(response){
-		var status = JSON.parse(response);
+		var status = response;
 		if(status){
 			isNewRoundStart();
 			$('.popup').addClass('hidden');
@@ -227,22 +234,40 @@ var showTableStatus = function(tableStatus){
 		showLedSuit(tableStatus.ledSuit);
 }
 
+var exit = function(){
+	document.cookie = '';
+	window.location.href = '../html/index.html'
+}
+
+var finishGame = function(winner){
+	var template = '<div><h1>Game Over</h1>'+
+					'<h2>Congratulations</h2>'+
+					    '<h3>'+winner+'</h3>'+
+ 			 		'</div><input type="submit" id="btn" value="exit">';
+	showPopup(template,exit);
+}
+
+
 var showPointTable =function(tableStatus){
 	var pointTableData = tableStatus.pointTable;
 	var allRounds = Object.keys(pointTableData);
 	var playersName = Object.keys(pointTableData.round1);
-	showPopup(representationOfPointTable(playersName,allRounds,pointTableData) + '<input type=button id="btn">', reqForNewRound);
+	var html = getPointTable(playersName,allRounds,pointTableData);
+	showPopup(html, reqForNewRound);
 }
 
 var requestForTableStatus = function(){
-	$.get('tableStatus',function(status){
-		console.log(status);
-		var tableStatus = JSON.parse(status);
+	$.get('tableStatus',function(tableStatus){
+		console.log(tableStatus);
 		if(tableStatus.isRoundOver==true){
 			clearInterval(interval);
            	showPointTable(tableStatus);
 		}
-		showTableStatus(tableStatus);	
+		else if(tableStatus.isGameOver){
+			finishGame(tableStatus.winner);
+		}
+		else 
+			showTableStatus(tableStatus);	
 	});
 };
 

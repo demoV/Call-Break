@@ -7,15 +7,15 @@ var alreadyConnected = function(){
 }
 
 var gameStatus = function(noOfPlayers){
-	return '<h3>No. of connected palyers:'+noOfPlayers+'</h3>'
+	return '<h3>No. of connected players:'+noOfPlayers+'</h3>'
 }
 
 var sendReaquestForUpdate = function(){
 	$.get('update',function(data){
-		if(JSON.parse(data).status == 'started'){
-			window.location.href = '../html/table.html'
+		if(data.isStarted){
+			window.location.href = 'table';
 		}
-		$('#game_status').html(gameStatus(JSON.parse(data).noOfPlayers));
+		$('#game_status').html(gameStatus(data.noOfPlayers));
 	});
 
 }
@@ -25,10 +25,10 @@ var sendReaquestToJoin = function(){
 	$('#user_name').val('')
 	$.post('join_user',{userName:userName} , function(data){
 		$('.join').remove();
-		if(JSON.parse(data).alreadyConnected){
+		if(data.alreadyConnected){
 			$('#game_status').html(alreadyConnected());
 		}
-		if(JSON.parse(data).isGameStarted){
+		if(data.isGameStarted){
 			$('#game_status').html(gameStarted());
 		}
 	});
