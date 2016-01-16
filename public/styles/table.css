@@ -58,19 +58,20 @@ section {
 	background-color: #B6E1E3;
 	position:absolute;
 	width:40%;
-	height:35;
+	height:35%;
 	top:31%;
 	left:30%;
 	overflow: scroll;
 }
 .popup {
+	text-align :center;
 	background-color: skyblue;
-     position:absolute;
-     width:40%;
-     height:350px;
-     top:31%;
-     left:30%;
-     overflow: scroll;
+    position:absolute;
+    width:40%;
+    height:350px;
+    top:31%;
+    left:30%;
+    overflow: scroll;
 }
 #topName{
 	display: inline-block;
@@ -155,6 +156,9 @@ section {
 }
 
 #pointTable {
+	text-align: center;
     border: 10px solid;
     color: black;
+    font-size: 20px
 }
+

@@ -22,8 +22,13 @@
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.4",
+    "pre-commit": "^1.1.2",
     "sinon": "^1.17.2",
     "supertest": "^1.1.0"
+  },
+  "precommit.silent" : true,
+  "pre-commit": {
+    "run": "test"
   },
   "dependencies": {
     "body-parser": "^1.14.2",

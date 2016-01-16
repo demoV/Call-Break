@@ -82,36 +82,27 @@ describe("status",function(){
 	it("should provide a status at the start of a game",function() {
 		game.addPlayer(player4);
 		game.start();
+		var capturedDetail = {	
+			A : {call : 0,captured : 0},
+			B : {call : 0,captured : 0},
+			C : {call : 0,captured : 0},
+			D : {call : 0,captured : 0} 
+		};
 		var expectedStatus={
 			deck:[],
 			ledSuit: '',
 			currentHand: {isOver:false, winner: ''},
-			capturedDetail: {
-                "A": {
-                    "call": 0,
-                    "captured": 0
-                },
-                "B": {
-                    "call": 0,
-                    "captured": 0
-                },
-                "C": {
-                    "call": 0,
-                    "captured": 0
-                },
-                "D": {
-                    "call": 0,
-                    "captured": 0
-                },
-            },
+			capturedDetail: capturedDetail,
 			currentTurn:"A",
 			isAllPlayerCalled : false,
 			isRoundOver: false,
-			pointTable : ''
+			pointTable : '',
+			isGameOver : false,
+			winner : ''
 		};
 		expect(game.status()).to.eql(expectedStatus);
 
-	});	
+	});
 });
 describe('callFor',function(){
 	it('should write the call of given palyer',function(){
@@ -159,8 +150,12 @@ describe('isAllPlayerCalled',function(){
 	});
 });
 
-describe('isPlayerCanThrowCard',function(){
-	it('should return true if palyer is allowed to throw card');
+describe('isGameOver',function(){
+	it('should give true if players have played five round',function(){
+		game.pointTable.noOfPlayedRounds =  5;
+		expect(game.isGameOver()).to.be.eql(true);
+	});
 });
 >>>>>>> f2b6cc49f62dda15be9bebcc6f473a3838a50670
+
 
