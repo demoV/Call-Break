@@ -114,23 +114,6 @@ describe('callFor',function(){
 		expect(player2.round.call).to.be.eql(0);
 	});
 });
-
-<<<<<<< HEAD
-describe('callFor',function(){
-	it('should write the call for current player',function(){
-		game.addPlayer(player4);
-		game.start();
-		game.callFor('A', 2);
-		expect(game.getPlayerByName('A').round.call).to.eql(2);
-	});
-	it('should not write call if player is not current player' ,function(){
-		game.addPlayer(player4);
-		game.start();
-		game.callFor('B' ,3);
-		expect(game.getPlayerByName('B').round.call).to.eql(0);
-	});
-})
-=======
 describe('isAllPlayerCalled',function(){
 	it('should return true if all player have make call',function(){
 		game.addPlayer(player4);
@@ -156,6 +139,5 @@ describe('isGameOver',function(){
 		expect(game.isGameOver()).to.be.eql(true);
 	});
 });
->>>>>>> f2b6cc49f62dda15be9bebcc6f473a3838a50670
 
 
