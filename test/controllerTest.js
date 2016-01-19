@@ -3,12 +3,22 @@ var controller = require('../lib/controller');
 var request = require('supertest');
 var sinon = require('sinon');
 var qs = require('querystring');
+var games;
+
+beforeEach(function(){
+	games = {
+		gameOf : sinon.stub(),
+		addPlayer : sinon.spy()
+	};
+});
 
 describe('controller',function(){
 	describe('GET /',function(){
 		it('should serve the landing page',function(done){
 
-			var handler = controller();
+			games.gameOf.returns.undefined;
+
+			var handler = controller(games);
 
 			request(handler)
 				.get('/')
@@ -19,11 +29,9 @@ describe('controller',function(){
 	describe('GET /join',function(){
 		it('should serve the login page if client is not exist in game',function(done){
 
-			var game = {
-						hasPlayer : sinon.stub().returns(false)
-					}
+			games.gameOf.returns.true;
 
-			var handler = controller(game);
+			var handler = controller(games);
 
 			request(handler)
 				.get('/join')
@@ -35,7 +43,9 @@ describe('controller',function(){
 	describe('GET /help',function(){
 		it('should serve the help page',function(done){
 
-			var handler = controller();
+			games.gameOf.returns.true;
+
+			var handler = controller(games);
 
 			request(handler)
 				.get('/help')
@@ -47,32 +57,29 @@ describe('controller',function(){
 		it('should respond alreadyConnected if player exist in the game',function(done){
 
 			var game = { hasPlayer : sinon.stub() };
-
 			game.hasPlayer.withArgs('A').returns(true);
 
-			var handler = controller(game);
+			games.gameOf.withArgs('A').returns(game);
+
+			var handler = controller(games);
 
 			request(handler)
 				.post('/join_user')
 				.set('Cookie','name=A')
-				.expect(/alreadyConnected/,done)
+				.expect(JSON.stringify({alreadyConnected : true}),done)
 		});
-		it('should add player if player exist in the game',function(done){
-
-			var game = { 
-						 hasPlayer : sinon.stub(),
-						 addPlayer : sinon.spy()
-						};
-			game.hasPlayer.returns(false);
-			var handler = controller(game);
+		it('should add player if player not exist in the game',function(done){
+			var game = {};
+			games.gameOf.withArgs('A').returns(game);
+			var handler = controller(games);
 
 			request(handler)
 				.post('/join_user')
 				.send('userName=B')
 				.expect(200)
-				.expect(/success/)
 				.end(function(err  , res){
-					assert.ok(game.addPlayer.calledOnce);
+					assert.ok(games.addPlayer.calledOnce);
+					assert.deepEqual(res.body ,{ join : true });
 					done();
 				})
 		});
@@ -83,8 +90,9 @@ describe('controller',function(){
 			var game = { canStartGame : sinon.stub().returns(false),
 						 numberOfPlayers : sinon.stub().returns(2)
 						};
+			games.gameOf.returns(game);
 
-			var handler = controller(game);
+			var handler = controller(games);
 
 			request(handler)
 				.get('/update')
@@ -97,8 +105,9 @@ describe('controller',function(){
 			var game = { canStartGame : sinon.stub().returns(true),
 						 start : sinon.spy()
 					};
+			games.gameOf.returns(game);
 
-			var handler = controller(game);
+			var handler = controller(games);
 
 			request(handler)
 				.get('/update')
@@ -107,7 +116,7 @@ describe('controller',function(){
 				.end(function(err , res){
 					assert.ok(game.start.called);
 					done();
-				})
+				});
 		});
 	});
 
@@ -115,8 +124,9 @@ describe('controller',function(){
 		it('should serve the table',function(done){
 			var game = { hasPlayer : sinon.stub()}
 			game.hasPlayer.withArgs('A').returns(true);
+			games.gameOf.returns(game);
 
-			var handler = controller(game);
+			var handler = controller(games);
 
 			request(handler)
 				.get('/table')
@@ -127,15 +137,16 @@ describe('controller',function(){
 
 		it('should redirect to login page to invalid players',function(done){
 			var game = { hasPlayer : sinon.stub()}
-			game.hasPlayer.withArgs('A').returns(false);
+			game.hasPlayer.withArgs('A').returns(true);
+			games.gameOf.returns(game);
 
-			var handler = controller(game);
+			var handler = controller(games);
 
 			request(handler)
 				.get('/table')
-				.set('Cookie','name=A')
-				.expect(302)
-				.expect('Location','/html/joinPage.html',done);
+				.set('Cookie','name=B')
+				.expect(/JOIN TABLE/)
+				.expect(200,done)
 		});
 	});
 
@@ -146,13 +157,15 @@ describe('controller',function(){
 			var game = {handOf : sinon.stub(),
 						hasPlayer : sinon.stub()
 						};
+			games.gameOf.returns(game);
+
 
 			hand.map.returns(handCards);
 			game.handOf.withArgs('A').returns(hand);
 			game.hasPlayer.withArgs('A').returns(true);
 
 			
-			var handler = controller(game);
+			var handler = controller(games);
 
 			request(handler)
 				.get('/cards')
@@ -168,9 +181,10 @@ describe('controller',function(){
 			var game = { getPlayerSequenceFor : sinon.stub()};
 
 			game.getPlayerSequenceFor.withArgs('A').returns(playerSequence);
+			games.gameOf.returns(game);
 
 
-			var handler = controller(game);
+			var handler = controller(games);
 
 			request(handler)
 				.get('/names')
@@ -184,7 +198,9 @@ describe('controller',function(){
 	describe('POST /call',function(){
 		it('should write the players call',function(done){
 			var game = { callFor : sinon.spy()};
-			var handler = controller(game);
+			games.gameOf.returns(game);
+
+			var handler = controller(games);
 
 			request(handler)
 				.post('/call')
@@ -212,8 +228,10 @@ describe('controller',function(){
 						};
 			game.status.returns(status);
 			game.hasPlayer.withArgs('A').returns(true);
+			games.gameOf.returns(game);
 
-			var handler = controller(game)
+
+			var handler = controller(games)
 
 			request(handler)
 				.get('/tableStatus')
@@ -227,8 +245,10 @@ describe('controller',function(){
 			var game = {  hasPlayer : sinon.stub() };
 
 			game.hasPlayer.withArgs('A').returns(false);
+			games.gameOf.returns(game);
 
-			var handler = controller(game)
+
+			var handler = controller(games)
 
 			request(handler)
 				.get('/tableStatus')
@@ -251,8 +271,10 @@ describe('controller',function(){
 			game.isCardThrowableFor.withArgs('A','AC').returns(true);
 			game.isCurrentPlayer.withArgs('A').returns(true);
 			game.isAllPlayerCalled.returns(true);
+
+			games.gameOf.returns(game);
 			
-			var handler = controller(game);
+			var handler = controller(games);
 
 			request(handler)
 				.post('/throwCard')
@@ -277,7 +299,9 @@ describe('controller',function(){
 			game.isCurrentPlayer.withArgs('A').returns(false);
 			game.isCardThrowableFor.withArgs('A','AD').returns(true);
 
-			var handler = controller(game);
+			games.gameOf.returns(game);
+
+			var handler = controller(games);
 
 			request(handler)
 				.post('/throwCard')
@@ -297,7 +321,9 @@ describe('controller',function(){
 			game.isCurrentPlayer.withArgs('A').returns(true);
 			game.isCardThrowableFor.withArgs('A','AD').returns(false);
 
-			var handler = controller(game);
+			games.gameOf.returns(game);
+
+			var handler = controller(games);
 
 			request(handler)
 				.post('/throwCard')
@@ -310,7 +336,7 @@ describe('controller',function(){
 
 	describe('not found',function(){
 		it('should give not found messege if requested file is not available',function(done){
-			var handler = controller();
+			var handler = controller(games);
 
 			request(handler)
 				.get('/server')		

@@ -1,7 +1,3 @@
-var gameStarted = function(){
-	return '<h3> A game is already running</h3>'
-}
-
 var alreadyConnected = function(){
 	return '<h3>you are already connected</h3>';
 }
@@ -25,12 +21,8 @@ var sendReaquestToJoin = function(){
 	$('#user_name').val('')
 	$.post('join_user',{userName:userName} , function(data){
 		$('.join').remove();
-		if(data.alreadyConnected){
+		if(data.alreadyConnected)
 			$('#game_status').html(alreadyConnected());
-		}
-		if(data.isGameStarted){
-			$('#game_status').html(gameStarted());
-		}
 	});
 	setInterval(sendReaquestForUpdate , 4000);
 }
