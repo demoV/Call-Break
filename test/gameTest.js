@@ -78,6 +78,12 @@ describe("start",function(){
  	});
  	it("should not start game unless there are four players");
 });
+describe('getPlayerNames',function(){
+	it('should give the name ofn all players playing in the game',function(){
+		var expected = ['A','B','C'];
+		expect(game.getPlayersName()).to.be.eql(expected)
+	});
+});
 describe("status",function(){
 	it("should provide a status at the start of a game",function() {
 		game.addPlayer(player4);
