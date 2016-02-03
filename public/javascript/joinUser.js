@@ -1,13 +1,15 @@
-var gameStarted = function(){
-	return '<h3> A game is already running</h3>'
-}
-
 var alreadyConnected = function(){
-	return '<h3>you are already connected</h3>';
+	return '<p>you are already connected</p>';
 }
 
-var gameStatus = function(noOfPlayers){
-	return '<h3>No. of connected players:'+noOfPlayers+'</h3>'
+var gameStatus = function(info){
+	var status = '<p>No. of connected players: '+info.noOfPlayers+'</p><div class="list">';
+	info.nameOfPlayers.forEach(function(pName){
+		status+= '<li>'+pName+'</li>';
+	});
+	status+='</div>';
+	return status;
+
 }
 
 var sendReaquestForUpdate = function(){
@@ -15,7 +17,7 @@ var sendReaquestForUpdate = function(){
 		if(data.isStarted){
 			window.location.href = 'table';
 		}
-		$('#game_status').html(gameStatus(data.noOfPlayers));
+		$('#game_status').html(gameStatus(data));
 	});
 
 }
@@ -25,18 +27,25 @@ var sendReaquestToJoin = function(){
 	$('#user_name').val('')
 	$.post('join_user',{userName:userName} , function(data){
 		$('.join').remove();
-		if(data.alreadyConnected){
+		if(data.alreadyConnected)
 			$('#game_status').html(alreadyConnected());
-		}
-		if(data.isGameStarted){
-			$('#game_status').html(gameStarted());
+	});
+	setInterval(sendReaquestForUpdate , 1000);
+}
+
+var showFormTemp = function(){
+	$.get('isPlayer',function(status){
+		if(!status.joined){
+			$('.join').html($("#input_temp").html());
+			$('#join').click(sendReaquestToJoin);
+		}else{
+			setInterval(sendReaquestForUpdate , 1000);
 		}
 	});
-	setInterval(sendReaquestForUpdate , 4000);
 }
 
 var onReady = function(){
-	$('#join').click(sendReaquestToJoin);
+	showFormTemp();
 }
 
 $(onReady);

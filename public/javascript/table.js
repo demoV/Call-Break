@@ -184,7 +184,7 @@ var showCapturedHand = function(capturedDetail){
 	keys.forEach(function(key){
 		var hands = capturedDetail[key].captured;
 		var call = capturedDetail[key].call;
-		$("div[pName*=" + key + "] #captured").html('<h3>Captured: '+hands+ '</h3>');
+	$("div[pName*=" + key + "] #captured").html('<h3>Captured: '+hands+ '</h3>');
 		$("div[pName*=" + key + "] #call").html('<h3>Call: '+call+ '</h3>');
 	});
 }
@@ -236,7 +236,7 @@ var showTableStatus = function(tableStatus){
 
 var exit = function(){
 	document.cookie = '';
-	window.location.href = '../html/index.html'
+	window.location.href = '/';
 }
 
 var finishGame = function(winner){

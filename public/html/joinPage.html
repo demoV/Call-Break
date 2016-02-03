@@ -2,18 +2,22 @@
 <html>
 <head>
 	<title>join Table</title>
+	<link rel="shortcut icon" href="../resources/favicon.ico">
 	<link rel="stylesheet" href="../styles/joinPage.css">
 	<script src="../resources/jquery-1.11.3.min.js"></script>
+	<script src="../resources/handlebars.min.js"></script>
 	<script src="../javascript/joinUser.js"></script>
 </head>
 <body>
-	<h1 align="center">JOIN TABLE</h1>
-	<div class="join"><br>
-	 	<input type="text"  placeholder="Enter your name .." id="user_name" name="user_name">
-	 	<br><br>
-		<button id="join">Join</button><br>
+	<div class="game">Call-Break</div>
+	<div class="join">
+	 	<script id="input_temp" type="text/x-handlebars-template">
+			<div class="join_table">JOIN TABLE</div>
+	 		<br><input type="text"  placeholder="Enter your name..." id="user_name" name="user_name">
+		 	<br><br>
+			<button id="join">Join</button><br>
+	 	</script>
 	  </div>
-	  <div id="game_status">
-	  </div>
+	  <div id="game_status"></div>
 </body>
 </html>
