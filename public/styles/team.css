@@ -1,0 +1,42 @@
+body{
+	margin:0px;
+}
+h2{
+	text-align: center;
+	font-family: sans-serif;
+	font-weight: 500;
+}
+h1{
+	margin-top: 55px;
+	text-align: center;
+	font-family: sans-serif;
+	font-weight: 20px;
+}
+
+p{
+	font-family: sans-serif;
+	text-align: center;
+	font-size: 30;
+	font-weight: 100;
+}
+
+section{
+	margin-left: 10%;
+	margin-right: 10%;
+	width:80%;
+	text-align: center;
+}
+
+section a {
+	position: relative;
+	width: 170px;
+	text-decoration: none;
+	text-align: center;
+}
+
+section img{
+	height:250;
+	width: 200;
+	border-radius: 5px;
+	margin: 2px;
+}

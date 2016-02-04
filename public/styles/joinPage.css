@@ -1,8 +1,24 @@
+
 .join{
 	text-align: center;
 }
-h1{
-	font-size: 80px;
+.game{
+	margin-top: 8%;
+	text-align: center;
+	font-size: 100px;
+	font-weight: 500;
+	font-family: sans-serif;
+}
+
+.join_table{
+	margin-top: 1%;
+	text-align: center;
+	font-family: sans-serif;
+	font-size: 40px
+}
+p{
+	font-family: sans-serif;
+	font-size: 20px;
 }
 input{
 	height: 20px;
@@ -16,4 +32,11 @@ input{
 }
 #game_status{
 	text-align: center;
+	font-family: sans-serif;
+	font-size: 10px;
+}
+
+li {
+	list-style-type: none;
+	font-size: 20px;
 }
