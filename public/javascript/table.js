@@ -1,11 +1,14 @@
 var hands;
 var interval;
+var deckCardsOfPlayers = [];
+var myId = '';
 var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
-	interval = setInterval(requestForTableStatus, 3000);
+	interval = setInterval(requestForTableStatus, 2000);
 	setTimeout(addClick, 4000);
 };
+
 
 //-----------------------pointTable Template-------------------------------//
 
@@ -43,43 +46,107 @@ var getPointTable =function(playerNames,totalRounds,playersData){
     return pointTableTemplate+'</table>'+'<input type=button id="btn" value="next round">';
 };
 
-//--------------------Template Fn End--------------------------------------//
+//--------------------Template Fn End--------------------------------------// == true
 
+
+var throwCardAnimation = function(id){
+    var deckPosition = $('#bottom_player').offset();
+    var card_Position = $('#'+id).offset();
+    var animationCordinate = {x:  deckPosition.left - card_Position.left,
+                                y:deckPosition.top - card_Position.top};
+    $('#'+id).removeClass('hands').addClass('any');
+    move("#"+id)
+    .to(animationCordinate.x - 80, animationCordinate.y - 40)
+    .rotate('180')
+        .set('border-color', 'black')
+        .duration('.5s')
+        .end();
+        setTimeout(function(){
+        	showOnDeckDiv(id)
+        },450);
+}
+
+var showOnDeckDiv = function(id){
+    $('#bottom_player').html($('#' + id).html());
+    $('#' + id).html('');
+}
 var addClick = function(){
+	// $('.hands').one('click',throwCard);
 	$('.throwableCards').one('click',throwCard);
 };
 var throwCard = function(){
 	var self = this;
-	$('.throwableCards').removeClass('throwableCards');
-	$.post('throwCard' , {card : this.id}, function(response){
-		if(response.thrown){
-			_.remove(hands, function(card){
-				return card == self.id + '.png';
-			});
-			// $('#'+self.id).remove();
+	$.post('throwCard' , {card : this.id.slice(1)}, function(response){
+		if(response.thrown == true){
+		$('#'+self.id).removeClass('hand').addClass('any');
+			throwCardAnimation(self.id);
+			setTimeout(function(){
+				_.remove(hands, function(card){
+				return card == self.id.splice(1) + '.png';
+				});
+			showhandCards();
+			},700);
+			
 		}
 	});
-	showhandCards();
 };
-var removalCards = function(){
-	$('.throwableCards').one('click',throwCard);
+
+var showButtonOfShowHandCards = function(){
+	var button = '<button id="showCard" onclick="showhandCards()"></button>';
+	var divForBtn = '<div style="width:30%">' + button + '</div>';
+	$('#myInfor').append(divForBtn);
+}
+var distribute = function(position, i){
+        move('#card_' + i)
+        .to(position.x, position.y)
+        .rotate('180')
+        .scale(.5)
+        .set('border-color', 'black')
+        .duration('2s')
+        .end();
+}
+var startDistribution = function (numberOfCards){
+  var positions = [{x: 0, y:300}, {x: 262, y:0},{x: 0, y:-300},{x: -400, y:0}];
+  var time = 100;
+    for(i=0; i <= numberOfCards; i++) {
+        (function(current) {
+          setTimeout(function() { distribute(positions[(current + 1)%4], current); }, current * 150);
+        })(i);
+    }
+    if(numberOfCards)
+    	getHandCards();
+    showButtonOfShowHandCards();
 };
 
 var setThrowableClass = function(card){
-	var template ='<td class="throwableCards" id="cardId">'+
-				  '<img src="../resources/resource/card"></td>';
-	var cardDetatil = {cardId: card.slice(0,-4) , card : card};
-	return template.replace(/cardId|card/g,function myFunction(x){
-		return cardDetatil[x];});
+	var cardWithRank = getCardWithSuit(card.slice(0,-4));
+	var template ='<td class="throwableCards hand" id="cardId">'+
+				  '<div class="cards"><div class="SUIT"><p>RANK</p></div></div></td>';
+	var cardDetatil = {
+						cardId: '_'+card.slice(0,-4),
+						SUIT: cardWithRank.suit,
+						RANK: cardWithRank.rank
+					};
+	return template.replace(/cardId|SUIT|RANK/g,function myFunction(x){
+		return cardDetatil[x];
+	});
 }
+
+var getCardWithSuit = function(cardId){
+    var ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+    var suits = {'S': 'suit_spades', 'D': 'suit_diamonds', 'C': 'suit_Clubs', 'H': 'suit_hearts'}; 
+    var suitOfCard = cardId.slice(-1);
+    var rankOfCard = +(cardId.slice(0,-1));
+    return { rank: ranks[rankOfCard - 2], suit: suits[suitOfCard] };
+};
 
 var showhandCards = function(){
 	var innerHtmlForHands = '';
 	[].forEach.call(hands,function(card){
 		innerHtmlForHands += setThrowableClass(card);
 	});
-	$('#hands').html(innerHtmlForHands);
-	setTimeout(addClick, 1000);
+	$('.hands').html(innerHtmlForHands);
+	setTimeout(addClick, 700);
 	return;
 };
 
@@ -96,15 +163,15 @@ var setNameAttrToPlayersDiv = function(positions){
 	$('.my').attr('pName', positions.bottom_player);
 }
 var showPlayersName = function(positions){
-	$('.top_player #name').html('<h3>'+positions.top_player+'</h3>');
-	$('.right_side_player>#name').html('<h3>'+positions.right_player+'</h3>');
-	$('.left_side_player>#name').html('<h3>'+positions.left_player+'</h3>');
-	$('.my #name').html('<h3>'+positions.bottom_player+'</h3>');
+	$('.top_player #name').html('<p class="playerInfo">'+positions.top_player+'</p>');
+	$('.right_side_player #name').html('<p class="playerInfo">'+positions.right_player+'</p>');
+	$('.left_side_player #name').html('<p class="playerInfo">'+positions.left_player+'</p>');
+	$('.my #name').html('<p class="playerInfo">'+positions.bottom_player+'</p>');
 };
 var setIdAtDeck = function(positions){
 	var keys = Object.keys(positions);
 	keys.forEach(function(key){
-		$('.deck #' + key).attr('name', positions[key]);
+		$('#' + key).attr('name', positions[key]);
 	});
 };
 
@@ -114,7 +181,6 @@ var seqAsTablePositions=function(playerSequence) {
 			top_player: playerSequence[2],
 			left_player: playerSequence[3]};
 };
-
 var getPlayersNames = function(){
 	$.get('names', function(_playerSequence){
 		var playerSequence = _playerSequence;
@@ -133,7 +199,7 @@ var templateForCall = '<h1>Select your call</h1><br>'+
 var showPopup = function(template,request){
 	$('.popup').removeClass('hidden');
 	$('.popup').html(template);
-	$('.popup>#btn').click(request);
+	$('.popup > #btn').click(request);
 }
 
 var postCall= function(){
@@ -157,17 +223,75 @@ var requestForThrowableCard = function(){
 	});
 };
 
+var getCordinatesFor = function(playerId){
+	var lastPlaysPosition = $("div[pName*=" + playerId + "]"); 
+	var lastPlaysDeckPosition = $("div[name*=" + playerId + "]");
+	var lastPlaysOffset = lastPlaysPosition.offset();
+	var lastPlaysDeckOffset = lastPlaysDeckPosition.offset();
+	return {x: lastPlaysDeckOffset.left - lastPlaysOffset.left,
+								y: lastPlaysDeckOffset.top - lastPlaysOffset.top, 
+								fromOffset: lastPlaysOffset};
+}
+
+var getCardForThrowAnimation = function(lastPlays){
+	var thrownCard = '<div class="cards toAnimate"><div class="suit"><p>rank</p></div></div>';
+	var cardWithRank = getCardWithSuit(lastPlays.card);
+	thrownCard = thrownCard.replace(/suit|rank/g, function(key){
+		return cardWithRank[key];
+	})
+	// if(lastPlays.playerId == $('.top_player').attr('pname'))
+	// 	thrownCard = thrownCard.replace('leftRight', 'toAnimateTop');
+	return thrownCard;
+}
+var showThrowAnimation = function(lastPlays){
+	// if($('.my').attr('pname') == lastPlays.playerId)
+	// 	return;
+	var animationCordinate = getCordinatesFor(lastPlays.playerId);
+	var thrownCard = getCardForThrowAnimation(lastPlays);
+	$('section').append(thrownCard);
+	$('.toAnimate').offset(animationCordinate.fromOffset);
+	setTimeout(function(){
+		move('.toAnimate')
+		.duration('.5s')
+		.to( animationCordinate.x, animationCordinate.y)
+		// .then()
+			// .set('opacity', 0)
+		.end();	
+		setTimeout(function(){
+			$('.toAnimate').remove();	
+		},550)
+		
+	}, 200);
+}
+
+var showOtherPlayerThrownCardAnimation = function(deckCards){
+	if(deckCards.length){
+		var lastPlayerIndex = deckCards.length - 1;
+		var lastPlays = deckCards[lastPlayerIndex];
+		if(deckCardsOfPlayers.length + 1 == deckCards.length && $('.my').attr('pname') != lastPlays.playerId)
+			showThrowAnimation(lastPlays);	
+	}
+	setTimeout(function(){
+		showDeck(deckCards);
+	},700); 
+}
 var showDeck = function(deckCards){
+	deckCardsOfPlayers = deckCards;
 	if(deckCards.length == 0)
 		$("div[name]").html('');
 	deckCards.forEach(function(thrownCard){
-		var deckCardsHtml = '<img src="../resources/resource/'+thrownCard.card + '.png">';
+		var cardWithRank = getCardWithSuit(thrownCard.card);
+		var deckCardsHtml = '<div class="cards"><div class="SUIT"><p>RANK</p></div></div>';
+		var cardDetatil = { SUIT: cardWithRank.suit, RANK: cardWithRank.rank};
+		deckCardsHtml = deckCardsHtml.replace(/SUIT|RANK/g, function(key){
+			return cardDetatil[key];
+		})
 		$("div[name*="+thrownCard.playerId+"]").html(deckCardsHtml);
 	});
 };
 
 var showLedSuit = function(ledSuit){
-	$('#ledSuit').html('<h2>Led Suit: ' + ledSuit + '</h2>');
+	$('#ledSuit').html('<h1>Led Suit: ' + ledSuit + '</h1>');
 };
 
 var showHandWinner = function(winner){
@@ -184,8 +308,8 @@ var showCapturedHand = function(capturedDetail){
 	keys.forEach(function(key){
 		var hands = capturedDetail[key].captured;
 		var call = capturedDetail[key].call;
-	$("div[pName*=" + key + "] #captured").html('<h3>Captured: '+hands+ '</h3>');
-		$("div[pName*=" + key + "] #call").html('<h3>Call: '+call+ '</h3>');
+	$("div[pName*=" + key + "] #captured").html('<p class="playerInfo">Captured: '+hands+ '</p>');
+		$("div[pName*=" + key + "] #call").html('<p class="playerInfo">Call: '+call+ '</p>');
 	});
 }
 
@@ -223,12 +347,45 @@ var showCallPopup = function(currentPlayerName, isAllPlayerCalled){
 	}
 }
 
+var clearDeck = function(){
+    $('.deckDiv').each(function(){
+        $(this).html('');
+    })
+}
+var moveDeckCardsToWinner = function(handWinner){
+	if(!handWinner)
+		return;
+	var positionOfWinner = $("div[pName*="+ handWinner +"]").offset();
+	var thrownCardsPosition = $('.deckCards').offset();
+	var animationCordinate = {
+		x: positionOfWinner.left - thrownCardsPosition.left,
+		y: positionOfWinner.top - thrownCardsPosition.top
+	};
+	if(deckCardsOfPlayers.length){
+		move('.deckCards')
+		.to(animationCordinate.x, animationCordinate.y)
+		.then()
+			.set('opacity', 0)
+		.end();
+
+		setTimeout(function(){
+			clearDeck();
+			move('.deckCards')
+			.x(0)
+			.then()
+			.set('opacity', 1)
+			.end();
+		},1000);	
+	}
+}
 var showTableStatus = function(tableStatus){
 	var handWinner = tableStatus.currentHand.winner;
 	showCallPopup(tableStatus.currentTurn, tableStatus.isAllPlayerCalled);
-	showDeck(tableStatus.deck);
+	// showDeck(tableStatus.deck);
+	showOtherPlayerThrownCardAnimation(tableStatus.deck);
 	showCapturedHand(tableStatus.capturedDetail);
 	showTurn(tableStatus.currentTurn);
+	moveDeckCardsToWinner(handWinner);
 	showHandWinner(handWinner);
 	if(tableStatus.ledSuit)
 		showLedSuit(tableStatus.ledSuit);
@@ -242,7 +399,7 @@ var exit = function(){
 var finishGame = function(winner){
 	var template = '<div><h1>Game Over</h1>'+
 					'<h2>Congratulations</h2>'+
-					    '<h3>'+winner+'</h3>'+
+					    '<p>'+winner+'</p>'+
  			 		'</div><input type="submit" id="btn" value="exit">';
 	showPopup(template,exit);
 }
@@ -258,7 +415,6 @@ var showPointTable =function(tableStatus){
 
 var requestForTableStatus = function(){
 	$.get('tableStatus',function(tableStatus){
-		console.log(tableStatus);
 		if(tableStatus.isRoundOver==true){
 			clearInterval(interval);
            	showPointTable(tableStatus);

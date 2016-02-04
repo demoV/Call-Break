@@ -1,81 +1,126 @@
 section {
-	background-color: CAE9FF;
+	background-color: EDEDD8;
 	border-width: 2px;
+	border: 2px solid #73AD21;
 	display: inline-block;
 	position: absolute;
-	top: 5%;
-	right: 5%;
-	left: 5%;
-	bottom: 5%;
+	top: 2.5%;
+	right: 2.5%;
+	left: 2.5%;
+	bottom: 2.5%;
 
 }
 
-.led {
-	background-color: #B6E1E3;
+h1 {
+	font-family: sans-serif;
+}
+p {
+	position: inline;
+	font-family: "Helvetica Neue";
+	font-weight: 600;
+	font-size: 20;
+}
+.any{
+	height: 27%;
+	width: 11%;
+	position: fixed;
+	z-index: 1;
+}
+.any img{
+	height: 100%;
+	width: 100%;
+}
+
+.move div {
+	width: 19%;
+	height: 45%;
+}
+.lead {
 	position: absolute;
+	top: 2.5%;
+	left: 3%;
     width: 28%;
 }
 
 .top_player {
-	background-color: #B6E1E3;
-	display: inline-block;
+	background-color: F3F5EF;
+	border: 2px solid #73AD21;
+    border-radius: 8%;
 	position:absolute;
-    top:20px;
-    left:36%;
-    width: 25%;
+    top:2%;
+    left:39%;
+    height: 26%;
+    width: 20%;
+    overflow: hidden;
 }
-.top_player img {
+
+.back_side_img {
 	position: relative;
-    left: 20%;
-    top: 10;
-    height: 17%;
-    width: 28%;
+    left: 10%;
+    top: 10%;
+    width: 34%;
 }
 .right_side_player {
 	border-radius: 8%;
-	background-color: #B6E1E3;
+	background-color: F3F5EF;
+	   border: 2px solid #73AD21;
 	position: absolute;
-	top: 35%;
+	top: 36%;
 	right: 2%;
+	height: 26%;
     width: 20%;
 }
 .left_side_player {
 	border-radius: 8%;
-	background-color: #B6E1E3;
+	background-color: F3F5EF;
+    border: 2px solid #73AD21;
+    border-radius: 10%;
 	position: absolute;
-	top: 35%;
+	top: 36%;
 	left: 2%;
+	height: 26%;
     width: 20%;
 }
 .my {
-	overflow: scroll;
-	width: 100%;
-	background-color: #B6E1E3;
+    border: 2px solid #73AD21;
+    border-radius: 1.5%;
+	height: 23%;
+	width: 96%;
+	background-color: F3F5EF;
 	position: absolute;
-    bottom: 0;
+	left: 1.9%;
+    bottom: 2.5%;
 }
 .deck{
-	background-color: #B6E1E3;
-	position:absolute;
-	width:40%;
-	height:35%;
-	top:31%;
-	left:30%;
-	overflow: scroll;
+	border: 2px solid #73AD21;
+	transform: rotateX(40deg);
+	border-radius: 50%;
+	background-color: EBE0BE;
+	opacity: 16%;
+     position:absolute;
+     width:44%;
+     height:50%;
+     top:26%;
+     left:27.5%;
+     overflow: scroll;
 }
 .popup {
-	text-align :center;
-	background-color: skyblue;
-    position:absolute;
-    width:40%;
-    height:350px;
-    top:31%;
-    left:30%;
-    overflow: scroll;
+	background-color: F3F5EF;
+	position:absolute;
+	border: 2px solid #73AD00;
+	text-align: center;
+	width:45%;
+	height:40%;
+	top:31%;
+	left:27%;
+	z-index: 2;
 }
 #topName{
-	display: inline-block;
-	float: right;
+	position: absolute;
+	top: 29%;
+	right: 10%;
+	width: 40%;
+	overflow: hidden;
 }
 
 .card {
@@ -91,13 +136,12 @@ section {
 	padding: 0.5% 3% 1% 3%;
 	margin: 0.5% 0 1% 0;
 }
-.topPlayer {
-	position: relative;
-}
-#hands img{
+
+.hands img{
 	position: static;
-	height: 50%;
-	/*width: 100%*/
+	height: 53%;
+	max-width: 50%;
+	min-width: 100%;
 }
 .deck img{
 	position: relative;
@@ -106,59 +150,101 @@ section {
 }
 #myinfor{
 	position: relative;
-	left: 25%;
+	left: 30%;
 	width: 50%;
+	padding: 0.2% 0 0.4%;
 	display: inline-flex;
+	overflow: scroll;
 }
 #top_player {
-	background-color: green;
 	position:absolute;
-    top:20px;
-    left: 38%;
+	z-index: 1;
+    top:3.5%;
+    left: 35%;
+    width: 22%;
+    height: 48%;
     margin-right:2.5%; 
-	width: 17%
 }
+
 #right_player {
-	background-color: green;
 	position: absolute;
-	top: 30%;
-	right: 10%;
-	width: 17%
+	z-index: 1;
+	top: 25%;
+	right: 19%;
+	width: 21%;
+	height: 48%;
 }
 
 #left_player {
 	flex	:1;
-	background-color: green;
 	position: absolute;
-	top: 30%;
-	left: 8%;
-    width: 17%
+	z-index: 1;
+	top: 25%;
+	left: 10%;
+	width: 22%;
+	height: 48%;
 }
 #bottom_player {
-	background-color: green;
 	position: absolute;
-    bottom: 5%;
-    left: 38%;
-    
-    width: 17%;
+	z-index: 1;
+    bottom: 1.5%;
+    right: 43%;
+    width: 22%;
+    height: 48%;
+    transform: rotate(0deg);
 }
 .hidden {
 	visibility: hidden;
 }
 .round {
-	background-color: #B6E1E3;
 	position: absolute;
 	right: 2%;
 	width: 25%
 }
-.turn{
-	background-color: green;
+.turn {
+	box-shadow: 0 0 20px #5FDA29;
+}
+.throw {
+	position: fixed;
 }
 
-#pointTable {
-	text-align: center;
-    border: 10px solid;
-    color: black;
-    font-size: 20px
+.deckCard {
+	width: 100%;
+	height: 100%;
 }
 
+#topName{
+  position: absolute;
+  top: 29%;
+  right: 10%;
+  width: 40%;
+  overflow: hidden;
+}
+
+.move {
+	 position:absolute;
+     width:30%;
+     height:33%;
+     top:34%;
+     left:35%;
+     z-index: 1;
+}
+
+ .deckCards div {
+	width: 19%;
+	height: 45%;
+}
+
+.deckCards {
+	 position:absolute;
+     width:30%;
+     height:40%;
+     top:32%;
+     left:35%;
+     z-index: 1;
+}
+
+.playerInfo{
+	padding: 0.5% 3% 1% 3%;
+	margin: 0.5% 0 1% 0;
+}

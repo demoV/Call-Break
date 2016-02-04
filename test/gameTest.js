@@ -133,6 +133,14 @@ describe('isAllPlayerCalled',function(){
 	});
 });
 
+describe('playerReadyToPlay',function(){
+	it('should add player into playerOnTable',function(){
+		game.playerReadyForPlay('A');
+		game.playerReadyForPlay('A');
+		expect(game.playerOnTable.length).to.equal(1);
+		expect(game.hasPlayerOnTable('A')).to.be.eql(true);
+	});
+});
 describe('isGameOver',function(){
 	it('should give true if players have played five round',function(){
 		game.pointTable.noOfPlayedRounds =  5;

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   viewBox="0 0 140 190"
+   sodipodi:version="0.32"
+   version="1.0"
+   inkscape:version="0.91 r13725"
+   y="0"
+   x="0"
+   sodipodi:docname="deck1.svg">
+  <sodipodi:namedview
+     id="base"
+     bordercolor="#666666"
+     inkscape:window-x="0"
+     inkscape:window-y="26"
+     pagecolor="#ffffff"
+     inkscape:zoom="1.2706612"
+     inkscape:pageshadow="2"
+     borderopacity="1.0"
+     inkscape:current-layer="svg2"
+     inkscape:cx="75.521498"
+     inkscape:cy="130.27503"
+     inkscape:window-height="791"
+     inkscape:pageopacity="0.0"
+     inkscape:window-width="1152"
+     showgrid="false"
+     inkscape:window-maximized="0" />
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient8308">
+      <stop
+         id="stop8314"
+         style="stop-color:#830007"
+         offset="0" />
+      <stop
+         id="stop8316"
+         style="stop-color:#ff0000"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient2481"
+       y2="134.97"
+       xlink:href="#linearGradient8308"
+       gradientUnits="userSpaceOnUse"
+       x2="128.44"
+       gradientTransform="scale(.88507 1.1299)"
+       y1="31.254"
+       x1="24.314"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient4520"
+       y2="128.7"
+       gradientUnits="userSpaceOnUse"
+       y1="63.1"
+       gradientTransform="translate(0 -1)"
+       x2="109"
+       x1="2"
+       inkscape:collect="always">
+      <stop
+         id="stop2062"
+         style="stop-color:#ebf0d0"
+         offset="0" />
+      <stop
+         id="stop2064"
+         style="stop-color:#ffffeb"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient4522"
+       y2="18.728"
+       xlink:href="#linearGradient8308"
+       gradientUnits="userSpaceOnUse"
+       y1="146.62"
+       gradientTransform="scale(.85424 1.1706)"
+       x2="36.52"
+       x1="138.23"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient4524"
+       y2="140.45"
+       xlink:href="#linearGradient8308"
+       gradientUnits="userSpaceOnUse"
+       y1="17.153"
+       gradientTransform="scale(.85537 1.1691)"
+       x2="146.4"
+       x1="22.029"
+       inkscape:collect="always" />
+  </defs>
+  <g
+     id="g4503">
+    <g
+       id="g4505">
+      <path
+         id="path4507"
+         style="fill-opacity:.49804;fill:#000000"
+         d="m21 5h103c8.86 0 16 7.136 16 16v153c0 8.86-7.14 16-16 16h-103c-8.864 0-16-7.14-16-16v-153c0-8.864 7.136-16 16-16z" />
+      <path
+         id="path4513"
+         style="fill:url(#linearGradient4520)"
+         d="m18 2h103c8.86 0 16 7.136 16 16v153c0 8.86-7.14 16-16 16h-103c-8.864 0-16-7.14-16-16v-153c0-8.864 7.136-16 16-16z" />
+    </g>
+    <path
+       id="path4517"
+       style="fill:url(#linearGradient4524)"
+       d="m22.156 9.375c-8.461 0-15.281 6.82-15.281 15.281v140.25c0 8.46 6.82 15.31 15.281 15.31h94.434c8.46 0 15.29-6.85 15.29-15.31v-140.25c0-8.465-6.83-15.285-15.29-15.285h-94.434zm0 1.25h94.434c7.79 0 14.03 6.241 14.03 14.031v140.25c0 7.79-6.24 14.06-14.03 14.06h-94.434c-7.79 0-14.031-6.27-14.031-14.06v-140.25c0-7.794 6.241-14.035 14.031-14.035z" />
+    <!-- <path
+        id="path4078"
+        style="fill-rule:evenodd;fill:url(#linearGradient2481)"
+        d="m38.906 21.25c-5.726 0-10.375 7.013-10.375 15.656 0 7.363 9.429 19.742 9.063 25.625-3.029 1.682-12.383-13.812-17.219-13.812-5.726 0-10.375 7.013-10.375 15.656s4.649 15.656 10.375 15.656c4.966 0 13.475-15.524 17.219-14.125 0.07 2.007-0.134 20.511-1.188 21.844-2.279 2.881-5.156 2.688-5.156 2.688l0.062 3.156 15.063-0.094 0.063-3.156s-2.846 0.225-5.126-2.656c-1.048-1.326-1.523-21.023-1.531-21.657h0.094v0.031c3.666-1.374 12.475 14.25 17.406 14.25 5.726 0 10.375-7.013 10.375-15.656s-4.649-15.656-10.375-15.656c-4.816 0-13.541 15.262-17.375 13.688 0.054-6.029 9.375-18.427 9.375-25.782 0-8.643-4.649-15.656-10.375-15.656zm59.594 3.906c-8.86 17.718-15.33 26.866-28.656 36.625 12.611 9.642 21.503 19.611 28.906 35.719 6.61-15.302 14.7-26.704 28.75-36.188-14.13-7.196-22.3-18.614-29-36.156zm-73.375 73.594c-1.719 0.012-3.596 0.455-5.687 1.41-22.795 17.71 7.931 46.28 20.906 70.81l0.375 0.12c14.259-26.81 41.396-56.31 20.656-70.93-16.431-7.478-20.815 17.38-20.969 18.28-0.134-0.79-3.493-19.769-15.281-19.69zm73.875 0.156c-10.575 16.814-43.025 45.474-22.469 54.314 12.478 4.07 18.423-4.27 20.938-9.78h0.5c-0.019 1.03-0.491 21.3-1.813 22.5-2.9 2.63-6.562 2.44-6.562 2.44l0.062 2.87 19.224-0.09 0.06-2.82s-3.63 0.17-6.53-2.46c-1.33-1.21-1.83-21.45-1.85-22.47h0.22c2.03 4.5 9.74 13.83 18.22 10.28 24.79-9.96-11.71-38.32-20-54.784z"
+    /> -->
+  </g>
+  <metadata
+     id="metadata3410">
+    <rdf:RDF>
+      <cc:Work>
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://openclipart.org/">
+            <dc:title>Openclipart</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:title></dc:title>
+        <dc:date>2009-03-23T14:04:42</dc:date>
+        <dc:description>playing card backs for the &quot;Ornamental&quot;, &quot;White&quot;, &quot;Simple&quot; and &quot;Bordered&quot; sets</dc:description>
+        <dc:source>https://openclipart.org/detail/23046/card-backs:-suits-red-by-nicubunu</dc:source>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>nicubunu</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>bordered deck</rdf:li>
+            <rdf:li>card</rdf:li>
+            <rdf:li>cards</rdf:li>
+            <rdf:li>deck</rdf:li>
+            <rdf:li>gambling</rdf:li>
+            <rdf:li>game</rdf:li>
+            <rdf:li>ornamental deck</rdf:li>
+            <rdf:li>play</rdf:li>
+            <rdf:li>playing cards</rdf:li>
+            <rdf:li>simple deck</rdf:li>
+            <rdf:li>white deck</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/publicdomain/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot3412"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
+       id="flowRegion3414"><rect
+         id="rect3416"
+         width="48.970879"
+         height="55.092239"
+         x="40.067085"
+         y="41.974384" /></flowRegion><flowPara
+       id="flowPara3418">jd,kldgjal</flowPara></flowRoot>  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:92.41749573px;line-height:125%;font-family:'Apple Chancery';-inkscape-font-specification:'Apple Chancery, Medium';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="22.329037"
+     y="98.913124"
+     id="text3420"
+     sodipodi:linespacing="125%"
+     transform="scale(0.95971831,1.0419724)"><tspan
+       sodipodi:role="line"
+       id="tspan3422"
+       x="22.329037"
+       y="98.913124">C</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="76.238754"
+     y="83.71093"
+     id="text3424"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3426"
+       x="76.238754"
+       y="83.71093" /></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="230.94221"
+     y="75.920113"
+     id="text3428"
+     sodipodi:linespacing="125%"><tspan
+       sodipodi:role="line"
+       id="tspan3430"
+       x="230.94221"
+       y="75.920113" /></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;font-size:91.58680725px;line-height:300%;font-family:'Apple Chancery';-inkscape-font-specification:'Apple Chancery, Medium';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+     x="45.875072"
+     y="155.927"
+     id="text3432"
+     sodipodi:linespacing="300%"
+     transform="scale(1.0368971,0.96441585)"><tspan
+       sodipodi:role="line"
+       id="tspan3434"
+       x="45.875072"
+       y="155.927">B</tspan></text>
+</svg>

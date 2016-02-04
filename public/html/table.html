@@ -1,6 +1,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="../styles/table.css">
+	<link rel="stylesheet" href="../styles/cards.css">
 	<script type="text/javascript" src="../resources/jquery-1.11.3.min.js"></script>
 	<script type="text/javascript" src="../javascript/table.js"></script>
 	<script type="text/javascript" src="../resources/handlebars.min.js"></script>
@@ -9,9 +10,9 @@
 	<title></title>
 </head>
 <body>
+<script type="text/javascript" src="../resources/move.min.js"></script>
 <section>
-
-	<div class="led">
+	<div class="lead">
 		<div id="ledSuit"></div>
 		<div id="hand_winner"></div>
 	</div>
@@ -23,21 +24,25 @@
 			<div id="call" > </div>
 			<div id="captured"> </div>
 		</div>
-		<img src="../resources/card.png" class="card" id="back_side_img" >
+		<img src="../resources/deck1.svg" class="back_side_img" >
 	</div>
 
 	<div class="right_side_player">
-			<img src="../resources/card.png" class="card" id="back_side_img">
-		<div id="name"></div>
-		<div id="call"></div>
-		<div id="captured"></div>
+			<img src="../resources/deck1.svg" class="back_side_img">
+			<div id="topName">
+				<div id="name"></div>
+				<div id="call"></div>
+				<div id="captured"></div>
+			</div>	
 	</div>
 
 	<div class="left_side_player">
-			<img src="../resources/card.png" class="card" id="back_side_img">
-		<div id="name"></div>	 
-		<div id="call"></div>
-		<div id="captured"></div>
+			<img src="../resources/deck1.svg" class="back_side_img">
+			<div id="topName">
+				<div id="name"></div>	 
+				<div id="call"></div>
+				<div id="captured"></div>
+			</div>	
 	</div>
 
 	<!-- <footer> -->
@@ -49,18 +54,28 @@
 		</div>
 		<div id="hand_cards">
 			<table align="center">
-				<tr id="hands"></tr>
+				<tr class="hands">
+					<!-- <td class="hands" id="C1"> <img src="../resources/deck.svg"  ></td>
+						<td  class="hands" id="C2" onclick="throwCard()"><img src="../resources/deck.svg"></td>
+						<td  class="hands" id="C3"><img src="../resources/deck.svg"></td>
+						<td  class="hands" id="C4"><img src="../resources/deck.svg"></td>
+						<td  class="hands" id="C5"><img src="../resources/deck.svg"></td> -->
+				</tr>
 			</table>
 		</div>	
 	</div>	
 	<!-- </footer> -->
-
-	<div class="deck">
-		<div id="right_player"></div>
-		<div id="top_player"></div>
-		<div id="left_player"></div>
-		<div id="bottom_player"></div>
-	</div>
+<!-- <div class="hight" id="card_2"><img onclick="cardClick(2);" src="../resources/deck.svg"></div>
+<div class="hight" id="card_1"><img onclick="cardClick(1);" src="../resources/deck.svg"></div>
+		<div class="hight" id="card_0"><img onclick="startDistribution(0);" src="../resources/deck.svg"></div> -->
+		<div class="deckCards">
+			<div class="deckDiv" id="right_player"><img class="deckCard"></div>
+			<div class="deckDiv"id="top_player"></div>
+			<div class="deckDiv"id="left_player"></div>
+			<div class="deckDiv"id="bottom_player"></div>	
+		</div>
+		
+	<div class="deck"></div>
 	<div class="popup hidden">	</div>
 </section>
 </body>

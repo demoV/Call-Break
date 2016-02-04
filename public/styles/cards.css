@@ -1,0 +1,108 @@
+.cards div, p {
+    margin: 0;
+}
+
+body {
+  background-color: antiquewhite;
+}
+
+.cards div[class*="suit"] {
+  position: relative;
+  float: left;
+  width: 6vw;
+  height: 8vw;
+  border-radius: 0.5vw;
+    border: 0.1vw solid black;
+  background: white;
+}
+
+.cards div[class*="suit"] p {
+    text-align: center;
+    font-family: sans-serif;
+    padding-top: 0.7vw;
+    font-size: 5vw;
+}
+
+/*----------------------------color style for card value--------------------*/
+
+.suit_diamonds p, .suit_hearts p {
+    -webkit-text-fill-color: red;
+    -webkit-text-stroke-width: 0.1vw;
+    -webkit-text-stroke-color: red;
+}
+
+.suit_spades p, .suit_clubs p {
+    -webkit-text-fill-color: black;
+    -webkit-text-stroke-width: 0.1vw;
+    -webkit-text-stroke-color: black;
+}
+
+/*-----------------------------setting suit for card------------------------------------*/
+
+.suit_diamonds:before, .suit_diamonds:after {
+  content: "♦";
+  color: #ff0000;
+}
+
+.suit_hearts:before, .suit_hearts:after {
+  content: "♥";
+  color: #ff0000;
+}
+
+.suit_clubs:before, .suit_clubs:after {
+  content: "♣";
+  color: #000;
+}
+
+.suit_spades:before, .suit_spades:after {
+    content: "♠";
+    color: #000;
+}
+
+/*-----------------------------setting size for suit symbol---------------------------------*/
+
+div[class*='suit']:before {
+  position: absolute;
+  font-size: 2vw;
+  left: 0.3vw;
+  top: 0.3vh;
+}
+
+div[class*='suit']:after {
+  position: absolute;
+  font-size: 2vw;
+  right: 0.3vw;
+  bottom: 0.3vh;
+}
+
+/*--------------------------------hover for cards-----------------------------------*/
+.suit_spades p:hover,.suit_clubs p:hover {
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke-width: 0.2vw;
+}
+
+
+.suit_diamonds p:hover,.suit_hearts p:hover {
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke-width: 0.2vw;
+}
+
+/*------------------spreading-------------------------------------*/
+/*
+.spread {
+  width: 350px;
+  height: 250px;
+  position: relative;
+}
+
+.spread > .card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-transition: top 0.3s ease, left 0.3s ease;
+  -moz-transition: top 0.3s ease, left 0.3s ease;
+  -o-transition: top 0.3s ease, left 0.3s ease;
+  -ms-transition: top 0.3s ease, left 0.3s ease;
+  transition: top 0.3s ease, left 0.3s ease;
+}
+*/
