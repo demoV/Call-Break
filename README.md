@@ -1,6 +1,6 @@
-   								 # Call-Break (Card Game)
+   						 # Call-Break (Card Game)
 
-								(TERMS)
+								  (TERMS)
 		---------------------------------------------------------------------------
 					Hand : Throwing a card from each players is a hand.
 					Trump : The spades suit cards are trump.
@@ -14,7 +14,7 @@
 				---> Based on cards values(rank) of led suits.
 				---> Trump card have a more priority than other suits.
 
-							(RULES)
+							       (RULES)
 		----------------------------------------------------------------------------
 			---> Every round will start after distribution of the cards.
 			---> Every player will get 13 cards

@@ -56,14 +56,14 @@ var throwCardAnimation = function(id){
                                 y:deckPosition.top - card_Position.top};
     $('#'+id).removeClass('hands').addClass('any');
     move("#"+id)
-    .to(animationCordinate.x - 80, animationCordinate.y - 40)
-    .rotate('180')
+    .to(animationCordinate.x, animationCordinate.y)
+    // .rotate('180')
         .set('border-color', 'black')
         .duration('.5s')
         .end();
         setTimeout(function(){
         	showOnDeckDiv(id)
-        },450);
+        },400);
 }
 
 var showOnDeckDiv = function(id){
@@ -205,7 +205,8 @@ var showPopup = function(template,request){
 var postCall= function(){
 	var call = $('#callInputId').val();
 	$.post('call',{call:call},function(data){
-			alert(data.call);
+			$('.call').html('<p>Your call is:' + data.call + '<p>');
+			setTimeout(function(){$('.call').addClass('hidden')}, 1400);
 	});
 	$('.popup').addClass('hidden');
 	interval = setInterval(requestForTableStatus, 3000);
