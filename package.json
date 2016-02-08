@@ -2,11 +2,12 @@
   "name": "Call-Break",
   "version": "1.0.0",
   "description": "Card Game.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "mocha",
     "min": "mocha -R min --recursive",
-    "watch": "mocha -R min --watch --recursive"
+    "watch": "mocha -R min --watch --recursive",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
