@@ -5,8 +5,8 @@ var myId = '';
 var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
-	interval = setInterval(requestForTableStatus, 2000);
-	setTimeout(addClick, 4000);
+	interval = setInterval(requestForTableStatus, 500);
+	setTimeout(addClick, 2500);
 };
 
 

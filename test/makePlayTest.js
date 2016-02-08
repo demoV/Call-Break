@@ -159,13 +159,13 @@ describe("setTurn",function(){
 }); 
 
 describe('status',function(){
-	it('should give the winner name when game is over',function(){
+	it('should give the winner name when game is over',function(done){
 		game.callFor('A',2);
 		game.callFor('B',2);
 		game.callFor('C',2);
 		game.callFor('D',2);
 
-		game.pointTable.noOfTotalRounds = 2;
+		game.pointTable.noOfTotalRounds = 1;
 
 		game.makePlay('A', '2S');
 		game.makePlay('B', '3S');
@@ -184,7 +184,6 @@ describe('status',function(){
 		game.makePlay('A', '2S');
 		game.makePlay('B', '3S');
 		game.makePlay('C', '4S');
-
 		game.makePlay('D', '5S');
 
 		game.collectThrownCards();
@@ -195,6 +194,7 @@ describe('status',function(){
 		game.makePlay('D', '5D');
 
 		game.collectThrownCards();
+		done();
 		expect(game.status().winner).to.be.eql('D');
 	});
 });
