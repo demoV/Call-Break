@@ -254,3 +254,18 @@ p {
 	top: 50%;
 	left: 40%;
 }
+
+#PointTable th {
+	letter-spacing: 2px;
+	text-transform: uppercase;
+	text-align: center;
+	padding: 6px 6px 6px 12px;
+    background-color: darkgrey;
+    color: black;
+}
+
+#PointTable td {
+    text-align: center;
+    background-color: #FAFAFA;
+	padding: 6px 6px 6px 12px;
+}

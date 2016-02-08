@@ -18,7 +18,7 @@ var tempforPlayerName = function(playerName){
 
 var tableHeadTemp = function(playerNames){
     var heading = ''
-    heading += '<table "id=PointTable"><tr><th>rounds</th>'
+    heading += "<table id='PointTable'><tr><th>rounds</th>"
     playerNames.forEach(function(player){
         heading += tempforPlayerName(player);
     });
@@ -26,7 +26,7 @@ var tableHeadTemp = function(playerNames){
 };
 
 var roundTemplate = function(round){
-    return '<tr><td>'+round+'<br>score</td>';
+    return '<tr><td>'+round+'</td>';
 };
 
 var tempforPlayerScore = function(playerScore){
