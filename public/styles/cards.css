@@ -12,17 +12,21 @@ body {
   width: 6vw;
   height: 8vw;
   border-radius: 0.5vw;
-    border: 0.1vw solid black;
+    border: 1px solid black;
   background: white;
 }
 
 .cards div[class*="suit"] p {
     text-align: center;
     font-family: sans-serif;
-    padding-top: 0.7vw;
-    font-size: 5vw;
+    padding-top: 2.5vw;
+    font-size: 2.5vw;
+    font-weight: 300;
 }
 
+.cards:hover{
+ cursor: pointer; 
+}
 /*----------------------------color style for card value--------------------*/
 
 .suit_diamonds p, .suit_hearts p {
