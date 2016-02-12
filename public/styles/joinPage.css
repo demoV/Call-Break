@@ -49,4 +49,13 @@ li {
 	margin-left: 47%;
 	list-style-type: none;
 	font-size: 20px;
-};
+}
+
+.leave {
+	width: 10%;
+	height: 45px;
+	font-size: 100%
+}
+.hidden {
+	visibility: hidden;
+}

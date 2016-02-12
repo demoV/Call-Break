@@ -6,10 +6,17 @@ var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
 	interval = setInterval(requestForTableStatus, 500);
+	setQuit();
 	setTimeout(addClick, 2500);
 };
 
-
+// var setQuit = function(){
+// 	$('.quit').click(quitFromGame);
+// }
+// var quitFromGame = function(){
+// 	clearInterval(interval);
+// 	$.get('quitFromGame');
+// }
 //-----------------------pointTable Template-------------------------------//
 
 var tempforPlayerName = function(playerName){
@@ -18,7 +25,7 @@ var tempforPlayerName = function(playerName){
 
 var tableHeadTemp = function(playerNames){
     var heading = ''
-    heading += "<table id='PointTable'><tr><th>rounds</th>"
+    heading += '<table id="PointTable" align="center"><tr><th>rounds</th>'
     playerNames.forEach(function(player){
         heading += tempforPlayerName(player);
     });
@@ -72,7 +79,8 @@ var showOnDeckDiv = function(id){
 }
 var addClick = function(){
 	// $('.hands').one('click',throwCard);
-	$('.throwableCards').one('click',throwCard);
+	// $('.throwableCards').one('click',throwCard);
+	$('.throwableCards').click(throwCard);
 };
 var throwCard = function(){
 	var self = this;
@@ -85,8 +93,7 @@ var throwCard = function(){
 				return card == self.id.splice(1) + '.png';
 				});
 			showhandCards();
-			},700);
-			
+			},700);	
 		}
 	});
 };
@@ -224,6 +231,10 @@ var requestForThrowableCard = function(){
 	});
 };
 
+var removeCard = function(card){
+	console.log(card, 'card');
+	$('#_' + card).remove();
+}
 var getCordinatesFor = function(playerId){
 	var lastPlaysPosition = $("div[pName*=" + playerId + "]"); 
 	var lastPlaysDeckPosition = $("div[name*=" + playerId + "]");
@@ -245,8 +256,6 @@ var getCardForThrowAnimation = function(lastPlays){
 	return thrownCard;
 }
 var showThrowAnimation = function(lastPlays){
-	// if($('.my').attr('pname') == lastPlays.playerId)
-	// 	return;
 	var animationCordinate = getCordinatesFor(lastPlays.playerId);
 	var thrownCard = getCardForThrowAnimation(lastPlays);
 	$('section').append(thrownCard);
@@ -255,8 +264,6 @@ var showThrowAnimation = function(lastPlays){
 		move('.toAnimate')
 		.duration('.5s')
 		.to( animationCordinate.x, animationCordinate.y)
-		// .then()
-			// .set('opacity', 0)
 		.end();	
 		setTimeout(function(){
 			$('.toAnimate').remove();	
@@ -269,6 +276,7 @@ var showOtherPlayerThrownCardAnimation = function(deckCards){
 	if(deckCards.length){
 		var lastPlayerIndex = deckCards.length - 1;
 		var lastPlays = deckCards[lastPlayerIndex];
+		removeCard(lastPlays.card);
 		if(deckCardsOfPlayers.length + 1 == deckCards.length && $('.my').attr('pname') != lastPlays.playerId)
 			showThrowAnimation(lastPlays);	
 	}
@@ -304,11 +312,16 @@ var showTurn = function(playerId){
 	$("div[pName*=" + playerId + "]").addClass('turn');
 }
 
+var ignoreSpecialChar = function(element) {
+    return  element.replace( /(:|\.|\[|\]| |,)/g, "\\$1" );
+};
+
 var showCapturedHand = function(capturedDetail){
 	var keys = Object.keys(capturedDetail);
 	keys.forEach(function(key){
 		var hands = capturedDetail[key].captured;
 		var call = capturedDetail[key].call;
+		key = ignoreSpecialChar(key);
 	$("div[pName*=" + key + "] #captured").html('<p class="playerInfo">Captured: '+hands+ '</p>');
 		$("div[pName*=" + key + "] #call").html('<p class="playerInfo">Call: '+call+ '</p>');
 	});
@@ -380,7 +393,7 @@ var moveDeckCardsToWinner = function(handWinner){
 	}
 }
 var showTableStatus = function(tableStatus){
-	var handWinner = tableStatus.currentHand.winner;
+	var handWinner = ignoreSpecialChar(tableStatus.currentHand.winner);
 	showCallPopup(tableStatus.currentTurn, tableStatus.isAllPlayerCalled);
 	// showDeck(tableStatus.deck);
 	showOtherPlayerThrownCardAnimation(tableStatus.deck);
@@ -416,9 +429,14 @@ var showPointTable =function(tableStatus){
 
 var requestForTableStatus = function(){
 	$.get('tableStatus',function(tableStatus){
+		console.log('handWinner', tableStatus.currentHand.winner, tableStatus.isRoundOver);
 		if(tableStatus.isRoundOver==true){
 			clearInterval(interval);
-           	showPointTable(tableStatus);
+			var handWinner = ignoreSpecialChar(tableStatus.currentHand.winner);
+			moveDeckCardsToWinner(handWinner);
+           	setTimeout(function(){
+           		showPointTable(tableStatus);
+           	}, 2000); 
 		}
 		else if(tableStatus.isGameOver){
 			finishGame(tableStatus.winner);

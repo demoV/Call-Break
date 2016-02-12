@@ -571,6 +571,26 @@ describe('controller',function(){
 				.expect('Location','/join',done)
 		});
 	});
+	
+	describe('POST quitFromGame',function(){
+		it('should remove player from the game',function(done){
+			var handler = controller(games)
+
+			var game = {  hasPlayer : sinon.stub(),
+						removePlayer : sinon.spy()}
+
+			games.gameOf.returns(game);		
+			request(handler)
+				.post('/quitFromGame')
+				.set('Cookie' , 'name=A')
+				.expect(302)
+				.expect('Location','/')
+				.end(function(err ,res){
+					// game.removePlayer.called.withArgs('A');
+					done();
+				})
+		})
+	})
 
 	describe('not found',function(){
 		it('should give not found messege if requested file is not available',function(done){
