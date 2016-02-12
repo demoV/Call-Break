@@ -22,7 +22,7 @@ describe('controller',function(){
 
 			request(handler)
 				.get('/')
-				.expect(/Call-Break/)
+				.expect(/C♠ll-Break/)
 				.expect(200,done);
 		});
 	});
