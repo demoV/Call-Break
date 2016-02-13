@@ -10,13 +10,24 @@ var onLoad = function(){
 	setTimeout(addClick, 2500);
 };
 
-// var setQuit = function(){
-// 	$('.quit').click(quitFromGame);
-// }
-// var quitFromGame = function(){
-// 	clearInterval(interval);
-// 	$.get('quitFromGame');
-// }
+var showLeadSuit = function(suit){
+    var suits = {spades: "♠", diamonds: "♦", clubs: "♣", hearts: "♥" };
+    var color = {spades: "black", diamonds: "red", clubs: "black", hearts: "red" }
+    $('.leadSuit').html(suits[suit]).css('color', color[suit]);     
+}
+var popUpForQuit = function(){
+	var popUp = '<p class="quitGame">If you Quit, you will loose your game.</p>'+
+				'</br><p class="quitGame">Do you want to Quit?</p><form method="POST" action="leave_game">'+
+				'<button class="yes_quit" type="submit">Yes</button></form>' + 
+				'<button class="no_quit" onclick="hidePopup()">No</button>';
+	return popUp;
+};
+var reqForQuit = function(){
+	showPopup(popUpForQuit(), function(){});
+};
+var hidePopup = function(){
+	$('.popup').addClass('hidden');
+}
 //-----------------------pointTable Template-------------------------------//
 
 var tempforPlayerName = function(playerName){
@@ -402,7 +413,7 @@ var showTableStatus = function(tableStatus){
 	moveDeckCardsToWinner(handWinner);
 	showHandWinner(handWinner);
 	if(tableStatus.ledSuit)
-		showLedSuit(tableStatus.ledSuit);
+		showLeadSuit(tableStatus.ledSuit);
 }
 
 var exit = function(){

@@ -13,11 +13,12 @@
 <body>
 <script type="text/javascript" src="../resources/move.min.js"></script>
 <section>
-	<div class="lead">
+	<!-- <div class="lead">
 		<div id="ledSuit"></div>
 		<div id="hand_winner"></div>
-	</div>
-	<div class="quit">Quit</div>
+	</div> -->
+	
+		
 	<div class="call"></div>
 	<div class="top_player">
 		<div id="topName">
@@ -76,7 +77,12 @@
 			<div class="deckDiv"id="bottom_player"></div>	
 		</div>
 		
-	<div class="deck"></div>
+	<div class="deck">
+		<div class="leadSuit"></div>
+		<div class="quit" onclick="reqForQuit()">
+			Quit
+		</div>
+	</div>
 	<div class="popup hidden">	</div>
 </section>
 </body>

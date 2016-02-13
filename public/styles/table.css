@@ -269,3 +269,36 @@ p {
     background-color: #FAFAFA;
 	padding: 6px 6px 6px 12px;
 }
+.leadSuit {
+  width: 10%;
+  height: 15%;
+  position: absolute;
+  top: 41%;
+  left: 5%;
+  font-size: 3vw;
+  z-index: 3;
+}
+.quitGame{
+	padding-top: 7%;
+}
+.yes_quit {
+	width: 8%;
+	height: 6%;
+	margin: 3% 3% 0 0;
+}
+.no_quit {
+	width: 8%;
+	height: 6%;
+	margin: 2% 3% 0 0;
+}
+.quit {
+	position: absolute;
+	right: 5%;
+	top: 41%;
+	z-index: 5;
+	width: 15%;
+	height: 10%;
+	font-size: 3vw;
+	cursor: default;
+	/*background-color: green;*/
+}
