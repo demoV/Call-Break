@@ -5,7 +5,7 @@ var myId = '';
 var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
-	interval = setInterval(requestForTableStatus, 500);
+	interval = setInterval(requestForTableStatus, 2000);
 	setQuit();
 	setTimeout(addClick, 2500);
 };
@@ -66,6 +66,7 @@ var getPointTable =function(playerNames,totalRounds,playersData){
 
 //--------------------Template Fn End--------------------------------------// == true
 
+// ------------------------- Animation ----------------------------------
 
 var throwCardAnimation = function(id){
     var deckPosition = $('#bottom_player').offset();
@@ -75,7 +76,6 @@ var throwCardAnimation = function(id){
     $('#'+id).removeClass('hands').addClass('any');
     move("#"+id)
     .to(animationCordinate.x, animationCordinate.y)
-    // .rotate('180')
         .set('border-color', 'black')
         .duration('.5s')
         .end();
@@ -87,10 +87,92 @@ var throwCardAnimation = function(id){
 var showOnDeckDiv = function(id){
     $('#bottom_player').html($('#' + id).html());
     $('#' + id).html('');
+};
+
+var removeCard = function(card){
+	$('#_' + card).remove();
 }
+var getCordinatesFor = function(playerId){
+	playerId = ignoreSpecialChar(playerId);
+	var lastPlaysPosition = $("div[pName*=" + playerId + "]"); 
+	var lastPlaysDeckPosition = $("div[name*=" + playerId + "]");
+	var lastPlaysOffset = lastPlaysPosition.offset();
+	var lastPlaysDeckOffset = lastPlaysDeckPosition.offset();
+	return {x: lastPlaysDeckOffset.left - lastPlaysOffset.left,
+								y: lastPlaysDeckOffset.top - lastPlaysOffset.top, 
+								fromOffset: lastPlaysOffset};
+};
+
+var getCardForThrowAnimation = function(lastPlays){
+	var thrownCard = '<div class="cards toAnimate"><div class="suit"><p>rank</p></div></div>';
+	var cardWithRank = getCardWithSuit(lastPlays.card);
+	return thrownCard.replace(/suit|rank/g, function(key){
+		return cardWithRank[key];
+	});
+};
+var showThrowAnimation = function(lastPlays){
+	var animationCordinate = getCordinatesFor(lastPlays.playerId);
+	var thrownCard = getCardForThrowAnimation(lastPlays);
+	$('section').append(thrownCard);
+	$('.toAnimate').offset(animationCordinate.fromOffset);
+	setTimeout(function(){
+		move('.toAnimate')
+		.duration('.5s')
+		.to( animationCordinate.x, animationCordinate.y)
+		.end();	
+		setTimeout(function(){
+			$('.toAnimate').remove();	
+		},550)
+		
+	}, 200);
+};
+
+var showOtherPlayerThrownCardAnimation = function(deckCards){
+	if(deckCards.length){
+		var lastPlayerIndex = deckCards.length - 1;
+		var lastPlays = deckCards[lastPlayerIndex];
+		removeCard(lastPlays.card);
+		if(deckCardsOfPlayers.length + 1 == deckCards.length && $('.my').attr('pname') != lastPlays.playerId)
+			showThrowAnimation(lastPlays);	
+	}
+	setTimeout(function(){
+		showDeck(deckCards);
+	},700); 
+};
+var clearDeck = function(){
+    $('.deckDiv').each(function(){
+        $(this).html('');
+    })
+};
+var moveDeckCardsToWinner = function(handWinner){
+	if(!handWinner)
+		return;
+	var positionOfWinner = $("div[pName*="+ handWinner +"]").offset();
+	var thrownCardsPosition = $('.deckCards').offset();
+	var animationCordinate = {
+		x: positionOfWinner.left - thrownCardsPosition.left,
+		y: positionOfWinner.top - thrownCardsPosition.top
+	};
+	if(deckCardsOfPlayers.length){
+		move('.deckCards')
+		.to(animationCordinate.x, animationCordinate.y)
+		.then()
+			.set('opacity', 0)
+		.end();
+
+		setTimeout(function(){
+			clearDeck();
+			move('.deckCards')
+			.x(0)
+			.then()
+			.set('opacity', 1)
+			.end();
+		},1000);	
+	}
+};
+// ----------------         GET And POST    --------------------------------
+
 var addClick = function(){
-	// $('.hands').one('click',throwCard);
-	// $('.throwableCards').one('click',throwCard);
 	$('.throwableCards').click(throwCard);
 };
 var throwCard = function(){
@@ -109,32 +191,31 @@ var throwCard = function(){
 	});
 };
 
-var showButtonOfShowHandCards = function(){
-	var button = '<button id="showCard" onclick="showhandCards()"></button>';
-	var divForBtn = '<div style="width:30%">' + button + '</div>';
-	$('#myInfor').append(divForBtn);
-}
-var distribute = function(position, i){
-        move('#card_' + i)
-        .to(position.x, position.y)
-        .rotate('180')
-        .scale(.5)
-        .set('border-color', 'black')
-        .duration('2s')
-        .end();
-}
-var startDistribution = function (numberOfCards){
-  var positions = [{x: 0, y:300}, {x: 262, y:0},{x: 0, y:-300},{x: -400, y:0}];
-  var time = 100;
-    for(i=0; i <= numberOfCards; i++) {
-        (function(current) {
-          setTimeout(function() { distribute(positions[(current + 1)%4], current); }, current * 150);
-        })(i);
-    }
-    if(numberOfCards)
-    	getHandCards();
-    showButtonOfShowHandCards();
+var getHandCards = function(){
+	$.get('cards', function(data){
+		hands = data;
+		showhandCards();
+	});
 };
+var getPlayersNames = function(){
+	$.get('names', function(_playerSequence){
+		var playerSequence = _playerSequence;
+		var positions=seqAsTablePositions(playerSequence);
+		showPlayersName(positions);
+		setIdAtDeck(positions);
+		setNameAttrToPlayersDiv(positions);
+	});
+};
+var postCall= function(){
+	var call = $('#callInputId').val();
+	$.post('call',{call:call},function(data){
+			$('.call').html('<p>Your call is:' + data.call + '<p>');
+			setTimeout(function(){$('.call').addClass('hidden')}, 1400);
+	});
+	$('.popup').addClass('hidden');
+	interval = setInterval(requestForTableStatus, 2000);
+};
+// ---------------------------------------------------------------------
 
 var setThrowableClass = function(card){
 	var cardWithRank = getCardWithSuit(card.slice(0,-4));
@@ -167,13 +248,7 @@ var showhandCards = function(){
 	setTimeout(addClick, 700);
 	return;
 };
-
-var getHandCards = function(){
-	$.get('cards', function(data){
-		hands = data;
-		showhandCards();
-	});
-};
+// --------------------------- Set attr of players -----------------------------------
 var setNameAttrToPlayersDiv = function(positions){
 	$('.top_player').attr('pName', positions.top_player);
 	$('.right_side_player').attr('pName', positions.right_player);
@@ -199,16 +274,8 @@ var seqAsTablePositions=function(playerSequence) {
 			top_player: playerSequence[2],
 			left_player: playerSequence[3]};
 };
-var getPlayersNames = function(){
-	$.get('names', function(_playerSequence){
-		var playerSequence = _playerSequence;
-		var positions=seqAsTablePositions(playerSequence);
-		showPlayersName(positions);
-		setIdAtDeck(positions);
-		setNameAttrToPlayersDiv(positions);
-	});
-};
 
+// -------------------------------------------------------------------------------------
 var templateForCall = '<h1>Select your call</h1><br>'+
 				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
 				'<br><output name="callOutputName" id="callOutputId">2</output><br><input type=button id="btn" value="submit">';
@@ -220,15 +287,7 @@ var showPopup = function(template,request){
 	$('.popup > #btn').click(request);
 }
 
-var postCall= function(){
-	var call = $('#callInputId').val();
-	$.post('call',{call:call},function(data){
-			$('.call').html('<p>Your call is:' + data.call + '<p>');
-			setTimeout(function(){$('.call').addClass('hidden')}, 1400);
-	});
-	$('.popup').addClass('hidden');
-	interval = setInterval(requestForTableStatus, 3000);
-};
+
 
 var requestForThrowableCard = function(){
 	$.get('throwableCard',function(cards){
@@ -242,59 +301,7 @@ var requestForThrowableCard = function(){
 	});
 };
 
-var removeCard = function(card){
-	console.log(card, 'card');
-	$('#_' + card).remove();
-}
-var getCordinatesFor = function(playerId){
-	var lastPlaysPosition = $("div[pName*=" + playerId + "]"); 
-	var lastPlaysDeckPosition = $("div[name*=" + playerId + "]");
-	var lastPlaysOffset = lastPlaysPosition.offset();
-	var lastPlaysDeckOffset = lastPlaysDeckPosition.offset();
-	return {x: lastPlaysDeckOffset.left - lastPlaysOffset.left,
-								y: lastPlaysDeckOffset.top - lastPlaysOffset.top, 
-								fromOffset: lastPlaysOffset};
-}
 
-var getCardForThrowAnimation = function(lastPlays){
-	var thrownCard = '<div class="cards toAnimate"><div class="suit"><p>rank</p></div></div>';
-	var cardWithRank = getCardWithSuit(lastPlays.card);
-	thrownCard = thrownCard.replace(/suit|rank/g, function(key){
-		return cardWithRank[key];
-	})
-	// if(lastPlays.playerId == $('.top_player').attr('pname'))
-	// 	thrownCard = thrownCard.replace('leftRight', 'toAnimateTop');
-	return thrownCard;
-}
-var showThrowAnimation = function(lastPlays){
-	var animationCordinate = getCordinatesFor(lastPlays.playerId);
-	var thrownCard = getCardForThrowAnimation(lastPlays);
-	$('section').append(thrownCard);
-	$('.toAnimate').offset(animationCordinate.fromOffset);
-	setTimeout(function(){
-		move('.toAnimate')
-		.duration('.5s')
-		.to( animationCordinate.x, animationCordinate.y)
-		.end();	
-		setTimeout(function(){
-			$('.toAnimate').remove();	
-		},550)
-		
-	}, 200);
-}
-
-var showOtherPlayerThrownCardAnimation = function(deckCards){
-	if(deckCards.length){
-		var lastPlayerIndex = deckCards.length - 1;
-		var lastPlays = deckCards[lastPlayerIndex];
-		removeCard(lastPlays.card);
-		if(deckCardsOfPlayers.length + 1 == deckCards.length && $('.my').attr('pname') != lastPlays.playerId)
-			showThrowAnimation(lastPlays);	
-	}
-	setTimeout(function(){
-		showDeck(deckCards);
-	},700); 
-}
 var showDeck = function(deckCards){
 	deckCardsOfPlayers = deckCards;
 	if(deckCards.length == 0)
@@ -305,13 +312,10 @@ var showDeck = function(deckCards){
 		var cardDetatil = { SUIT: cardWithRank.suit, RANK: cardWithRank.rank};
 		deckCardsHtml = deckCardsHtml.replace(/SUIT|RANK/g, function(key){
 			return cardDetatil[key];
-		})
-		$("div[name*="+thrownCard.playerId+"]").html(deckCardsHtml);
+		});
+		var playerId = ignoreSpecialChar(thrownCard.playerId);
+		$("div[name*="+playerId+"]").html(deckCardsHtml);
 	});
-};
-
-var showLedSuit = function(ledSuit){
-	$('#ledSuit').html('<h1>Led Suit: ' + ledSuit + '</h1>');
 };
 
 var showHandWinner = function(winner){
@@ -319,6 +323,7 @@ var showHandWinner = function(winner){
 }
 
 var showTurn = function(playerId){
+	playerId = ignoreSpecialChar(playerId);
 	$("div[pName]").removeClass('turn');
 	$("div[pName*=" + playerId + "]").addClass('turn');
 }
@@ -338,19 +343,10 @@ var showCapturedHand = function(capturedDetail){
 	});
 }
 
-var setIntervalTo = function(interval, time, callBack){
-	interval = setInterval(callBack, time);
-};
-
-var stopIntervalOf = function(interval){
-	clearInterval(interval);
-}
-
 var isNewRoundStart = function(){
 	$.get('isStarted', function(response){
 		var status = response;
 		// if(status){
-			// stopIntervalOf(interval);
 			onLoad();
 		// }game
 	})
@@ -366,47 +362,16 @@ var reqForNewRound = function(){
 }
 
 var showCallPopup = function(currentPlayerName, isAllPlayerCalled){
-	if((document.cookie.slice(5) == currentPlayerName) && !isAllPlayerCalled){
+	if($('.my').attr('pName') == currentPlayerName && !isAllPlayerCalled){	
 		clearInterval(interval);
 		showPopup(templateForCall,postCall);	
 	}
 }
 
-var clearDeck = function(){
-    $('.deckDiv').each(function(){
-        $(this).html('');
-    })
-}
-var moveDeckCardsToWinner = function(handWinner){
-	if(!handWinner)
-		return;
-	var positionOfWinner = $("div[pName*="+ handWinner +"]").offset();
-	var thrownCardsPosition = $('.deckCards').offset();
-	var animationCordinate = {
-		x: positionOfWinner.left - thrownCardsPosition.left,
-		y: positionOfWinner.top - thrownCardsPosition.top
-	};
-	if(deckCardsOfPlayers.length){
-		move('.deckCards')
-		.to(animationCordinate.x, animationCordinate.y)
-		.then()
-			.set('opacity', 0)
-		.end();
 
-		setTimeout(function(){
-			clearDeck();
-			move('.deckCards')
-			.x(0)
-			.then()
-			.set('opacity', 1)
-			.end();
-		},1000);	
-	}
-}
 var showTableStatus = function(tableStatus){
 	var handWinner = ignoreSpecialChar(tableStatus.currentHand.winner);
 	showCallPopup(tableStatus.currentTurn, tableStatus.isAllPlayerCalled);
-	// showDeck(tableStatus.deck);
 	showOtherPlayerThrownCardAnimation(tableStatus.deck);
 	showCapturedHand(tableStatus.capturedDetail);
 	showTurn(tableStatus.currentTurn);
@@ -440,7 +405,6 @@ var showPointTable =function(tableStatus){
 
 var requestForTableStatus = function(){
 	$.get('tableStatus',function(tableStatus){
-		console.log('handWinner', tableStatus.currentHand.winner, tableStatus.isRoundOver);
 		if(tableStatus.isRoundOver==true){
 			clearInterval(interval);
 			var handWinner = ignoreSpecialChar(tableStatus.currentHand.winner);

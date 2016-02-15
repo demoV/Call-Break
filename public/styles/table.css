@@ -293,12 +293,12 @@ p {
 }
 .quit {
 	position: absolute;
-	right: 5%;
-	top: 41%;
+	right: 2%;
+	top: 3%;
 	z-index: 5;
-	width: 15%;
-	height: 10%;
-	font-size: 3vw;
+	width: 5%;
+	height: 3%;
+	font-size: 2vw;
 	cursor: default;
 	/*background-color: green;*/
 }
