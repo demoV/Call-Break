@@ -1,18 +1,16 @@
 var interval;
 var alreadyConnected = function(){
 	return '<p>you are already connected</p>';
-}
-
+};
 var gameStatus = function(info){
-	// console.log(info,'info');
-	var status = '<p>No. of connected players: '+info.noOfPlayers+'</p><div class="list">';
-	info.nameOfPlayers.forEach(function(pName){
-		status+= '<li>'+pName+'</li>';
+	var status = '<p>connected players are :</p>';
+	info.nameOfPlayers.forEach(function(pName,i){
+		status+= '<li><b>'+(i+1)+'</b> : '+pName.toUpperCase()+'</li>';
 	});
-	status+='</div>';
+	status+='<br><div class="wait">wait for another '+(4-info.noOfPlayers)+' players to join...</div>';
 	return status;
 
-}
+};
 
 var sendRequestForUpdate = function(){
 	$.get('update',function(data){
@@ -21,8 +19,7 @@ var sendRequestForUpdate = function(){
 		}
 		$('#game_status').html(gameStatus(data));
 	});
-
-}
+};
 
 var sendRequestToJoin = function(){
 	var userName = $('#user_name').val();
@@ -34,7 +31,7 @@ var sendRequestToJoin = function(){
 			$('#game_status').html(alreadyConnected());
 	});
 	interval = setInterval(sendRequestForUpdate , 1000);
-}
+};
 
 var showFormTemp = function(){
 	$.get('isPlayer',function(status){
@@ -45,10 +42,10 @@ var showFormTemp = function(){
 			interval = setInterval(sendRequestForUpdate , 1000);
 		}
 	});
-}
+};
 
 var onReady = function(){
 	showFormTemp();
-}
+};
 
 $(onReady);
