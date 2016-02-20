@@ -40,6 +40,7 @@ var showFormTemp = function(){
 			$('#join').click(sendRequestToJoin);
 		}else{
 			interval = setInterval(sendRequestForUpdate , 1000);
+			$('.leave').removeClass('hidden');
 		}
 	});
 };
