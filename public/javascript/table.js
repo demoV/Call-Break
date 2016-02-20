@@ -276,7 +276,7 @@ var seqAsTablePositions=function(playerSequence) {
 };
 
 // -------------------------------------------------------------------------------------
-var templateForCall = '<h1>Select your call</h1><br>'+
+var templateForCall = '<h1 id="call_h1">Select your call</h1><br>'+
 				'<input type="range" name="callInputName" id="callInputId" value="2" min="2" max="8" oninput="callOutputId.value = callInputId.value">'+
 				'<br><output name="callOutputName" id="callOutputId">2</output><br><input type=button id="btn" value="submit">';
 
