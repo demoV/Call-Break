@@ -384,7 +384,8 @@ var showTableStatus = function(tableStatus){
 }
 
 var exit = function(){
-	document.cookie = '';
+	document.cookie = "name=''";
+	document.cookie = "game=''";
 	window.location.href = '/';
 }
 
