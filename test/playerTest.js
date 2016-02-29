@@ -7,7 +7,7 @@ var expect = chai.expect;
 
 describe('Player', function(){
 	var Player = entities.Player;
-	var player = new Player();
+	var player = new Player('new');
 	it('should be able to receive a card and add it to its hand', function(){
 		var card=new Card(Suits.diamonds,2);
 		player.addCardToHand(card);

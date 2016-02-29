@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Join Table</title>
+	<link rel="shortcut icon" href="../resources/favicon.ico">
+	<link rel="stylesheet" href="../styles/joinPage.css">
+	<script src="../resources/jquery-1.11.3.min.js"></script>
+	<script src="../resources/handlebars.min.js"></script>
+	<script src="../javascript/playFast.js"></script>
+</head>
+<body>
+	<div class="game">
+		<p>C<span>♠LL</span>-B<span>REAK</span></p>
+	</div>
+	<div class="leave hidden">
+		<form method="POST" action="leave_table">
+		 <button class="btn" type="submit">Leave table</button>   
+		</form>
+	</div>
+	<div class="join">
+	 	<script id="input_temp" type="text/x-handlebars-template">
+			<div class="join_table">PLAY FAST</div>
+	 		<br><input type="text"  placeholder="Enter your name..." id="user_name" name="user_name">
+		 	<br><br>
+			<button id="join">Join</button><br>
+	 	</script>
+	</div>
+	<div id="game_status"></div>
+</body>
+</html>

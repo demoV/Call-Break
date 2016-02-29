@@ -2,15 +2,12 @@ var interval;
 var alreadyConnected = function(){
 	return '<p>you are already connected</p>';
 };
-var removeId = function(name){
-	return name.split('_')[0]
-}
 var gameStatus = function(info){
-	var status = '<p>connected players are :</p>';
-	info.nameOfPlayers.forEach(function(pName,i){
-		status+= '<li><b>'+(i+1)+'</b> : '+removeId(pName).toUpperCase()+'</li>';
-	});
-	status+='<br><div class="wait">wait for another '+(4-info.noOfPlayers)+' players to join...</div>';
+	// var status = '<p>connected players are :</p>';
+	// info.nameOfPlayers.forEach(function(pName,i){
+		// status+= '<li><b>'+(i+1)+'</b> :</li>';
+	// });
+	status+='<br><div class="wait">Wait a movement.....</div>';
 	return status;
 
 };
@@ -27,7 +24,7 @@ var sendRequestForUpdate = function(){
 var sendRequestToJoin = function(){
 	var userName = $('#user_name').val();
 	$('#user_name').val('')
-	$.post('join_user',{userName:userName} , function(data){
+	$.post('join_user_fast_play',{userName:userName} , function(data){
 		$('.join').remove();
 		$('.leave').removeClass('hidden');
 		if(data.alreadyConnected)

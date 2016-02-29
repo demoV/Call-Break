@@ -6,7 +6,6 @@ var onLoad = function(){
 	getHandCards();
 	getPlayersNames();
 	interval = setInterval(requestForTableStatus, 2000);
-	setQuit();
 	setTimeout(addClick, 2500);
 };
 
@@ -197,10 +196,13 @@ var getHandCards = function(){
 		showhandCards();
 	});
 };
+var removeId = function(name) {
+	return name.split('_')[0];
+}
 var getPlayersNames = function(){
 	$.get('names', function(_playerSequence){
-		var playerSequence = _playerSequence;
-		var positions=seqAsTablePositions(playerSequence);
+		// var playerSequence = _playerSequence;
+		var positions=seqAsTablePositions(_playerSequence);
 		showPlayersName(positions);
 		setIdAtDeck(positions);
 		setNameAttrToPlayersDiv(positions);
@@ -256,10 +258,10 @@ var setNameAttrToPlayersDiv = function(positions){
 	$('.my').attr('pName', positions.bottom_player);
 }
 var showPlayersName = function(positions){
-	$('.top_player #name').html('<p class="playerInfo">'+positions.top_player+'</p>');
-	$('.right_side_player #name').html('<p class="playerInfo">'+positions.right_player+'</p>');
-	$('.left_side_player #name').html('<p class="playerInfo">'+positions.left_player+'</p>');
-	$('.my #name').html('<p class="playerInfo">'+positions.bottom_player+'</p>');
+	$('.top_player #name').html('<p class="playerInfo">'+removeId(positions.top_player)+'</p>');
+	$('.right_side_player #name').html('<p class="playerInfo">'+removeId(positions.right_player) +'</p>');
+	$('.left_side_player #name').html('<p class="playerInfo">'+removeId(positions.left_player)+'</p>');
+	$('.my #name').html('<p class="playerInfo">'+removeId(positions.bottom_player)+'</p>');
 };
 var setIdAtDeck = function(positions){
 	var keys = Object.keys(positions);
