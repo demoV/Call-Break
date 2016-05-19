@@ -7,7 +7,7 @@ var gameStatus = function(info){
 	// info.nameOfPlayers.forEach(function(pName,i){
 		// status+= '<li><b>'+(i+1)+'</b> :</li>';
 	// });
-	status+='<br><div class="wait">Wait a movement.....</div>';
+	status+='<br><div class="wait">Wait a moment.....</div>';
 	return status;
 
 };
